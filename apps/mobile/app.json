@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "Libolink",
+    "slug": "libolink",
+    "scheme": "libolink",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "platforms": ["ios", "android"],
+    "plugins": ["expo-router", "expo-font", "expo-splash-screen"],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
