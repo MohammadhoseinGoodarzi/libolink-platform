@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Expo / React Native
+.expo/
+expo-env.d.ts
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+android/
+ios/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Turborepo
+.turbo/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+*.swp
+
+# Claude Code local settings (machine-specific)
+.claude/settings.local.json
+
+# Testing
+coverage/
