@@ -1,0 +1,62 @@
+{
+  "Auth": {
+    "signInTitle": "Sign in to Libolink",
+    "signUpTitle": "Create your account",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "usernameLabel": "Username",
+    "usernamePlaceholder": "yourusername",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm password",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "continueWithApple": "Continue with Apple",
+    "continueWithGoogle": "Continue with Google",
+    "invalidEmail": "Enter a valid email address",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "usernameTooShort": "Username must be at least 3 characters",
+    "signInFailed": "Sign in failed. Check your credentials and try again."
+  },
+  "Home": {
+    "feedTitle": "Home",
+    "composerPlaceholder": "What are you reading?",
+    "post": "Post",
+    "like": "Like",
+    "comment": "Comment",
+    "comments": "Comments",
+    "addComment": "Add a comment",
+    "loadingFeed": "Loading your feed…",
+    "feedError": "Something went wrong loading the feed.",
+    "emptyFeed": "No posts yet. Follow readers to fill your feed.",
+    "postEmpty": "Post cannot be empty",
+    "postTooLong": "Posts are limited to 500 characters",
+    "invalidImageUrl": "Image link must be a valid URL"
+  },
+  "Landing": {
+    "headline": "Where readers connect",
+    "subheadline": "Share what you read, discover your next book, and meet readers like you.",
+    "getStarted": "Get started",
+    "signIn": "Sign in",
+    "downloadIos": "Download for iOS",
+    "downloadAndroid": "Download for Android"
+  },
+  "Common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "search": "Search",
+    "required": "This field is required",
+    "toggleTheme": "Toggle theme",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "notFound": "Page not found",
+    "goHome": "Go home",
+    "genericError": "Something went wrong. Please try again."
+  }
+}
