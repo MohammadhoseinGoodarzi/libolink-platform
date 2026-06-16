@@ -197,6 +197,37 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
   matrix. Two peer warnings on `pnpm install` are expected until then — do NOT pin them with
   manual `pnpm.overrides` (root package.json stays devDeps-only).
 
+### Implemented shared layer — reuse, never recreate
+- UI atoms barrel `@/shared/components/ui`: `Text` (Vazirmatn-enforcing — use INSTEAD of RN
+  `<Text>` so no screen leaks the system font), `Button`, `Input`/`PasswordInput`/`SearchInput`
+  (filled, recessed), `Card`, `Avatar`, `BookCover`, `FilterChip`, `MessageBubble`, badges
+  (`CountBadge`/`VerifiedBadge`/`ProChip`), `IconButton`, `BrandGradient` (svg green→navy),
+  `BottomSheet`, `ActionSheet`, `Toast`. `BrandLogo` is `@/shared/components/brand-logo`.
+- Shell `@/shared/components/shell`: `Header`, `LeftDrawer`, `BottomTabBar` (raised AI centre
+  opens Lio), `LioAssistant`. Drawer/Lio toggle via `drawerOpenAtom`/`lioOpenAtom`
+  (`@/shared/store/ui`). `ToastProvider` lives at the app root (`app/_layout.tsx`) — fire with
+  `useToast().show()`.
+- Sheets/drawer use built-in `Modal` + `Animated` + `PanResponder` (NO gesture-handler /
+  reanimated / @gorhom). Gradients use the installed `react-native-svg` (NO expo-linear-gradient).
+  Ask before adding native deps — the owner keeps the dependency surface minimal.
+- Theme: `useThemeColors()` + `useShadow()` from `@/shared/theme` for any RN prop that can't read a
+  CSS var (lucide `color`, `placeholderTextColor`, `shadowColor`, svg fills). `oklchToHex` /
+  `avatarColors` / `hueFromString` for avatars. Persisted via AsyncStorage — `useAppTheme`
+  (toggle) and `useThemeBootstrap` (root gate, applies theme + fonts before first paint).
+- Fonts: Vazirmatn only via family classes — `font-sans` (400) · `font-sans-medium` (500) ·
+  `font-sans-semibold` (600) · `font-sans-bold` (700). Do NOT use Tailwind weight classes
+  (`font-medium`/`font-bold`) on RN text — static weights are separate registered families.
+- Mock data lives in `features/<name>/services` (auth runs on a mock `HttpClient` until the
+  backend exists — swap `authClient` in `features/auth/services/auth-service.ts`, untouched hooks).
+
+### Running it (no device needed)
+- **Expo Go cannot run this app** — it is version-locked and tops out below SDK 56. Use the **web
+  preview** (or a dev build). Run from the **repo ROOT** (the shell cwd drifts; a bare `expo`
+  then computes the wrong project root): `pnpm --filter mobile exec expo start --web` →
+  http://localhost:8081. No login backend — deep-link `/home` on web, or use the mock auth form.
+- `global.css` ends with a web-only block (input focus outline + Chrome autofill) that is
+  DOM-targeted and ignored on native — keep web/native parity in mind when editing it.
+
 ---
 
 ## Naming Conventions (everywhere)
