@@ -1,5 +1,8 @@
 // Public barrel — the ONLY surface external code (app/, other features) imports.
 export { AUTH_ROUTES } from './constants';
-export { SignInContainer } from './containers/sign-in-container';
-export { SignUpContainer } from './containers/sign-up-container';
+export { LoginContainer } from './containers/login-container';
+export { SignUpContainer } from './containers/signup-container';
+export { SplashContainer } from './containers/splash-container';
+export { SuccessContainer } from './containers/success-container';
+export { WelcomeContainer } from './containers/welcome-container';
 export { isAuthenticatedAtom, sessionAtom, userAtom } from './store';

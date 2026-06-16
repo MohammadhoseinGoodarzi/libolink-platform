@@ -6,6 +6,7 @@ import { hideAsync, preventAutoHideAsync } from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback } from 'react';
 import { View } from 'react-native';
+import { ToastProvider } from '@/shared/components/ui';
 import { FONT_MAP } from '@/shared/fonts';
 import { Providers } from '@/shared/providers';
 import { useThemeBootstrap } from '@/shared/theme';
@@ -30,10 +31,12 @@ function RootGate() {
   }
 
   return (
-    <View className="flex-1 bg-background" onLayout={onLayout}>
-      <StatusBar style="auto" />
-      <Stack screenOptions={{ headerShown: false }} />
-    </View>
+    <ToastProvider>
+      <View className="flex-1 bg-background" onLayout={onLayout}>
+        <StatusBar style="auto" />
+        <Stack screenOptions={{ headerShown: false }} />
+      </View>
+    </ToastProvider>
   );
 }
 

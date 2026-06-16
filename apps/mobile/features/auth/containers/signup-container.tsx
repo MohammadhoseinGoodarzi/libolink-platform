@@ -1,5 +1,5 @@
-import { useSignUpForm } from '@/features/auth/hooks/use-sign-up-form';
-import { SignUpForm } from '../components/sign-up-form';
+import { SignUpForm } from '../components/signup-form';
+import { useSignUpForm } from '../hooks/use-signup-form';
 
 export function SignUpContainer() {
   const { form, onSubmit, isSubmitting, hasError } = useSignUpForm();

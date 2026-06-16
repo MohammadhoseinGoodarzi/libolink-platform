@@ -1,5 +1,5 @@
-import { LandingHero } from '@/features/landing';
+import { SplashContainer } from '@/features/auth';
 
-export default function LandingScreen() {
-  return <LandingHero />;
+export default function SplashScreen() {
+  return <SplashContainer />;
 }
