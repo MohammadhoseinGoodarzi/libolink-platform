@@ -4,6 +4,11 @@ export const ROUTES = {
   welcome: '/welcome',
   login: '/login',
   signup: '/signup',
+  verify: '/verify',
+  forgot: '/forgot',
+  code: '/code',
+  newPassword: '/new-password',
+  complete: '/complete-profile',
   success: '/success',
   home: '/home',
 } as const;

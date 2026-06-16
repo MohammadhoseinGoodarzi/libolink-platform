@@ -6,7 +6,6 @@ import { View } from 'react-native';
 import { useGoogleAuth } from '@/features/auth/hooks/use-google-auth';
 import type { LoginFormProps } from '@/features/auth/types';
 import { BrandLogo } from '@/shared/components/brand-logo';
-import { useToast } from '@/shared/components/ui';
 import { ROUTES } from '@/shared/constants';
 import { AuthButton } from './auth-button';
 import { AuthField } from './auth-field';
@@ -19,9 +18,7 @@ import { TextLink } from './text-link';
 
 export function LoginForm({ form, onSubmit, isSubmitting, hasError }: LoginFormProps) {
   const t = useDictionary('Auth');
-  const tCommon = useDictionary('Common');
   const router = useRouter();
-  const toast = useToast();
   const onGoogle = useGoogleAuth();
   const {
     control,
@@ -81,9 +78,7 @@ export function LoginForm({ form, onSubmit, isSubmitting, hasError }: LoginFormP
             )}
           />
           <View className="mt-2 flex-row justify-end">
-            <TextLink onPress={() => toast.show(tCommon('comingSoon'))}>
-              {t('forgotPassword')}
-            </TextLink>
+            <TextLink onPress={() => router.push(ROUTES.forgot)}>{t('forgotPassword')}</TextLink>
           </View>
         </View>
 

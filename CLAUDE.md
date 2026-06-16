@@ -25,6 +25,7 @@ both apps, stop — it belongs in a package.
 | nativewind | — | 4.2.5 | — | Tailwind v3 ONLY. v5 (Tailwind v4) still preview — revisit when stable |
 | react-native-reusables | — | CLI 0.7.1 | — | Copy-in components via `@react-native-reusables/cli`; not a runtime dep |
 | @react-native-async-storage/async-storage | — | 2.2.0 | — | `expo install`-pinned (SDK 56); theme + settings persistence, future session token |
+| expo-image-picker | — | ~56.0.18 | — | `expo install`-pinned (SDK 56); Complete-Profile photo (camera/gallery) |
 | Vazirmatn (font) | woff2 (web) | ttf 400/500/600/700 (mobile) | — | Bundled asset, NOT a dependency. Mobile `.ttf` in `assets/fonts/` from the Google Fonts release |
 | react-native-web | — | ~0.21.0 | — | Web preview only (`expo start --web`); Expo SDK 56-aligned |
 | react-dom (mobile) | — | catalog: (19.2.7) | — | Web preview peer; matches React (NOT the SDK-suggested 19.2.3 — react/react-dom must match) |

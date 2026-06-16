@@ -29,13 +29,12 @@ export function useSignUpForm() {
   });
 
   const onSubmit = form.handleSubmit((values) => {
-    // Maps the richer mobile form to the shared SignUpPayload; the first name is
-    // forwarded to the Success screen greeting.
+    // Maps the richer mobile form to the shared SignUpPayload, then continues the
+    // onboarding flow: verify → complete profile → success.
     signUp.mutate(
       { email: values.email, username: values.username, password: values.password },
       {
-        onSuccess: () =>
-          router.replace({ pathname: ROUTES.success, params: { name: values.firstName } }),
+        onSuccess: () => router.push({ pathname: ROUTES.verify, params: { email: values.email } }),
       },
     );
   });
