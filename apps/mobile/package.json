@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "catalog:",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "@repo/api": "workspace:*",
     "@repo/hooks": "workspace:*",
     "@repo/i18n": "workspace:*",

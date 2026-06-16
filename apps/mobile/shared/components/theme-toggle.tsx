@@ -1,26 +1,19 @@
-import { themeAtom } from '@repo/stores';
-import { useSetAtom } from 'jotai';
 import { Moon, Sun } from 'lucide-react-native';
-import { useColorScheme } from 'nativewind';
 import { Pressable } from 'react-native';
+import { useAppTheme } from '@/shared/theme';
 
-// NativeWind owns the actual color scheme; themeAtom mirrors it into the shared
-// store so non-UI code (and the web app's equivalent) observes one source.
+// Writes through useAppTheme so the choice persists (AsyncStorage) and mirrors
+// into themeAtom. Lives in the left drawer per the handoff (§5).
 export function ThemeToggle() {
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-  const setTheme = useSetAtom(themeAtom);
-  const isDark = colorScheme === 'dark';
+  const { isDark, toggle } = useAppTheme();
   const iconColor = isDark ? '#fafafa' : '#171717';
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel="Toggle theme"
-      onPress={() => {
-        toggleColorScheme();
-        setTheme(isDark ? 'light' : 'dark');
-      }}
-      className="h-9 w-9 items-center justify-center rounded-md"
+      onPress={toggle}
+      className="h-9 w-9 items-center justify-center rounded-full"
     >
       {isDark ? <Sun size={20} color={iconColor} /> : <Moon size={20} color={iconColor} />}
     </Pressable>

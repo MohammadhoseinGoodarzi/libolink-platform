@@ -24,6 +24,8 @@ both apps, stop — it belongs in a package.
 | expo-router | — | 56.2.10 | — | SDK-aligned versioning; no longer depends on react-navigation |
 | nativewind | — | 4.2.5 | — | Tailwind v3 ONLY. v5 (Tailwind v4) still preview — revisit when stable |
 | react-native-reusables | — | CLI 0.7.1 | — | Copy-in components via `@react-native-reusables/cli`; not a runtime dep |
+| @react-native-async-storage/async-storage | — | 2.2.0 | — | `expo install`-pinned (SDK 56); theme + settings persistence, future session token |
+| Vazirmatn (font) | woff2 (web) | ttf 400/500/600/700 (mobile) | — | Bundled asset, NOT a dependency. Mobile `.ttf` in `assets/fonts/` from the Google Fonts release |
 | @tanstack/react-query | 5.101.0 | 5.101.0 | 5.101.0 | catalog |
 | jotai | 2.20.1 | 2.20.1 | 2.20.1 | catalog |
 | jotai-tanstack-query | 0.11.0 | 0.11.0 | 0.11.0 | No stable v1.0 exists (verified 2026-06-13) |

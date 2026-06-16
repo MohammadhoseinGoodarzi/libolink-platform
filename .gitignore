@@ -48,5 +48,8 @@ Thumbs.db
 # Claude Code local settings (machine-specific)
 .claude/settings.local.json
 
+# Design handoff bundle (references only — not shipped source)
+.design-handoff/
+
 # Testing
 coverage/
