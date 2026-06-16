@@ -26,6 +26,9 @@ both apps, stop — it belongs in a package.
 | react-native-reusables | — | CLI 0.7.1 | — | Copy-in components via `@react-native-reusables/cli`; not a runtime dep |
 | @react-native-async-storage/async-storage | — | 2.2.0 | — | `expo install`-pinned (SDK 56); theme + settings persistence, future session token |
 | Vazirmatn (font) | woff2 (web) | ttf 400/500/600/700 (mobile) | — | Bundled asset, NOT a dependency. Mobile `.ttf` in `assets/fonts/` from the Google Fonts release |
+| react-native-web | — | ~0.21.0 | — | Web preview only (`expo start --web`); Expo SDK 56-aligned |
+| react-dom (mobile) | — | catalog: (19.2.7) | — | Web preview peer; matches React (NOT the SDK-suggested 19.2.3 — react/react-dom must match) |
+| @expo/metro-runtime | — | ~56.0.15 | — | Required by Expo web bundling |
 | @tanstack/react-query | 5.101.0 | 5.101.0 | 5.101.0 | catalog |
 | jotai | 2.20.1 | 2.20.1 | 2.20.1 | catalog |
 | jotai-tanstack-query | 0.11.0 | 0.11.0 | 0.11.0 | No stable v1.0 exists (verified 2026-06-13) |
@@ -49,6 +52,12 @@ both apps, stop — it belongs in a package.
 Shared versions live in the `catalog:` of `pnpm-workspace.yaml` — apps/packages reference them
 with `"catalog:"`. Mobile's Expo-managed deps (expo, react-native, expo-*) stay explicit per the
 Expo SDK 56 compatibility matrix.
+
+The root `.npmrc` sets `node-linker=hoisted` (Expo's official pnpm-monorepo recommendation): React
+Native autolinking + Metro need a flat-ish `node_modules` to resolve bare imports injected by
+tooling (e.g. NativeWind's `react-native-css-interop/jsx-runtime`). Do NOT revert to the strict
+pnpm layout for the mobile app. Note: Expo Go (Play/App Store) is version-locked and cannot run
+this SDK 56 app — use the web preview (`expo start --web`) or a dev build to run it.
 
 ---
 
