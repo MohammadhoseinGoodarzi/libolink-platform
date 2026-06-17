@@ -1,0 +1,16 @@
+# Normalize line endings: store LF in the repo and check out LF everywhere,
+# regardless of a contributor's core.autocrlf. Prevents CRLF creeping into the
+# working tree on Windows (which Biome flags as formatting errors).
+* text=auto eol=lf
+
+# Explicit binaries — never normalized.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
