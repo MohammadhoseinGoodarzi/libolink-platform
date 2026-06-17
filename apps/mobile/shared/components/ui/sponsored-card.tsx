@@ -2,15 +2,25 @@ import { useDictionary } from '@repo/i18n';
 import { useRouter } from 'expo-router';
 import { ChevronRight } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
-import { Text } from '@/shared/components/ui';
 import { ROUTES } from '@/shared/constants';
 import { useThemeColors } from '@/shared/theme';
-import type { FeedAd } from '../types';
+import { Text } from './text';
 
-// Feed-native sponsored card, injected after every 6 posts (handoff §6.2). The
-// "Remove ads" link routes to Subscription; Premium removes these entirely.
-export function SponsoredBanner({ ad }: { ad: FeedAd }) {
-  const t = useDictionary('Home');
+type SponsoredCardProps = {
+  /** Monogram letter for the square mark. */
+  letter: string;
+  title: string;
+  body: string;
+  cta: string;
+  /** Appended to the CTA as "{cta} · {brand}" when present. */
+  brand?: string;
+};
+
+// Reusable "Sponsored" ad card (handoff §5): surface fill, "Remove ads ›" →
+// Subscription, primary monogram + CTA. Shared across the feed and messages
+// list; Premium removes these entirely.
+function SponsoredCard({ letter, title, body, cta, brand }: SponsoredCardProps) {
+  const t = useDictionary('Common');
   const router = useRouter();
   const colors = useThemeColors();
 
@@ -36,27 +46,29 @@ export function SponsoredBanner({ ad }: { ad: FeedAd }) {
 
       <View className="flex-row items-center gap-3">
         <View className="h-[54px] w-[54px] items-center justify-center rounded-[12px] bg-primary">
-          <Text className="font-sans-bold text-[22px] text-primary-foreground">{ad.letter}</Text>
+          <Text className="font-sans-bold text-[22px] text-primary-foreground">{letter}</Text>
         </View>
         <View className="min-w-0 flex-1">
           <Text className="font-sans-bold text-[14.5px] leading-[18px] text-foreground">
-            {ad.title}
+            {title}
           </Text>
           <Text className="mt-0.5 font-sans text-[12px] leading-[17px] text-muted-foreground">
-            {ad.body}
+            {body}
           </Text>
         </View>
       </View>
 
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`${ad.cta} · ${ad.brand}`}
+        accessibilityLabel={brand ? `${cta} · ${brand}` : cta}
         className="mt-3 h-10 items-center justify-center rounded-[20px] bg-primary active:opacity-90"
       >
         <Text className="font-sans-bold text-[13.5px] text-primary-foreground">
-          {ad.cta} · {ad.brand}
+          {brand ? `${cta} · ${brand}` : cta}
         </Text>
       </Pressable>
     </View>
   );
 }
+
+export { SponsoredCard };

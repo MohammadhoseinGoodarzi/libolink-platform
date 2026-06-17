@@ -141,8 +141,6 @@
     "goPremium": "Go Premium",
     "goPremiumBlurb": "Unlimited AI, a verified badge, monthly giveaways & early access.",
     "get": "Get",
-    "sponsored": "Sponsored",
-    "removeAds": "Remove ads",
     "saved": "Saved",
     "removedFromSaved": "Removed from Saved",
     "postEmpty": "Post cannot be empty",
@@ -174,7 +172,9 @@
     "notFound": "Page not found",
     "goHome": "Go home",
     "comingSoon": "Coming soon",
-    "genericError": "Something went wrong. Please try again."
+    "genericError": "Something went wrong. Please try again.",
+    "sponsored": "Sponsored",
+    "removeAds": "Remove ads"
   },
   "Shell": {
     "tabHome": "Home",
@@ -207,5 +207,22 @@
     "suggestionSummarize": "Summarize a classic",
     "suggestionBuddy": "Find a reading buddy",
     "suggestionTrending": "What's trending?"
+  },
+  "Messages": {
+    "title": "Messages",
+    "unread": "unread",
+    "searchPlaceholder": "Search people, clubs, conversations",
+    "filterAll": "All",
+    "filterUnread": "Unread",
+    "filterFriends": "Friends",
+    "filterClubs": "Book Clubs",
+    "pinned": "Pinned",
+    "allMessages": "All Messages",
+    "typing": "typing…",
+    "encrypted": "Your conversations are end-to-end encrypted",
+    "emptyAll": "No conversations yet. Connect with readers and clubs to start chatting.",
+    "emptyUnread": "You're all caught up.",
+    "newMessage": "New message",
+    "chat": "Chat"
   }
 }

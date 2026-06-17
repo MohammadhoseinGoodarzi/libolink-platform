@@ -1,14 +1,13 @@
 import { useDictionary } from '@repo/i18n';
 import type { Post } from '@repo/types';
 import { ActivityIndicator, FlatList, type ListRenderItem, View } from 'react-native';
-import { Button, Text } from '@/shared/components/ui';
+import { Button, SponsoredCard, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useFeed, useStories } from '../hooks/use-feed';
 import { FEED_ADS } from '../services/feed-data';
 import type { FeedAd } from '../types';
 import { PostCard } from './post-card';
 import { PremiumPromoCard } from './premium-promo-card';
-import { SponsoredBanner } from './sponsored-banner';
 import { StoriesRow } from './stories-row';
 
 // A Sponsored banner follows every 6th post (handoff §6.2).
@@ -30,7 +29,17 @@ function buildRows(posts: Post[]): FeedRow[] {
 }
 
 const renderRow: ListRenderItem<FeedRow> = ({ item }) =>
-  item.kind === 'post' ? <PostCard post={item.post} /> : <SponsoredBanner ad={item.ad} />;
+  item.kind === 'post' ? (
+    <PostCard post={item.post} />
+  ) : (
+    <SponsoredCard
+      letter={item.ad.letter}
+      title={item.ad.title}
+      body={item.ad.body}
+      cta={item.ad.cta}
+      brand={item.ad.brand}
+    />
+  );
 
 // Social Home feed (handoff §6.2): stories → Go Premium → posts (+ Sponsored
 // every 6). Data flows through the shared @repo/api/@repo/hooks via useFeed.

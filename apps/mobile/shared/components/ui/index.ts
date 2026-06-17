@@ -12,5 +12,6 @@ export * from './input';
 export * from './message-bubble';
 export * from './password-input';
 export * from './search-input';
+export * from './sponsored-card';
 export * from './text';
 export * from './toast';
