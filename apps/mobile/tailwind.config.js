@@ -22,14 +22,27 @@ module.exports = {
         'accent-foreground': 'hsl(var(--accent-foreground))',
         destructive: 'hsl(var(--destructive))',
         'destructive-foreground': 'hsl(var(--destructive-foreground))',
+        link: 'hsl(var(--link))',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
       },
       borderRadius: {
+        // --radius is the 20px container default (handoff §3.3). lg == container
+        // radius; md/sm step down for inline thumbnails and small controls.
         lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        md: 'calc(var(--radius) - 8px)', // 12px — small inline cards/thumbnails
+        sm: 'calc(var(--radius) - 12px)', // 8px — chips, tight controls
+      },
+      fontFamily: {
+        // Vazirmatn is the only sanctioned family (§3.5). RN renders static
+        // weights as distinct families, so each weight is its own utility:
+        // font-sans (400) · font-sans-medium (500) · font-sans-semibold (600) ·
+        // font-sans-bold (700). Keep `font-bold` etc. (fontWeight) off RN text.
+        sans: ['Vazirmatn-Regular'],
+        'sans-medium': ['Vazirmatn-Medium'],
+        'sans-semibold': ['Vazirmatn-SemiBold'],
+        'sans-bold': ['Vazirmatn-Bold'],
       },
     },
   },

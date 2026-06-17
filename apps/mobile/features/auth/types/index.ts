@@ -1,7 +1,7 @@
-import type { SignInInput, SignUpInput } from '@repo/validators';
 import type { UseFormReturn } from 'react-hook-form';
+import type { SignInInput, SignUpFormInput } from '@/features/auth/validations';
 
-export interface SignInFormProps {
+export interface LoginFormProps {
   form: UseFormReturn<SignInInput>;
   onSubmit: () => void;
   isSubmitting: boolean;
@@ -9,7 +9,7 @@ export interface SignInFormProps {
 }
 
 export interface SignUpFormProps {
-  form: UseFormReturn<SignUpInput>;
+  form: UseFormReturn<SignUpFormInput>;
   onSubmit: () => void;
   isSubmitting: boolean;
   hasError: boolean;
