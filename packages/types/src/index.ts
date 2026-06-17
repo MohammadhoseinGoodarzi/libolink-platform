@@ -3,4 +3,5 @@ export type * from './auth';
 export type * from './comment';
 export type * from './common';
 export type * from './post';
+export type * from './story';
 export type * from './user';

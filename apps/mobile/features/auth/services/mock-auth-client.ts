@@ -30,6 +30,7 @@ function mockSession(email: string, username?: string): AuthSession {
       displayName: titleCase(handle) || 'Reader',
       avatarUrl: null,
       bio: null,
+      verified: false,
       createdAt: now,
       updatedAt: now,
     },

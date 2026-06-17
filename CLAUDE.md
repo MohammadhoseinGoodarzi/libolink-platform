@@ -261,6 +261,10 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 - No ESLint. No Prettier. Anywhere.
 - Single quotes, trailing commas all, semicolons, 2-space indent, 100-char lines, organized
   imports via assist.
+- **Line endings are LF everywhere**, enforced by the root `.gitattributes` (`* text=auto
+  eol=lf`). Biome formats to LF; CRLF in the working tree (e.g. a Windows checkout with
+  `core.autocrlf=true` on a repo missing `.gitattributes`) makes `biome check .` fail on every
+  file. Do NOT remove `.gitattributes`. See `docs/ENGINEERING_LOG.md` (2026-06-17 entry).
 - **Run `pnpm lint` after creating or editing files — no task is done with lint errors.**
 
 ## Package Management
@@ -276,3 +280,17 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 - Commit step by step — one logical unit per commit, ask before committing.
 - Conventional commits (`feat:`, `fix:`, `refactor:`, `chore:`, `docs:`).
 - Never include `Co-Authored-By:` in commit messages.
+
+## Engineering log
+
+`docs/ENGINEERING_LOG.md` is the running record of **notable problems and how we resolved
+them** — non-obvious bugs, environment/tooling gotchas, and the reasoning behind structural
+decisions. Two hard rules:
+
+- **Check it FIRST when you hit a problem or error.** Before debugging anything unexpected
+  (build/lint/type/test failures, tooling or environment weirdness), search this log — the
+  fix may already be written down. Don't re-debug a solved problem.
+- **Always log it AFTER you resolve one.** Append a dated entry (newest on top: *symptom →
+  root cause → fix → prevention*) for anything that cost real debugging time or that a
+  teammate could hit again. No task that involved a non-trivial problem is done until it's
+  logged.
