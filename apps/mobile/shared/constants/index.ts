@@ -11,6 +11,13 @@ export const ROUTES = {
   complete: '/complete-profile',
   success: '/success',
   home: '/home',
+  messages: '/messages',
+  clubs: '/clubs',
+  profile: '/profile',
+  friends: '/friends',
+  saved: '/saved',
+  settings: '/settings',
+  subscription: '/subscription',
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];

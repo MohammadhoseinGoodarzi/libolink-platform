@@ -1,5 +1,5 @@
 import { createPostApi, type HttpClient, postKeys } from '@repo/api';
-import type { ToggleLikeInput } from '@repo/types';
+import type { ToggleLikeInput, ToggleSaveInput } from '@repo/types';
 import { type CreatePostInput, createPostSchema } from '@repo/validators';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { parse } from 'valibot';
@@ -21,5 +21,11 @@ export function usePostActions(client: HttpClient) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: postKeys.all }),
   });
 
-  return { createPost, toggleLike };
+  const toggleSave = useMutation({
+    mutationFn: ({ postId, saved }: ToggleSaveInput) =>
+      saved ? api.unsave(postId) : api.save(postId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: postKeys.all }),
+  });
+
+  return { createPost, toggleLike, toggleSave };
 }

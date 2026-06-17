@@ -1,1 +1,1 @@
-export { HomeView } from './components/home-view';
+export { HomeFeed } from './components/home-feed';

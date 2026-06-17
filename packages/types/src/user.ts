@@ -7,6 +7,8 @@ export interface User {
   displayName: string;
   avatarUrl: Nullable<string>;
   bio: Nullable<string>;
+  /** Verified reader — renders the green badge across the app (handoff §6.2). */
+  verified: boolean;
   createdAt: string;
   updatedAt: string;
 }
