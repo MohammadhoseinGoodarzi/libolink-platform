@@ -285,6 +285,12 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 
 `docs/ENGINEERING_LOG.md` is the running record of **notable problems and how we resolved
 them** — non-obvious bugs, environment/tooling gotchas, and the reasoning behind structural
-decisions. Append a dated entry (symptom → root cause → fix → prevention) whenever something
-cost real debugging time, so the same issue isn't solved twice. Skim it before touching
-tooling, build config, or anything that has bitten us before.
+decisions. Two hard rules:
+
+- **Check it FIRST when you hit a problem or error.** Before debugging anything unexpected
+  (build/lint/type/test failures, tooling or environment weirdness), search this log — the
+  fix may already be written down. Don't re-debug a solved problem.
+- **Always log it AFTER you resolve one.** Append a dated entry (newest on top: *symptom →
+  root cause → fix → prevention*) for anything that cost real debugging time or that a
+  teammate could hit again. No task that involved a non-trivial problem is done until it's
+  logged.
