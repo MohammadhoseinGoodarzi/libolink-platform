@@ -6,7 +6,7 @@ import { Pressable, type PressableProps, Text } from 'react-native';
 
 // Variant + size names mirror the web Button exactly — identical developer
 // experience, different (RN) implementation.
-const buttonVariants = cva('flex-row items-center justify-center gap-2 rounded-md', {
+const buttonVariants = cva('flex-row items-center justify-center gap-2', {
   variants: {
     variant: {
       default: 'bg-primary',
@@ -15,13 +15,15 @@ const buttonVariants = cva('flex-row items-center justify-center gap-2 rounded-m
       destructive: 'bg-destructive',
       post: 'bg-primary shadow-lg shadow-primary/50',
     },
+    // Radius lives per-size (handoff §3.3): container buttons use the 20px
+    // family (rounded-lg == --radius); icon/pill buttons stay fully round.
     size: {
-      default: 'h-[42px] px-6',
-      sm: 'h-8 px-3',
-      lg: 'h-[52px] px-8',
-      icon: 'h-9 w-9',
-      'icon-sm': 'h-8 w-8',
-      post: 'h-[19px] px-2.5',
+      default: 'h-[42px] rounded-lg px-6',
+      sm: 'h-8 rounded-md px-3',
+      lg: 'h-[52px] rounded-lg px-8',
+      icon: 'h-9 w-9 rounded-full',
+      'icon-sm': 'h-8 w-8 rounded-full',
+      post: 'h-[19px] rounded-full px-2.5',
     },
   },
   defaultVariants: {
@@ -30,7 +32,7 @@ const buttonVariants = cva('flex-row items-center justify-center gap-2 rounded-m
   },
 });
 
-const buttonTextVariants = cva('font-medium text-sm', {
+const buttonTextVariants = cva('font-sans-medium text-sm', {
   variants: {
     variant: {
       default: 'text-primary-foreground',

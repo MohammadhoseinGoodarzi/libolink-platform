@@ -1,7 +1,6 @@
-import { createAuthApi } from '@repo/api';
-import { httpClient } from '@/shared/services/http-client';
+import { createMockAuthClient } from './mock-auth-client';
 
-// Feature service binds the shared, platform-agnostic auth API to this app's
-// configured HTTP client. To develop without a backend, swap `httpClient` for a
-// mock client here — the call sites and shared hooks stay untouched.
-export const authService = createAuthApi(httpClient);
+// Auth runs against an offline mock client until the backend exists (handoff §7).
+// To go live, replace this with the real `httpClient` from
+// '@/shared/services/http-client' — useAuth/forms/screens are untouched.
+export const authClient = createMockAuthClient();

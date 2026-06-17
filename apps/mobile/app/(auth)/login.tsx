@@ -1,5 +1,5 @@
-import { SignInContainer } from '@/features/auth';
+import { LoginContainer } from '@/features/auth';
 
 export default function LoginScreen() {
-  return <SignInContainer />;
+  return <LoginContainer />;
 }

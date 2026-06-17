@@ -1,8 +1,15 @@
 // Route hrefs mirror the web app's paths so deep links match across platforms.
 export const ROUTES = {
-  landing: '/',
+  splash: '/',
+  welcome: '/welcome',
   login: '/login',
   signup: '/signup',
+  verify: '/verify',
+  forgot: '/forgot',
+  code: '/code',
+  newPassword: '/new-password',
+  complete: '/complete-profile',
+  success: '/success',
   home: '/home',
 } as const;
 

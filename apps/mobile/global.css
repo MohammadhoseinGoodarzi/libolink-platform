@@ -2,45 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Libolink locked design tokens (handoff §3.2). The six brand hex values are
+ * expressed as HSL channel triplets for NativeWind. Both apps share these
+ * semantic names so component class strings stay identical across web/mobile. */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 14%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 14%;
-    --primary: 152 45% 38%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 97%;
-    --secondary-foreground: 0 0% 20%;
-    --muted: 0 0% 97%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 152 30% 94%;
-    --accent-foreground: 0 0% 20%;
-    --destructive: 8 75% 48%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 92%;
+    --background: 40 33% 92%; /* warm cream canvas #F4EEE1 */
+    --foreground: 145 29% 8%; /* near-black green #0F1B14 */
+    --card: 0 0% 100%; /* pure white */
+    --card-foreground: 145 29% 8%;
+    --primary: 145 93% 11%; /* forest #023618 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 36 39% 87%; /* recessed warm fill #ECE4D4 */
+    --secondary-foreground: 145 93% 11%;
+    --muted: 0 0% 92%; /* #EAEAEA */
+    --muted-foreground: 220 9% 46%; /* #6B7280 */
+    --accent: 36 39% 87%;
+    --accent-foreground: 145 93% 11%;
+    --destructive: 355 49% 52%; /* crimson #C14953 */
+    --destructive-foreground: 0 0% 100%;
+    --link: 215 50% 23%; /* navy #1D3557 */
+    --border: 0 0% 92%; /* #EAEAEA */
     --input: 0 0% 92%;
-    --ring: 152 45% 38%;
-    --radius: 0.625rem;
+    --ring: 145 93% 11%;
+    --radius: 1.25rem; /* 20px container default (§3.3) */
   }
 
   .dark:root {
-    --background: 0 0% 14%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 20%;
-    --card-foreground: 0 0% 98%;
-    --primary: 152 48% 55%;
-    --primary-foreground: 0 0% 14%;
-    --secondary: 0 0% 27%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 27%;
-    --muted-foreground: 0 0% 71%;
-    --accent: 152 25% 24%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 8 70% 58%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 27%;
-    --input: 0 0% 30%;
-    --ring: 152 48% 55%;
+    --background: 150 20% 8%; /* forest green-black */
+    --foreground: 150 10% 96%;
+    --card: 150 15% 12%;
+    --card-foreground: 150 10% 96%;
+    --primary: 150 35% 42%; /* lifted green, AA on dark */
+    --primary-foreground: 0 0% 8%;
+    --secondary: 150 12% 16%;
+    --secondary-foreground: 150 10% 96%;
+    --muted: 150 12% 16%;
+    --muted-foreground: 220 8% 65%;
+    --accent: 150 12% 18%;
+    --accent-foreground: 150 10% 96%;
+    --destructive: 2 60% 58%; /* lighter crimson, AA on dark */
+    --destructive-foreground: 0 0% 100%;
+    --link: 215 45% 65%;
+    --border: 150 8% 22%;
+    --input: 150 8% 24%;
+    --ring: 150 35% 42%;
   }
+}
+
+/* Web preview only (react-native-web). Browsers draw a focus outline on the
+ * inner <input> and Chrome paints an autofill background — both override our
+ * themed inputs. These rules target DOM elements, so they have no effect on
+ * native (NativeWind ignores non-RN selectors). */
+input,
+textarea {
+  outline: none !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill {
+  -webkit-text-fill-color: hsl(var(--foreground));
+  caret-color: hsl(var(--foreground));
+  transition: background-color 100000s ease-in-out 0s;
 }

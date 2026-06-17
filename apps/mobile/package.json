@@ -11,7 +11,9 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~56.0.15",
     "@hookform/resolvers": "catalog:",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "@repo/api": "workspace:*",
     "@repo/hooks": "workspace:*",
     "@repo/i18n": "workspace:*",
@@ -26,6 +28,7 @@
     "expo": "56.0.11",
     "expo-constants": "~56.0.18",
     "expo-font": "~56.0.6",
+    "expo-image-picker": "~56.0.18",
     "expo-linking": "~56.0.14",
     "expo-router": "~56.2.10",
     "expo-splash-screen": "~56.0.10",
@@ -36,11 +39,13 @@
     "lucide-react-native": "1.18.0",
     "nativewind": "4.2.5",
     "react": "catalog:",
+    "react-dom": "catalog:",
     "react-hook-form": "catalog:",
     "react-native": "0.85.3",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.25.2",
     "react-native-svg": "15.15.4",
+    "react-native-web": "~0.21.0",
     "tailwind-merge": "catalog:",
     "valibot": "catalog:"
   },
