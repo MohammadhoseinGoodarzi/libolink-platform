@@ -1,7 +1,7 @@
 import { useDictionary } from '@repo/i18n';
 import { Bell, Search } from 'lucide-react-native';
-import { ScrollView, View } from 'react-native';
-import { HomeView } from '@/features/home';
+import { View } from 'react-native';
+import { HomeFeed } from '@/features/home';
 import { Header } from '@/shared/components/shell';
 import { CountBadge, IconButton } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
@@ -30,9 +30,7 @@ export default function HomeScreen() {
   return (
     <View className="flex-1 bg-background">
       <Header showProChip right={<HomeHeaderActions />} />
-      <ScrollView className="flex-1" contentContainerClassName="p-4">
-        <HomeView />
-      </ScrollView>
+      <HomeFeed />
     </View>
   );
 }
