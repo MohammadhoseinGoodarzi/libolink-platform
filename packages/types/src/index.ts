@@ -1,5 +1,6 @@
 export type * from './api';
 export type * from './auth';
+export type * from './chat';
 export type * from './comment';
 export type * from './common';
 export type * from './conversation';

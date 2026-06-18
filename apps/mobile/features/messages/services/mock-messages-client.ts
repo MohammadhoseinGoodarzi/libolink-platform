@@ -1,6 +1,9 @@
 import type { HttpClient } from '@repo/api';
-import type { Conversation, Paginated } from '@repo/types';
+import type { ChatMessage, Conversation, Paginated } from '@repo/types';
 import { CONVERSATIONS } from './messages-data';
+import { getThread } from './thread-data';
+
+const THREAD = /^\/conversations\/([^/]+)\/thread$/;
 
 // Offline messages backend (handoff §7) — a minimal HttpClient fulfilling the
 // routes createMessageApi calls. Swap `messagesClient` in messages-service.ts
@@ -27,6 +30,10 @@ export function createMockMessagesClient(): HttpClient {
         totalPages: 1,
       };
       return delay(page) as Promise<T>;
+    }
+    const threadMatch = THREAD.exec(path);
+    if (threadMatch) {
+      return delay(getThread(threadMatch[1] as string) as ChatMessage[]) as Promise<T>;
     }
     return unsupported();
   }

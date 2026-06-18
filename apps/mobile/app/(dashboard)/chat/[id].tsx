@@ -1,9 +1,9 @@
-import { useDictionary } from '@repo/i18n';
-import { PlaceholderScreen } from '@/shared/components/placeholder-screen';
+import { useLocalSearchParams } from 'expo-router';
+import { ChatView } from '@/features/messages';
 
-// Chat detail is the next Messages slice; this keeps row taps navigable (push +
-// back) in the meantime, matching the placeholder pattern for unbuilt routes.
+// Chat detail — pushed over the tabs (handoff §6.3). Opened from a conversation
+// row with the conversation id.
 export default function ChatScreen() {
-  const t = useDictionary('Messages');
-  return <PlaceholderScreen title={t('chat')} back />;
+  const { id } = useLocalSearchParams<{ id: string }>();
+  return <ChatView id={id} />;
 }

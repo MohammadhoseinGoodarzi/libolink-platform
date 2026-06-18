@@ -223,6 +223,17 @@
     "emptyAll": "No conversations yet. Connect with readers and clubs to start chatting.",
     "emptyUnread": "You're all caught up.",
     "newMessage": "New message",
-    "chat": "Chat"
+    "chat": "Chat",
+    "members": "members",
+    "activeNow": "Active now",
+    "activeRecently": "Active recently",
+    "encryptedBanner": "Messages are end-to-end encrypted. Only you two can read them.",
+    "sayHello": "Say hello and start talking about the books you love.",
+    "composerPlaceholder": "Message…",
+    "recommendation": "Recommendation",
+    "sharedBook": "Shared a book",
+    "viewBook": "View Book",
+    "now": "now",
+    "send": "Send"
   }
 }
