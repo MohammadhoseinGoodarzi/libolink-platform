@@ -41,13 +41,69 @@ const theo = mkUser('Theo Almeida', 'theoreads');
 const noor = mkUser('Noor Haddad', 'noor.h', { verified: true });
 const lina = mkUser('Lina Soltani', 'lina.reads');
 
-// Stories row — "You" is prepended in the component (handoff §6.2).
+// The signed-in reader — author of posts created from the composer.
+export const ME: User = mkUser('Mehrab Kargardoost', 'mehrab');
+
+// Stories row — "You" is prepended in the component (handoff §6.2). Each story
+// carries the full-screen segments shown in the viewer.
 export const STORIES: Story[] = [
-  { id: 's1', author: amara, seen: false },
-  { id: 's2', author: daniel, seen: false },
-  { id: 's3', author: priya, seen: false },
-  { id: 's4', author: marco, seen: true },
-  { id: 's5', author: lina, seen: true },
+  {
+    id: 's1',
+    author: amara,
+    seen: false,
+    segments: [
+      {
+        id: 's1a',
+        title: 'Currently reading',
+        caption: 'Prairie Winds — 60 pages in and already wrecked.',
+      },
+      {
+        id: 's1b',
+        title: 'Coffee & chapters',
+        caption: 'Sunday mornings are for slow reading. ☕',
+      },
+    ],
+  },
+  {
+    id: 's2',
+    author: daniel,
+    seen: false,
+    segments: [
+      {
+        id: 's2a',
+        title: 'Quote of the day',
+        caption: '“It does not do to dwell on dreams and forget to live.”',
+      },
+    ],
+  },
+  {
+    id: 's3',
+    author: priya,
+    seen: false,
+    segments: [
+      {
+        id: 's3a',
+        title: 'Shelf reorg',
+        caption: 'Sorted my shelves by the feeling each book left me with.',
+      },
+    ],
+  },
+  {
+    id: 's4',
+    author: marco,
+    seen: true,
+    segments: [
+      { id: 's4a', title: 'Book swap Saturday', caption: 'Riverside library, 10am. Coffee on me.' },
+    ],
+  },
+  {
+    id: 's5',
+    author: lina,
+    seen: true,
+    segments: [
+      { id: 's5a', title: 'Margins > everything', caption: 'Annotating in pen, fight me.' },
+    ],
+  },
 ];
 
 export const FEED_POSTS: Post[] = [

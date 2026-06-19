@@ -19,3 +19,25 @@ export interface FeedAd {
 
 // A rendered feed row — a post or an injected sponsored ad.
 export type FeedRow = { kind: 'post'; post: Post } | { kind: 'ad'; key: string; ad: FeedAd };
+
+// Phase-2 interaction props (handoff §6.2): compose + story viewer.
+export type HomeFeedProps = {
+  /** Open the story viewer at the tapped story. */
+  onOpenStory?: (id: string) => void;
+};
+
+export type ComposerBarProps = {
+  onOpen: () => void;
+};
+
+export type ComposeSheetProps = {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (text: string) => void;
+};
+
+export type StoryViewerProps = {
+  /** Story to open first; the viewer can page to neighbours from here. */
+  startId: string;
+  onClose: () => void;
+};

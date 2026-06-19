@@ -1,6 +1,6 @@
 import type { HttpClient, RequestOptions } from '@repo/api';
-import type { Comment, Paginated, Post, Story } from '@repo/types';
-import { FEED_POSTS, STORIES } from './feed-data';
+import type { Comment, CreatePostPayload, Paginated, Post, Story } from '@repo/types';
+import { FEED_POSTS, ME, STORIES } from './feed-data';
 
 // Offline feed backend (handoff §7). A minimal HttpClient fulfilling the routes
 // `createPostApi` calls, backed by mutable in-memory state so like/save survive
@@ -23,6 +23,26 @@ export function createMockFeedClient(): HttpClient {
 
   function clone(post: Post): Post {
     return { ...post, author: { ...post.author }, book: post.book ? { ...post.book } : null };
+  }
+
+  function createPost(payload: CreatePostPayload): Post {
+    const nowIso = new Date().toISOString();
+    const created: Post = {
+      id: `u_${Date.now()}`,
+      author: { ...ME },
+      content: payload.content,
+      imageUrl: payload.imageUrl ?? null,
+      book: null,
+      likeCount: 0,
+      commentCount: 0,
+      shareCount: 0,
+      likedByMe: false,
+      savedByMe: false,
+      createdAt: nowIso,
+      updatedAt: nowIso,
+    };
+    posts.unshift(created);
+    return clone(created);
   }
 
   function feed(options: RequestOptions | undefined): Paginated<Post> {
@@ -83,7 +103,11 @@ export function createMockFeedClient(): HttpClient {
     }
   }
 
-  async function post<T>(path: string): Promise<T> {
+  async function post<T>(path: string, body?: unknown): Promise<T> {
+    if (path === '/posts') {
+      // Boundary cast: the create route always receives a CreatePostPayload.
+      return delay(createPost(body as CreatePostPayload)) as Promise<T>;
+    }
     mutateFlag(path, true);
     return delay(undefined as T);
   }
