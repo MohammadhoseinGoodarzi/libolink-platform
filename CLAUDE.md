@@ -260,8 +260,12 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
   - Cross-app domain types still go in `@repo/types`.
   - Type declarations in non-component `.ts` files (constants/validations/services/hooks) are
     fine — this rule targets component files only.
-- Named exports for components. `async/await` over `.then()`. `cn()` for all className merging.
-  `cva` for variants. TypeScript only — never `.js` source files.
+- Named exports for components — **except framework route files**, which the router contract
+  requires to **default-export**: Next.js `apps/web/app/**` pages/layouts and Expo Router
+  `apps/mobile/app/**` screens. Converting these to named exports breaks routing. (CodeRabbit
+  flags route default exports as a false positive — keep them default; see ENGINEERING_LOG
+  2026-06-19.) `async/await` over `.then()`. `cn()` for all className merging. `cva` for
+  variants. TypeScript only — never `.js` source files.
 
 ## Linting — Biome only
 

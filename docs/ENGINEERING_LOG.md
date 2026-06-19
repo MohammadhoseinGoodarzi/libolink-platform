@@ -9,6 +9,27 @@ that nobody debugs the same thing twice.
 
 ---
 
+## 2026-06-19 — Route files must default-export (named-export rule has a router exception)
+
+**Symptom.** CodeRabbit (PR #6) flagged `apps/mobile/app/(dashboard)/(tabs)/messages.tsx` for
+using `export default function MessagesScreen()` and "suggested" converting it to a named export,
+citing our "named exports for components" guideline.
+
+**Root cause.** That guideline targets *our* components. **Framework route files are different:**
+Expo Router (and Next.js `app/**`) discover a route by its **default export** — the file's default
+is the screen/page/layout. A named export there is not picked up, so converting it silently breaks
+routing (blank/404 route, no type error). CodeRabbit doesn't model this framework contract, so it's
+a false positive for any file under `app/**`.
+
+**Fix.** Kept the default export; skipped the finding with that reason. Everything else in the file
+(the `MessagesHeaderActions` helper) stays a named/inline component as usual.
+
+**Prevention.** Codified the exception in `CLAUDE.md` (TypeScript & Code Style → "Named exports for
+components — **except framework route files**…"). Rule of thumb: **default-export only the route
+entry under `app/**`; named-export everywhere else.** Re-flags of this pattern can be dismissed.
+
+---
+
 ## 2026-06-17 — `biome check .` fails on ~105 untouched files (CRLF) after merge + pull
 
 **Symptom.** Right after merging `feat/mobile-shell` → `dev` and running `git pull` + `pnpm i`
