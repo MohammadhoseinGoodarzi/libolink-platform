@@ -299,5 +299,32 @@
     "formatEbook": "Ebook",
     "formatAudiobook": "Audiobook",
     "languagesRead": "Languages Read"
+  },
+  "Clubs": {
+    "title": "Clubs & Communities",
+    "subtitle": "The largest gathering place for readers.",
+    "premium": "Premium",
+    "create": "Create",
+    "searchPlaceholder": "Search clubs, authors, publishers…",
+    "seeAll": "See all",
+    "members": "members",
+    "followers": "followers",
+    "joined": "Joined",
+    "myClubs": "My Clubs",
+    "myClubsSub": "Communities you're a part of",
+    "publishers": "Publisher Communities",
+    "publishersSub": "Follow the houses behind the books",
+    "series": "Book Series Fan Clubs",
+    "seriesSub": "For readers who live inside a literary universe",
+    "adaptations": "Books On Screen",
+    "adaptationsSub": "Communities for books that became films & series",
+    "authors": "Author Fan Communities",
+    "authorsSub": "Gather around a favourite voice",
+    "sponsored": "Sponsored",
+    "sponsoredTitle": "Libolink Reading Week",
+    "sponsoredBody": "Live author talks, group reads & giveaways — Jun 14–21.",
+    "sponsoredPresenter": "Presented by Penguin Books",
+    "learnMore": "Learn more",
+    "footer": "The world's largest gathering place for readers"
   }
 }

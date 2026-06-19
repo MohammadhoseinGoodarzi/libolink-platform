@@ -240,7 +240,14 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 | Constants | SCREAMING_SNAKE_CASE | `export const AUTH_ROUTES` |
 | Types/Interfaces | PascalCase | `interface SignInFormProps` |
 | Jotai atoms | camelCase + `Atom` | `export const userAtom` |
+| TanStack Query key factories | camelCase + `Keys` | `export const postKeys` |
 | Packages | @repo/kebab-case | `@repo/types` |
+
+Query-key factories are the one intentional exception to the SCREAMING_SNAKE_CASE
+constant rule: every `@repo/api` domain uses the `xxxKeys` convention
+(`userKeys`, `postKeys`, `messageKeys`, `authKeys`, `profileKeys`, `clubKeys`) —
+the React Query community standard. Keep new ones consistent; don't rename to
+`XXX_KEYS`. (CodeRabbit flags these — it's a false positive.)
 
 ---
 
