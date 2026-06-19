@@ -1,8 +1,8 @@
 import { useDictionary } from '@repo/i18n';
 import { getInitials } from '@repo/utils';
 import { Heart, Send, X } from 'lucide-react-native';
-import { useEffect, useId, useRef, useState } from 'react';
-import { Animated, Easing, Modal, Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useId, useState } from 'react';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { Avatar, Text, useToast } from '@/shared/components/ui';
@@ -31,27 +31,29 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
   const [si, setSi] = useState(startIndex);
   const [seg, setSeg] = useState(0);
   const [liked, setLiked] = useState(false);
-  const progress = useRef(new Animated.Value(0)).current;
+  const [pct, setPct] = useState(0);
   const gradientId = `sv${useId().replace(/:/g, '')}`;
 
   const story = items[si];
 
-  // Auto-advance the active segment, then page to the next story (or close).
+  // Tick the active segment's fill from 0→100% over SEGMENT_MS, then page to the
+  // next story (or close). Interval-driven state (not Animated) so the bar grows
+  // smoothly over time on both native and web.
   useEffect(() => {
     if (!story) {
       return undefined;
     }
-    progress.setValue(0);
-    const anim = Animated.timing(progress, {
-      toValue: 1,
-      duration: SEGMENT_MS,
-      easing: Easing.linear,
-      useNativeDriver: false,
-    });
-    anim.start(({ finished }) => {
-      if (!finished) {
+    setPct(0);
+    const STEP_MS = 30;
+    const steps = SEGMENT_MS / STEP_MS;
+    let step = 0;
+    const id = setInterval(() => {
+      step += 1;
+      setPct(Math.min(100, (step / steps) * 100));
+      if (step < steps) {
         return;
       }
+      clearInterval(id);
       if (seg < story.segments.length - 1) {
         setSeg(seg + 1);
       } else if (si < items.length - 1) {
@@ -60,9 +62,9 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
       } else {
         onClose();
       }
-    });
-    return () => anim.stop();
-  }, [si, seg, story, items.length, onClose, progress]);
+    }, STEP_MS);
+    return () => clearInterval(id);
+  }, [si, seg, story, items.length, onClose]);
 
   // Reset the like state when paging to a different story.
   useEffect(() => {
@@ -145,18 +147,16 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
             >
               {i < seg ? (
                 <View
-                  className="h-full rounded-full"
-                  style={{ width: '100%', backgroundColor: '#FFFFFF' }}
+                  className="h-full w-full rounded-full"
+                  style={{ backgroundColor: '#FFFFFF' }}
                 />
               ) : i === seg ? (
-                <Animated.View
-                  className="h-full rounded-full"
+                <View
+                  className="h-full w-full rounded-full"
                   style={{
                     backgroundColor: '#FFFFFF',
-                    width: progress.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ['0%', '100%'],
-                    }),
+                    transformOrigin: 'left',
+                    transform: [{ scaleX: pct / 100 }],
                   }}
                 />
               ) : null}
@@ -201,10 +201,7 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
           style={{ position: 'absolute', left: 14, right: 14, bottom: insets.bottom + 16 }}
           className="flex-row items-center gap-2.5"
         >
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('replyPlaceholder')}
-            onPress={() => toast.show(tCommon('comingSoon'))}
+          <View
             className="h-[46px] flex-1 flex-row items-center rounded-full px-4"
             style={{
               backgroundColor: 'rgba(255,255,255,0.16)',
@@ -212,9 +209,14 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
               borderColor: 'rgba(255,255,255,0.32)',
             }}
           >
-            <Text className="flex-1 font-sans text-[13.5px] text-white/85">
-              {t('replyPlaceholder')}
-            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('replyPlaceholder')}
+              onPress={() => toast.show(tCommon('comingSoon'))}
+              className="h-full flex-1 justify-center active:opacity-70"
+            >
+              <Text className="font-sans text-[13.5px] text-white/85">{t('replyPlaceholder')}</Text>
+            </Pressable>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={t('like')}
@@ -227,7 +229,7 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
                 fill={liked ? colors.destructive : 'transparent'}
               />
             </Pressable>
-          </Pressable>
+          </View>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('share')}
