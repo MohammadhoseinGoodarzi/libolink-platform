@@ -6,16 +6,7 @@ import { ROUTES } from '@/shared/constants';
 import { useThemeColors } from '@/shared/theme';
 import { Text } from './text';
 import { useToast } from './toast';
-
-type SponsoredCardProps = {
-  /** Monogram letter for the square mark. */
-  letter: string;
-  title: string;
-  body: string;
-  cta: string;
-  /** Appended to the CTA as "{cta} · {brand}" when present. */
-  brand?: string;
-};
+import type { SponsoredCardProps } from './types';
 
 // Reusable "Sponsored" ad card (handoff §5): surface fill, "Remove ads ›" →
 // Subscription, primary monogram + CTA. Shared across the feed and messages

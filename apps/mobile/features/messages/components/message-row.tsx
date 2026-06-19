@@ -124,8 +124,8 @@ function ReactionPill({ reactions, mine }: { reactions: ChatReaction[]; mine: bo
         mine ? 'left-2' : 'right-2',
       )}
     >
-      {reactions.map((r) => (
-        <Text key={r.emoji} className="text-[12px]">
+      {reactions.map((r, index) => (
+        <Text key={`${r.emoji}-${index}`} className="text-[12px]">
           {r.emoji}
         </Text>
       ))}

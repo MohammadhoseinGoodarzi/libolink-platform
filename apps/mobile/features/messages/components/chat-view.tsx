@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { Lock } from 'lucide-react-native';
 import { useRef, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { Avatar, BookCover, Text } from '@/shared/components/ui';
+import { Avatar, BookCover, Button, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useConversation, useThread } from '../hooks/use-conversations';
 import { ChatComposer } from './chat-composer';
@@ -19,8 +19,9 @@ import { MessageRow } from './message-row';
 export function ChatView({ id }: { id: string }) {
   const router = useRouter();
   const t = useDictionary('Messages');
+  const tCommon = useDictionary('Common');
   const colors = useThemeColors();
-  const { conversation } = useConversation(id);
+  const { conversation, isLoading: conversationLoading } = useConversation(id);
   const thread = useThread(id);
   const scrollRef = useRef<ScrollView>(null);
   const [sent, setSent] = useState<ChatMessage[]>([]);
@@ -35,10 +36,23 @@ export function ChatView({ id }: { id: string }) {
     ]);
   };
 
-  if (!conversation) {
+  if (conversationLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator color={colors.primary} />
+      </View>
+    );
+  }
+
+  if (!conversation) {
+    return (
+      <View className="flex-1 items-center justify-center gap-3 bg-background px-8">
+        <Text className="text-center font-sans text-[14px] text-muted-foreground">
+          {t('conversationNotFound')}
+        </Text>
+        <Button variant="outline" size="sm" onPress={() => router.back()}>
+          {tCommon('back')}
+        </Button>
       </View>
     );
   }

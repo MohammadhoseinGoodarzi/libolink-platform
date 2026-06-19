@@ -17,7 +17,7 @@ export function createMessageApi(client: HttpClient): MessageApi {
   return {
     conversations: () => client.get<Paginated<Conversation>>('/conversations'),
     thread: (conversationId) =>
-      client.get<ChatMessage[]>(`/conversations/${conversationId}/thread`),
+      client.get<ChatMessage[]>(`/conversations/${encodeURIComponent(conversationId)}/thread`),
   };
 }
 

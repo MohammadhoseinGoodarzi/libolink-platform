@@ -11,7 +11,15 @@ export function useConversations() {
 export function useConversation(id: string) {
   const conversations = useConversations();
   const conversation = conversations.data?.items.find((c) => c.id === id) ?? null;
-  return { conversation, isLoading: conversations.isLoading };
+  // Distinguish "still loading" from "loaded but no such id" so consumers don't
+  // sit on a permanent spinner for an unknown/invalid conversation.
+  const notFound = conversations.isFetched && !conversations.isError && conversation === null;
+  return {
+    conversation,
+    isLoading: conversations.isLoading,
+    isError: conversations.isError,
+    notFound,
+  };
 }
 
 export function useThread(conversationId: string) {

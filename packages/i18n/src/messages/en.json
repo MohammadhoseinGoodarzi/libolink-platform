@@ -229,6 +229,7 @@
     "activeNow": "Active now",
     "activeRecently": "Active recently",
     "encryptedBanner": "Messages are end-to-end encrypted. Only you two can read them.",
+    "conversationNotFound": "This conversation isn't available.",
     "sayHello": "Say hello and start talking about the books you love.",
     "composerPlaceholder": "Message…",
     "recommendation": "Recommendation",
