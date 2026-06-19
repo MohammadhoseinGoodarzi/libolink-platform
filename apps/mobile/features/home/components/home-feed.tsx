@@ -5,15 +5,13 @@ import { Button, SponsoredCard, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useFeed, useStories } from '../hooks/use-feed';
 import { FEED_ADS } from '../services/feed-data';
-import type { FeedAd } from '../types';
+import type { FeedRow } from '../types';
 import { PostCard } from './post-card';
 import { PremiumPromoCard } from './premium-promo-card';
 import { StoriesRow } from './stories-row';
 
 // A Sponsored banner follows every 6th post (handoff §6.2).
 const ADS_EVERY = 6;
-
-type FeedRow = { kind: 'post'; post: Post } | { kind: 'ad'; key: string; ad: FeedAd };
 
 function buildRows(posts: Post[]): FeedRow[] {
   const rows: FeedRow[] = [];

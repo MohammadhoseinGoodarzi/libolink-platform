@@ -1,3 +1,5 @@
+import type { Post } from '@repo/types';
+
 // View-only types for the Social Home feed (handoff §6.2). The feed's domain
 // shapes (Post, Story, Comment, User) live in @repo/types and are consumed
 // directly — these cover presentation concerns the API contract doesn't own.
@@ -14,3 +16,6 @@ export interface FeedAd {
   /** Monogram letter shown in the ad's square mark. */
   letter: string;
 }
+
+// A rendered feed row — a post or an injected sponsored ad.
+export type FeedRow = { kind: 'post'; post: Post } | { kind: 'ad'; key: string; ad: FeedAd };

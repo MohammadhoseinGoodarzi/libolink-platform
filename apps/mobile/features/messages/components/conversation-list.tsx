@@ -8,9 +8,9 @@ import { Button, FilterChip, SearchInput, SponsoredCard, Text } from '@/shared/c
 import { useThemeColors } from '@/shared/theme';
 import { useConversations } from '../hooks/use-conversations';
 import { MESSAGES_AD } from '../services/messages-data';
+import type { FilterKey } from '../types';
 import { ConversationRow } from './conversation-row';
 
-type FilterKey = 'all' | 'unread' | 'friends' | 'clubs';
 const FILTERS: { key: FilterKey; labelKey: MessageKey<'Messages'> }[] = [
   { key: 'all', labelKey: 'filterAll' },
   { key: 'unread', labelKey: 'filterUnread' },
