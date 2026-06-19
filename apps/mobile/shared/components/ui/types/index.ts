@@ -12,3 +12,11 @@ export type SponsoredCardProps = {
   /** Appended to the CTA as "{cta} · {brand}" when present. */
   brand?: string;
 };
+
+export type StarsProps = {
+  /** Number of filled stars (0–5). */
+  count: number;
+  size?: number;
+  /** Fill/stroke colour for filled stars; defaults to crimson (destructive). */
+  color?: string;
+};
