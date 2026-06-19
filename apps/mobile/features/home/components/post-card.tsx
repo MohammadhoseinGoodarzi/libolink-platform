@@ -23,7 +23,9 @@ function coverFor(title: string): FeedCover {
   for (let i = 0; i < title.length; i += 1) {
     hash = (hash * 17 + title.charCodeAt(i)) % COVER_KEYS.length;
   }
-  return COVER_KEYS[hash] as FeedCover;
+  // hash is always in range, but noUncheckedIndexedAccess widens the access —
+  // fall back instead of asserting.
+  return COVER_KEYS[hash] ?? 'greenNavy';
 }
 
 // Book/media banner: a brand gradient with a dark scrim and the title/author

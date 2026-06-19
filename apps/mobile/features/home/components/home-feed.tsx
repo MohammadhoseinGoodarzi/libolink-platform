@@ -1,36 +1,45 @@
 import { useDictionary } from '@repo/i18n';
 import type { Post } from '@repo/types';
 import { ActivityIndicator, FlatList, type ListRenderItem, View } from 'react-native';
-import { Button, Text } from '@/shared/components/ui';
+import { Button, SponsoredCard, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useFeed, useStories } from '../hooks/use-feed';
 import { FEED_ADS } from '../services/feed-data';
-import type { FeedAd } from '../types';
+import type { FeedRow } from '../types';
 import { PostCard } from './post-card';
 import { PremiumPromoCard } from './premium-promo-card';
-import { SponsoredBanner } from './sponsored-banner';
 import { StoriesRow } from './stories-row';
 
 // A Sponsored banner follows every 6th post (handoff §6.2).
 const ADS_EVERY = 6;
 
-type FeedRow = { kind: 'post'; post: Post } | { kind: 'ad'; key: string; ad: FeedAd };
-
 function buildRows(posts: Post[]): FeedRow[] {
   const rows: FeedRow[] = [];
   posts.forEach((post, index) => {
     rows.push({ kind: 'post', post });
-    if ((index + 1) % ADS_EVERY === 0) {
+    if ((index + 1) % ADS_EVERY === 0 && FEED_ADS.length > 0) {
       const adIndex = Math.floor(index / ADS_EVERY);
-      const ad = FEED_ADS[adIndex % FEED_ADS.length] as FeedAd;
-      rows.push({ kind: 'ad', key: `ad-${adIndex}`, ad });
+      const ad = FEED_ADS[adIndex % FEED_ADS.length];
+      if (ad) {
+        rows.push({ kind: 'ad', key: `ad-${adIndex}`, ad });
+      }
     }
   });
   return rows;
 }
 
 const renderRow: ListRenderItem<FeedRow> = ({ item }) =>
-  item.kind === 'post' ? <PostCard post={item.post} /> : <SponsoredBanner ad={item.ad} />;
+  item.kind === 'post' ? (
+    <PostCard post={item.post} />
+  ) : (
+    <SponsoredCard
+      letter={item.ad.letter}
+      title={item.ad.title}
+      body={item.ad.body}
+      cta={item.ad.cta}
+      brand={item.ad.brand}
+    />
+  );
 
 // Social Home feed (handoff §6.2): stories → Go Premium → posts (+ Sponsored
 // every 6). Data flows through the shared @repo/api/@repo/hooks via useFeed.
