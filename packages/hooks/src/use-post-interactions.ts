@@ -1,6 +1,6 @@
 import type { HttpClient } from '@repo/api';
 import type { Post } from '@repo/types';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { usePostActions } from './use-post-actions';
 
 export interface PostInteractions {
@@ -22,16 +22,48 @@ export function usePostInteractions(client: HttpClient, post: Post): PostInterac
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [saved, setSaved] = useState(post.savedByMe);
 
+  // Tag each toggle with an incrementing id so a stale (out-of-order) failure
+  // can't roll back a newer tap's optimistic state.
+  const likeOpRef = useRef(0);
+  const saveOpRef = useRef(0);
+
   const toggleLiked = () => {
-    setLiked(!liked);
-    setLikeCount((count) => count + (liked ? -1 : 1));
-    toggleLike.mutate({ postId: post.id, liked });
+    const op = ++likeOpRef.current;
+    const prevLiked = liked;
+    const prevLikeCount = likeCount;
+    setLiked(!prevLiked);
+    setLikeCount((count) => count + (prevLiked ? -1 : 1));
+    toggleLike.mutate(
+      { postId: post.id, liked: prevLiked },
+      {
+        // Roll back only if no newer toggle has superseded this one.
+        onError: () => {
+          if (likeOpRef.current !== op) {
+            return;
+          }
+          setLiked(prevLiked);
+          setLikeCount(prevLikeCount);
+        },
+      },
+    );
   };
 
   const toggleSaved = (): boolean => {
-    const next = !saved;
+    const op = ++saveOpRef.current;
+    const prevSaved = saved;
+    const next = !prevSaved;
     setSaved(next);
-    toggleSave.mutate({ postId: post.id, saved });
+    toggleSave.mutate(
+      { postId: post.id, saved: prevSaved },
+      {
+        onError: () => {
+          if (saveOpRef.current !== op) {
+            return;
+          }
+          setSaved(prevSaved);
+        },
+      },
+    );
     return next;
   };
 

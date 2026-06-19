@@ -43,16 +43,17 @@ export function createMockFeedClient(): HttpClient {
   }
 
   async function get<T>(path: string, options?: RequestOptions): Promise<T> {
+    // Boundary casts (`as Promise<T>`): this mock returns each route's concrete
+    // type; the generic T is owned by the @repo/api query factories.
     if (path === '/posts/feed') {
       return delay(feed(options)) as Promise<T>;
     }
     if (path === '/posts/stories') {
-      return delay(
-        STORIES.map((s) => ({ ...s, author: { ...s.author } })) as Story[],
-      ) as Promise<T>;
+      const stories: Story[] = STORIES.map((s) => ({ ...s, author: { ...s.author } }));
+      return delay(stories) as Promise<T>;
     }
     if (COMMENTS.test(path)) {
-      return delay([] as Comment[]) as Promise<T>;
+      return delay<Comment[]>([]) as Promise<T>;
     }
     return unsupported();
   }
@@ -62,11 +63,19 @@ export function createMockFeedClient(): HttpClient {
     if (!match) {
       unsupported();
     }
-    const post = findPost(match[1] as string);
+    const id = match[1];
+    if (!id) {
+      return;
+    }
+    const post = findPost(id);
     if (!post) {
       return;
     }
     if (match[2] === 'like') {
+      // Idempotent — a repeated like/unlike must not drift the counter.
+      if (post.likedByMe === on) {
+        return;
+      }
       post.likedByMe = on;
       post.likeCount += on ? 1 : -1;
     } else {
