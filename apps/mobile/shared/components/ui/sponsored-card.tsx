@@ -5,6 +5,7 @@ import { Pressable, View } from 'react-native';
 import { ROUTES } from '@/shared/constants';
 import { useThemeColors } from '@/shared/theme';
 import { Text } from './text';
+import { useToast } from './toast';
 
 type SponsoredCardProps = {
   /** Monogram letter for the square mark. */
@@ -23,6 +24,7 @@ function SponsoredCard({ letter, title, body, cta, brand }: SponsoredCardProps) 
   const t = useDictionary('Common');
   const router = useRouter();
   const colors = useThemeColors();
+  const toast = useToast();
 
   return (
     <View className="mx-3.5 my-2.5 rounded-[20px] bg-secondary p-3.5">
@@ -61,6 +63,7 @@ function SponsoredCard({ letter, title, body, cta, brand }: SponsoredCardProps) 
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={brand ? `${cta} · ${brand}` : cta}
+        onPress={() => toast.show(t('openingSponsor'))}
         className="mt-3 h-10 items-center justify-center rounded-[20px] bg-primary active:opacity-90"
       >
         <Text className="font-sans-bold text-[13.5px] text-primary-foreground">

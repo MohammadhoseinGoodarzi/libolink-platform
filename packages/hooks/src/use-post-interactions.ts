@@ -23,15 +23,29 @@ export function usePostInteractions(client: HttpClient, post: Post): PostInterac
   const [saved, setSaved] = useState(post.savedByMe);
 
   const toggleLiked = () => {
-    setLiked(!liked);
-    setLikeCount((count) => count + (liked ? -1 : 1));
-    toggleLike.mutate({ postId: post.id, liked });
+    const prevLiked = liked;
+    setLiked(!prevLiked);
+    setLikeCount((count) => count + (prevLiked ? -1 : 1));
+    toggleLike.mutate(
+      { postId: post.id, liked: prevLiked },
+      {
+        // Roll back the optimistic update if the mutation fails.
+        onError: () => {
+          setLiked(prevLiked);
+          setLikeCount((count) => count + (prevLiked ? 1 : -1));
+        },
+      },
+    );
   };
 
   const toggleSaved = (): boolean => {
-    const next = !saved;
+    const prevSaved = saved;
+    const next = !prevSaved;
     setSaved(next);
-    toggleSave.mutate({ postId: post.id, saved });
+    toggleSave.mutate(
+      { postId: post.id, saved: prevSaved },
+      { onError: () => setSaved(prevSaved) },
+    );
     return next;
   };
 

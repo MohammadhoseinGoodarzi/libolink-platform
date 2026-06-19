@@ -21,6 +21,8 @@ export function createMockMessagesClient(): HttpClient {
   }
 
   async function get<T>(path: string): Promise<T> {
+    // Boundary casts (`as Promise<T>`): this mock returns each route's concrete
+    // type; the generic T is owned by the @repo/api query factories.
     if (path === '/conversations') {
       const page: Paginated<Conversation> = {
         items: CONVERSATIONS.map((c) => ({ ...c })),
@@ -32,8 +34,10 @@ export function createMockMessagesClient(): HttpClient {
       return delay(page) as Promise<T>;
     }
     const threadMatch = THREAD.exec(path);
-    if (threadMatch) {
-      return delay(getThread(threadMatch[1] as string) as ChatMessage[]) as Promise<T>;
+    const conversationId = threadMatch?.[1];
+    if (conversationId) {
+      const thread: ChatMessage[] = getThread(conversationId);
+      return delay(thread) as Promise<T>;
     }
     return unsupported();
   }

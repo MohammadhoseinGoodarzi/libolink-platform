@@ -174,7 +174,8 @@
     "comingSoon": "Coming soon",
     "genericError": "Something went wrong. Please try again.",
     "sponsored": "Sponsored",
-    "removeAds": "Remove ads"
+    "removeAds": "Remove ads",
+    "openingSponsor": "Opening sponsored link…"
   },
   "Shell": {
     "tabHome": "Home",

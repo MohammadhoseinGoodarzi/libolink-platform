@@ -19,10 +19,12 @@ function buildRows(posts: Post[]): FeedRow[] {
   const rows: FeedRow[] = [];
   posts.forEach((post, index) => {
     rows.push({ kind: 'post', post });
-    if ((index + 1) % ADS_EVERY === 0) {
+    if ((index + 1) % ADS_EVERY === 0 && FEED_ADS.length > 0) {
       const adIndex = Math.floor(index / ADS_EVERY);
-      const ad = FEED_ADS[adIndex % FEED_ADS.length] as FeedAd;
-      rows.push({ kind: 'ad', key: `ad-${adIndex}`, ad });
+      const ad = FEED_ADS[adIndex % FEED_ADS.length];
+      if (ad) {
+        rows.push({ kind: 'ad', key: `ad-${adIndex}`, ad });
+      }
     }
   });
   return rows;
