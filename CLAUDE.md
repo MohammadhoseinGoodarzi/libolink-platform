@@ -251,7 +251,15 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 - No `any` (use `unknown` + type guard; if unavoidable, inline comment why). No `as` casts without
   an inline justification comment.
 - Never `import * as React` — import exactly what's needed, types with `type`.
-- Never declare types inside component files — `features/<name>/types/` or `@repo/types`.
+- **No `type`/`interface` declarations inside component files** (any `*.tsx` that renders, incl.
+  private in-file helper components and their prop types). Move them to an organized `types/`
+  folder, not scattered next to each file:
+  - Feature code → `features/<name>/types/` (the feature-based structure).
+  - Shared components → a shared `types/` folder (e.g. `shared/components/ui/types/`), grouped
+    like `@repo/types` does — RN/platform-coupled prop types can't go in `@repo/types`.
+  - Cross-app domain types still go in `@repo/types`.
+  - Type declarations in non-component `.ts` files (constants/validations/services/hooks) are
+    fine — this rule targets component files only.
 - Named exports for components. `async/await` over `.then()`. `cn()` for all className merging.
   `cva` for variants. TypeScript only — never `.js` source files.
 
