@@ -13,5 +13,6 @@ export * from './message-bubble';
 export * from './password-input';
 export * from './search-input';
 export * from './sponsored-card';
+export * from './stars';
 export * from './text';
 export * from './toast';

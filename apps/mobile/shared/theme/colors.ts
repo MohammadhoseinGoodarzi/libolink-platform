@@ -17,6 +17,7 @@ export interface ThemeColors {
   mutedForeground: string;
   accent: string;
   destructive: string;
+  destructiveForeground: string;
   link: string;
   border: string;
   ring: string;
@@ -37,6 +38,7 @@ export const LIGHT_COLORS: ThemeColors = {
   mutedForeground: '#6B7280',
   accent: '#EBE0D1',
   destructive: '#C14953',
+  destructiveForeground: '#FFFFFF',
   link: '#1D3658',
   border: '#EBEBEB',
   ring: '#023618',
@@ -56,6 +58,7 @@ export const DARK_COLORS: ThemeColors = {
   mutedForeground: '#9FA3AD',
   accent: '#28332E',
   destructive: '#D45854',
+  destructiveForeground: '#FFFFFF',
   link: '#7E9FCE',
   border: '#343D38',
   ring: '#46916B',
