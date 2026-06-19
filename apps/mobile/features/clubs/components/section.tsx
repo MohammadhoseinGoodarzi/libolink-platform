@@ -24,7 +24,7 @@ function ClubsSection({
             <Text className="mt-0.5 font-sans text-[12.5px] text-muted-foreground">{sub}</Text>
           ) : null}
         </View>
-        {action ? (
+        {action && onAction ? (
           <Pressable
             accessibilityRole="button"
             onPress={onAction}

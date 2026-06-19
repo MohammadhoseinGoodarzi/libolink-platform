@@ -9,9 +9,11 @@ import type { TonedGradientProps } from '../types';
 // banners. Mirrors BookCover's offline-safe SVG gradient approach.
 function TonedGradient({ tone, className, style, children }: TonedGradientProps) {
   const id = `tg${useId().replace(/:/g, '')}`;
-  // `as` cast mirrors BookCover: the modulo index is always in range, but
-  // noUncheckedIndexedAccess can't prove it.
-  const [from, to] = CLUB_TONES[tone % CLUB_TONES.length] as readonly [string, string];
+  // Normalize so a negative tone can't produce a negative (out-of-range) index;
+  // the `as` cast mirrors BookCover since noUncheckedIndexedAccess can't prove
+  // the index is in range.
+  const index = ((tone % CLUB_TONES.length) + CLUB_TONES.length) % CLUB_TONES.length;
+  const [from, to] = CLUB_TONES[index] as readonly [string, string];
   return (
     <View className={cn('overflow-hidden', className)} style={style}>
       <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
