@@ -139,8 +139,7 @@ function ProfileHero({
                 {following ? (
                   <Check size={17} color={colors.primary} />
                 ) : (
-                  // Crimson button → always white icon (text-destructive-foreground).
-                  <UserPlus size={17} color="#FFFFFF" />
+                  <UserPlus size={17} color={colors.destructiveForeground} />
                 )}
                 <Text
                   className={
