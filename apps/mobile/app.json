@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "platforms": ["ios", "android", "web"],
+    "platforms": ["ios", "android"],
     "plugins": ["expo-router", "expo-font", "expo-splash-screen"],
     "experiments": {
       "typedRoutes": false
