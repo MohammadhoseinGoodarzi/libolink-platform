@@ -49,21 +49,3 @@
     --ring: 150 35% 42%;
   }
 }
-
-/* Web preview only (react-native-web). Browsers draw a focus outline on the
- * inner <input> and Chrome paints an autofill background — both override our
- * themed inputs. These rules target DOM elements, so they have no effect on
- * native (NativeWind ignores non-RN selectors). */
-input,
-textarea {
-  outline: none !important;
-}
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill {
-  -webkit-text-fill-color: hsl(var(--foreground));
-  caret-color: hsl(var(--foreground));
-  transition: background-color 100000s ease-in-out 0s;
-}

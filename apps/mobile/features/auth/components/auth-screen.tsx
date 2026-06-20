@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IconButton } from '@/shared/components/ui';
+import { ROUTES } from '@/shared/constants';
 import { useShadow, useThemeColors } from '@/shared/theme';
 
 type AuthScreenProps = {
@@ -29,6 +30,16 @@ export function AuthScreen({
   const shadow = useShadow('card');
   const router = useRouter();
   const t = useDictionary('Common');
+
+  // Reloading/deep-linking onto an auth sub-screen can leave it as the stack
+  // root; fall back to welcome so back is never a dead end.
+  const goBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace(ROUTES.welcome);
+    }
+  };
 
   return (
     <View className="flex-1 bg-background">
@@ -61,7 +72,7 @@ export function AuthScreen({
       {showBack ? (
         <View style={{ position: 'absolute', top: insets.top + 12, left: 12 }}>
           <View style={shadow} className="rounded-full bg-card">
-            <IconButton accessibilityLabel={t('back')} onPress={() => router.back()}>
+            <IconButton accessibilityLabel={t('back')} onPress={goBack}>
               <ChevronLeft size={22} color={colors.primary} />
             </IconButton>
           </View>

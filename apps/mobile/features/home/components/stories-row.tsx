@@ -87,7 +87,7 @@ export function StoriesRow({
   onOpen,
 }: {
   stories: Story[];
-  onOpen?: (id: string) => void;
+  onOpen?: ((id: string) => void) | undefined;
 }) {
   const colors = useThemeColors();
   const user = useAtomValue(userAtom);
