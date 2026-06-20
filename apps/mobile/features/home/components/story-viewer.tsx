@@ -71,6 +71,13 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
     setLiked(false);
   }, [si]);
 
+  // A story with no segments can't render — close instead of dead-ending.
+  useEffect(() => {
+    if (story && story.segments.length === 0) {
+      onClose();
+    }
+  }, [story, onClose]);
+
   if (!story) {
     return null;
   }
@@ -91,7 +98,7 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
     if (si > 0) {
       const prev = items[si - 1];
       setSi(si - 1);
-      setSeg((prev?.segments.length ?? 1) - 1);
+      setSeg(Math.max(0, (prev?.segments.length ?? 1) - 1));
     }
   };
   const goNext = () => {
@@ -233,7 +240,7 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('share')}
-            onPress={() => toast.show(t('share'))}
+            onPress={() => toast.show(tCommon('comingSoon'))}
             className="h-[46px] w-[46px] items-center justify-center rounded-full"
             style={{
               backgroundColor: 'rgba(255,255,255,0.16)',

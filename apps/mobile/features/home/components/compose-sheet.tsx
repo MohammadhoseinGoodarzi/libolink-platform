@@ -21,14 +21,17 @@ export function ComposeSheet({ open, onClose, onSubmit }: ComposeSheetProps) {
   const [text, setText] = useState('');
   const canPost = text.trim().length > 0;
 
-  const submit = () => {
+  const submit = async () => {
     const value = text.trim();
     if (!value) {
       return;
     }
-    onSubmit(value);
-    setText('');
-    onClose();
+    // Keep the draft and the sheet open if creation fails.
+    const ok = await onSubmit(value);
+    if (ok) {
+      setText('');
+      onClose();
+    }
   };
 
   // Attachments land in a later pass; acknowledge the tap for now.

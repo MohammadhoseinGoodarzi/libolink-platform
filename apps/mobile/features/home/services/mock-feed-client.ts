@@ -16,9 +16,22 @@ function delay<T>(value: T): Promise<T> {
 const LIKE_OR_SAVE = /^\/posts\/([^/]+)\/(like|save)$/;
 const COMMENTS = /^\/posts\/([^/]+)\/comments$/;
 
+function isCreatePostPayload(value: unknown): value is CreatePostPayload {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+  // Narrow the unknown request body to read its fields (justified: type guard).
+  const candidate = value as { content?: unknown; imageUrl?: unknown };
+  return (
+    typeof candidate.content === 'string' &&
+    (candidate.imageUrl === undefined || typeof candidate.imageUrl === 'string')
+  );
+}
+
 export function createMockFeedClient(): HttpClient {
   // Mutable "server" state — seeded once from the static fixtures.
   const posts: Post[] = FEED_POSTS.map((p) => ({ ...p }));
+  let postSeq = 0;
   const findPost = (id: string): Post | undefined => posts.find((p) => p.id === id);
 
   function clone(post: Post): Post {
@@ -27,8 +40,9 @@ export function createMockFeedClient(): HttpClient {
 
   function createPost(payload: CreatePostPayload): Post {
     const nowIso = new Date().toISOString();
+    postSeq += 1;
     const created: Post = {
-      id: `u_${Date.now()}`,
+      id: `p_mock_${Date.now()}_${postSeq}`,
       author: { ...ME },
       content: payload.content,
       imageUrl: payload.imageUrl ?? null,
@@ -105,8 +119,11 @@ export function createMockFeedClient(): HttpClient {
 
   async function post<T>(path: string, body?: unknown): Promise<T> {
     if (path === '/posts') {
-      // Boundary cast: the create route always receives a CreatePostPayload.
-      return delay(createPost(body as CreatePostPayload)) as Promise<T>;
+      if (!isCreatePostPayload(body)) {
+        throw new Error('mock-feed-client: invalid create-post payload');
+      }
+      // Boundary cast (`as Promise<T>`): T is owned by the @repo/api factories.
+      return delay(createPost(body)) as Promise<T>;
     }
     mutateFlag(path, true);
     return delay(undefined as T);

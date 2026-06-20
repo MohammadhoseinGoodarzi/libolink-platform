@@ -33,7 +33,8 @@ export type ComposerBarProps = {
 export type ComposeSheetProps = {
   open: boolean;
   onClose: () => void;
-  onSubmit: (text: string) => void;
+  /** Resolves true when the post was created (sheet closes only then). */
+  onSubmit: (text: string) => Promise<boolean>;
 };
 
 export type StoryViewerProps = {

@@ -10,12 +10,21 @@ import { ComposerBar } from './composer-bar';
 // the shared create-post mutation on the feed's (mock) client.
 export function ComposeDock() {
   const t = useDictionary('Home');
+  const tCommon = useDictionary('Common');
   const toast = useToast();
   const [open, setOpen] = useState(false);
   const createPost = useCreatePost(feedClient);
 
-  const submit = (text: string) => {
-    createPost.mutate({ content: text }, { onSuccess: () => toast.show(t('posted')) });
+  // Await the mutation so the sheet can keep the draft open on failure.
+  const submit = async (text: string): Promise<boolean> => {
+    try {
+      await createPost.mutateAsync({ content: text });
+      toast.show(t('posted'));
+      return true;
+    } catch {
+      toast.show(tCommon('genericError'));
+      return false;
+    }
   };
 
   return (
