@@ -27,6 +27,10 @@ export interface PostApi {
   unsave(postId: string): Promise<void>;
   comments(postId: string): Promise<Comment[]>;
   addComment(payload: CreateCommentPayload): Promise<Comment>;
+  likeComment(postId: string, commentId: string): Promise<void>;
+  unlikeComment(postId: string, commentId: string): Promise<void>;
+  editComment(postId: string, commentId: string, content: string): Promise<Comment>;
+  deleteComment(postId: string, commentId: string): Promise<void>;
 }
 
 export function createPostApi(client: HttpClient): PostApi {
@@ -39,8 +43,26 @@ export function createPostApi(client: HttpClient): PostApi {
     unlike: (postId) => client.delete<void>(`/posts/${postId}/like`),
     save: (postId) => client.post<void>(`/posts/${postId}/save`),
     unsave: (postId) => client.delete<void>(`/posts/${postId}/save`),
-    comments: (postId) => client.get<Comment[]>(`/posts/${postId}/comments`),
-    addComment: (payload) => client.post<Comment>(`/posts/${payload.postId}/comments`, payload),
+    comments: (postId) => client.get<Comment[]>(`/posts/${encodeURIComponent(postId)}/comments`),
+    addComment: (payload) =>
+      client.post<Comment>(`/posts/${encodeURIComponent(payload.postId)}/comments`, payload),
+    likeComment: (postId, commentId) =>
+      client.post<void>(
+        `/posts/${encodeURIComponent(postId)}/comments/${encodeURIComponent(commentId)}/like`,
+      ),
+    unlikeComment: (postId, commentId) =>
+      client.delete<void>(
+        `/posts/${encodeURIComponent(postId)}/comments/${encodeURIComponent(commentId)}/like`,
+      ),
+    editComment: (postId, commentId, content) =>
+      client.patch<Comment>(
+        `/posts/${encodeURIComponent(postId)}/comments/${encodeURIComponent(commentId)}`,
+        { content },
+      ),
+    deleteComment: (postId, commentId) =>
+      client.delete<void>(
+        `/posts/${encodeURIComponent(postId)}/comments/${encodeURIComponent(commentId)}`,
+      ),
   };
 }
 
