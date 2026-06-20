@@ -1,4 +1,4 @@
-import type { Post } from '@repo/types';
+import type { Comment, Post } from '@repo/types';
 
 // View-only types for the Social Home feed (handoff §6.2). The feed's domain
 // shapes (Post, Story, Comment, User) live in @repo/types and are consumed
@@ -41,4 +41,20 @@ export type StoryViewerProps = {
   /** Story to open first; the viewer can page to neighbours from here. */
   startId: string;
   onClose: () => void;
+};
+
+export type CommentsSheetProps = {
+  post: Post;
+  open: boolean;
+  onClose: () => void;
+};
+
+export type CommentRowProps = {
+  node: Comment;
+  depth: number;
+  /** Top-level ancestor id — replies attach to the root. */
+  rootId: string;
+  onLike: (id: string) => void;
+  onReply: (node: Comment, rootId: string) => void;
+  onMenu: (node: Comment, rootId: string) => void;
 };
