@@ -9,6 +9,42 @@ that nobody debugs the same thing twice.
 
 ---
 
+## 2026-06-20 — React/renderer mismatch on first native run; web-preview removed
+
+**Symptom.** First run on a real device (Expo Go, SDK 56) crashed: *"Incompatible React
+versions: react and react-native-renderer must have the exact same version … react-native-renderer:
+19.2.3"* plus *"Cannot read property 'default' of undefined"* in `RendererImplementation.js`.
+
+**Root cause.** The catalog pinned `react`/`react-dom` to **19.2.7** (a deliberate May-2026
+Next/react-dom SSR security bump), but Expo SDK 56 / RN 0.85.3 ship a reconciler built for
+**19.2.3** and require an exact match. We'd never hit it because every prior check ran on the
+**web preview**, which renders through `react-dom` — not the native renderer. The first native run
+exposed the latent mismatch. (`pnpm --filter mobile exec expo install --check` confirms SDK wants
+`react@19.2.3`.) The security advisory is a react-dom/Next SSR issue — **N/A to React Native**.
+
+**Fix.** Aligned the whole repo to `react`/`react-dom` **19.2.3** (catalog), enforced repo-wide via
+a root **`pnpm.overrides`** (a per-app pin left a *duplicate* React — root 19.2.3 + a nested 19.2.7
+under `apps/mobile` from a transitive `^19` range — which is its own hazard). A stale-symlink
+gotcha on Windows meant the nested 19.2.7 survived several installs; a clean `rm -rf` of all
+`node_modules` + reinstall was needed. After: a single `react@19.2.3`, no nested copies.
+
+Separately, now that Expo Go runs SDK 56 we **removed the web-preview stack** (react-native-web,
+react-dom-as-mobile-dep, @expo/metro-runtime, the `web` platform, the `global.css` web block) and
+the unused `features/landing`. Testing is now device-only via Expo Go (`exp://<LAN-IP>:8081`);
+`expo export -p web` no longer applies — verify with type-check + lint + the device.
+
+**⚠️ Open decision (web security debt).** Web is now on react 19.2.3 too, which lacks the 19.2.7
+Next/react-dom SSR fix. Web is unbuilt scaffold so this is dormant — **when the web app is actually
+built, decide** how to restore the web security pin (e.g. web-only react/react-dom 19.2.7 with
+`@repo/*` react as peer-only so neither app bundles a duplicate, or whatever Next requires then).
+
+**Prevention.** Codified in `CLAUDE.md` (version table react row + the `.npmrc`/overrides note).
+Rule of thumb: the mobile React version is **dictated by the Expo SDK matrix** — run
+`expo install --check` before trusting a native build, and don't bump React off the matrix for
+mobile. Test on a device, not just a (now-removed) web bundle.
+
+---
+
 ## 2026-06-19 — Route files must default-export (named-export rule has a router exception)
 
 **Symptom.** CodeRabbit (PR #6) flagged `apps/mobile/app/(dashboard)/(tabs)/messages.tsx` for

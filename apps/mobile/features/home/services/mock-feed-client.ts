@@ -1,6 +1,6 @@
 import type { HttpClient, RequestOptions } from '@repo/api';
-import type { Comment, Paginated, Post, Story } from '@repo/types';
-import { FEED_POSTS, STORIES } from './feed-data';
+import type { Comment, CreatePostPayload, Paginated, Post, Story } from '@repo/types';
+import { FEED_POSTS, ME, STORIES } from './feed-data';
 
 // Offline feed backend (handoff §7). A minimal HttpClient fulfilling the routes
 // `createPostApi` calls, backed by mutable in-memory state so like/save survive
@@ -16,13 +16,47 @@ function delay<T>(value: T): Promise<T> {
 const LIKE_OR_SAVE = /^\/posts\/([^/]+)\/(like|save)$/;
 const COMMENTS = /^\/posts\/([^/]+)\/comments$/;
 
+function isCreatePostPayload(value: unknown): value is CreatePostPayload {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+  // Narrow the unknown request body to read its fields (justified: type guard).
+  const candidate = value as { content?: unknown; imageUrl?: unknown };
+  return (
+    typeof candidate.content === 'string' &&
+    (candidate.imageUrl === undefined || typeof candidate.imageUrl === 'string')
+  );
+}
+
 export function createMockFeedClient(): HttpClient {
   // Mutable "server" state — seeded once from the static fixtures.
   const posts: Post[] = FEED_POSTS.map((p) => ({ ...p }));
+  let postSeq = 0;
   const findPost = (id: string): Post | undefined => posts.find((p) => p.id === id);
 
   function clone(post: Post): Post {
     return { ...post, author: { ...post.author }, book: post.book ? { ...post.book } : null };
+  }
+
+  function createPost(payload: CreatePostPayload): Post {
+    const nowIso = new Date().toISOString();
+    postSeq += 1;
+    const created: Post = {
+      id: `p_mock_${Date.now()}_${postSeq}`,
+      author: { ...ME },
+      content: payload.content,
+      imageUrl: payload.imageUrl ?? null,
+      book: null,
+      likeCount: 0,
+      commentCount: 0,
+      shareCount: 0,
+      likedByMe: false,
+      savedByMe: false,
+      createdAt: nowIso,
+      updatedAt: nowIso,
+    };
+    posts.unshift(created);
+    return clone(created);
   }
 
   function feed(options: RequestOptions | undefined): Paginated<Post> {
@@ -83,7 +117,14 @@ export function createMockFeedClient(): HttpClient {
     }
   }
 
-  async function post<T>(path: string): Promise<T> {
+  async function post<T>(path: string, body?: unknown): Promise<T> {
+    if (path === '/posts') {
+      if (!isCreatePostPayload(body)) {
+        throw new Error('mock-feed-client: invalid create-post payload');
+      }
+      // Boundary cast (`as Promise<T>`): T is owned by the @repo/api factories.
+      return delay(createPost(body)) as Promise<T>;
+    }
     mutateFlag(path, true);
     return delay(undefined as T);
   }

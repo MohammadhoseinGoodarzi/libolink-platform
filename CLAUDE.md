@@ -18,7 +18,7 @@ both apps, stop — it belongs in a package.
 | Package | Web | Mobile | Shared | Notes |
 |---|---|---|---|---|
 | next | 16.2.9 | — | — | ≥16.2.6 required (May 2026 security release, 13 CVEs) |
-| react / react-dom | 19.2.7 | 19.2.7 | peer | 19.2.3 affected by May 2026 React/Next security release |
+| react / react-dom | 19.2.3 | 19.2.3 | peer | Expo SDK 56 / RN 0.85.3 matrix — the native renderer requires an EXACT match, so the whole repo is pinned to 19.2.3 via root `pnpm.overrides`. ⚠️ Web wanted 19.2.7 (May-2026 Next/react-dom SSR security fix; N/A to React Native) — **decide when the web app is built** (see ENGINEERING_LOG 2026-06-20) |
 | expo | — | 56.0.11 | — | SDK 56 |
 | react-native | — | 0.85.3 | — | Expo SDK 56 matrix — do NOT use npm latest (0.86.x) |
 | expo-router | — | 56.2.10 | — | SDK-aligned versioning; no longer depends on react-navigation |
@@ -27,9 +27,6 @@ both apps, stop — it belongs in a package.
 | @react-native-async-storage/async-storage | — | 2.2.0 | — | `expo install`-pinned (SDK 56); theme + settings persistence, future session token |
 | expo-image-picker | — | ~56.0.18 | — | `expo install`-pinned (SDK 56); Complete-Profile photo (camera/gallery) |
 | Vazirmatn (font) | woff2 (web) | ttf 400/500/600/700 (mobile) | — | Bundled asset, NOT a dependency. Mobile `.ttf` in `assets/fonts/` from the Google Fonts release |
-| react-native-web | — | ~0.21.0 | — | Web preview only (`expo start --web`); Expo SDK 56-aligned |
-| react-dom (mobile) | — | catalog: (19.2.7) | — | Web preview peer; matches React (NOT the SDK-suggested 19.2.3 — react/react-dom must match) |
-| @expo/metro-runtime | — | ~56.0.15 | — | Required by Expo web bundling |
 | @tanstack/react-query | 5.101.0 | 5.101.0 | 5.101.0 | catalog |
 | jotai | 2.20.1 | 2.20.1 | 2.20.1 | catalog |
 | jotai-tanstack-query | 0.11.0 | 0.11.0 | 0.11.0 | No stable v1.0 exists (verified 2026-06-13) |
@@ -57,8 +54,8 @@ Expo SDK 56 compatibility matrix.
 The root `.npmrc` sets `node-linker=hoisted` (Expo's official pnpm-monorepo recommendation): React
 Native autolinking + Metro need a flat-ish `node_modules` to resolve bare imports injected by
 tooling (e.g. NativeWind's `react-native-css-interop/jsx-runtime`). Do NOT revert to the strict
-pnpm layout for the mobile app. Note: Expo Go (Play/App Store) is version-locked and cannot run
-this SDK 56 app — use the web preview (`expo start --web`) or a dev build to run it.
+pnpm layout for the mobile app. Testing is via Expo Go on a device running SDK 56 (or a dev build) —
+see "Running it" below.
 
 ---
 
@@ -194,8 +191,10 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 - Fonts via expo-font (Vazirmatn — same as web). Icons via lucide-react-native.
 - Before the first native build run `npx expo install --fix` to align transitive native
   modules (react-native-reanimated/worklets, @react-native/metro-config) to the Expo SDK 56
-  matrix. Two peer warnings on `pnpm install` are expected until then — do NOT pin them with
-  manual `pnpm.overrides` (root package.json stays devDeps-only).
+  matrix. Two peer warnings on `pnpm install` are expected until then — do NOT pin those with
+  manual `pnpm.overrides`. (The root `pnpm.overrides` pinning `react`/`react-dom` to 19.2.3 is
+  intentional and separate — it forces the single SDK-matched React version repo-wide so the
+  native renderer's exact-match check passes; see the version table + ENGINEERING_LOG 2026-06-20.)
 
 ### Implemented shared layer — reuse, never recreate
 - UI atoms barrel `@/shared/components/ui`: `Text` (Vazirmatn-enforcing — use INSTEAD of RN
@@ -220,13 +219,16 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 - Mock data lives in `features/<name>/services` (auth runs on a mock `HttpClient` until the
   backend exists — swap `authClient` in `features/auth/services/auth-service.ts`, untouched hooks).
 
-### Running it (no device needed)
-- **Expo Go cannot run this app** — it is version-locked and tops out below SDK 56. Use the **web
-  preview** (or a dev build). Run from the **repo ROOT** (the shell cwd drifts; a bare `expo`
-  then computes the wrong project root): `pnpm --filter mobile exec expo start --web` →
-  http://localhost:8081. No login backend — deep-link `/home` on web, or use the mock auth form.
-- `global.css` ends with a web-only block (input focus outline + Chrome autofill) that is
-  DOM-targeted and ignored on native — keep web/native parity in mind when editing it.
+### Running it (Expo Go on a device)
+- Test on **Expo Go** — the device must be on **SDK 56** (older Expo Go is version-locked and
+  can't run it), or use a dev build. Run the dev server from the **repo ROOT** (the shell cwd
+  drifts; a bare `expo` then computes the wrong project root): `pnpm --filter mobile exec expo
+  start` → open `exp://<LAN-IP>:8081` in Expo Go (phone on the same Wi-Fi). No login backend —
+  deep-link `/home` or use the mock auth form.
+- **Native-only.** Web-preview support (react-native-web / react-dom / @expo/metro-runtime, the
+  `global.css` web block, and the `web` platform) was removed 2026-06-20 — don't reintroduce it
+  without asking. `expo export -p web` no longer applies; verify with `pnpm type-check` +
+  `pnpm lint` + a run on the device.
 
 ---
 

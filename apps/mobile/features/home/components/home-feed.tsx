@@ -5,7 +5,7 @@ import { Button, SponsoredCard, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useFeed, useStories } from '../hooks/use-feed';
 import { FEED_ADS } from '../services/feed-data';
-import type { FeedRow } from '../types';
+import type { FeedRow, HomeFeedProps } from '../types';
 import { PostCard } from './post-card';
 import { PremiumPromoCard } from './premium-promo-card';
 import { StoriesRow } from './stories-row';
@@ -43,7 +43,7 @@ const renderRow: ListRenderItem<FeedRow> = ({ item }) =>
 
 // Social Home feed (handoff §6.2): stories → Go Premium → posts (+ Sponsored
 // every 6). Data flows through the shared @repo/api/@repo/hooks via useFeed.
-export function HomeFeed() {
+export function HomeFeed({ onOpenStory }: HomeFeedProps) {
   const t = useDictionary('Home');
   const tCommon = useDictionary('Common');
   const colors = useThemeColors();
@@ -84,7 +84,9 @@ export function HomeFeed() {
       className="flex-1 bg-background"
       ListHeaderComponent={
         <>
-          {stories.data && stories.data.length > 0 ? <StoriesRow stories={stories.data} /> : null}
+          {stories.data && stories.data.length > 0 ? (
+            <StoriesRow stories={stories.data} onOpen={onOpenStory} />
+          ) : null}
           <PremiumPromoCard />
         </>
       }

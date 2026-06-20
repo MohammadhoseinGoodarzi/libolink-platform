@@ -1,7 +1,8 @@
 import { useDictionary } from '@repo/i18n';
 import { Bell, Search } from 'lucide-react-native';
+import { useState } from 'react';
 import { View } from 'react-native';
-import { HomeFeed } from '@/features/home';
+import { ComposeDock, HomeFeed, StoryViewer } from '@/features/home';
 import { Header } from '@/shared/components/shell';
 import { CountBadge, IconButton } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
@@ -27,10 +28,15 @@ function HomeHeaderActions() {
 }
 
 export default function HomeScreen() {
+  const [storyId, setStoryId] = useState<string | null>(null);
   return (
     <View className="flex-1 bg-background">
       <Header showProChip right={<HomeHeaderActions />} />
-      <HomeFeed />
+      <HomeFeed onOpenStory={setStoryId} />
+      <ComposeDock />
+      {storyId ? (
+        <StoryViewer key={storyId} startId={storyId} onClose={() => setStoryId(null)} />
+      ) : null}
     </View>
   );
 }
