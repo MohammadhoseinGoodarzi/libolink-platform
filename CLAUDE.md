@@ -18,7 +18,7 @@ both apps, stop — it belongs in a package.
 | Package | Web | Mobile | Shared | Notes |
 |---|---|---|---|---|
 | next | 16.2.9 | — | — | ≥16.2.6 required (May 2026 security release, 13 CVEs) |
-| react / react-dom | 19.2.7 | 19.2.7 | peer | 19.2.3 affected by May 2026 React/Next security release |
+| react / react-dom | 19.2.3 | 19.2.3 | peer | Expo SDK 56 / RN 0.85.3 matrix — the native renderer requires an EXACT match, so the whole repo is pinned to 19.2.3 via root `pnpm.overrides`. ⚠️ Web wanted 19.2.7 (May-2026 Next/react-dom SSR security fix; N/A to React Native) — **decide when the web app is built** (see ENGINEERING_LOG 2026-06-20) |
 | expo | — | 56.0.11 | — | SDK 56 |
 | react-native | — | 0.85.3 | — | Expo SDK 56 matrix — do NOT use npm latest (0.86.x) |
 | expo-router | — | 56.2.10 | — | SDK-aligned versioning; no longer depends on react-navigation |
@@ -191,8 +191,10 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 - Fonts via expo-font (Vazirmatn — same as web). Icons via lucide-react-native.
 - Before the first native build run `npx expo install --fix` to align transitive native
   modules (react-native-reanimated/worklets, @react-native/metro-config) to the Expo SDK 56
-  matrix. Two peer warnings on `pnpm install` are expected until then — do NOT pin them with
-  manual `pnpm.overrides` (root package.json stays devDeps-only).
+  matrix. Two peer warnings on `pnpm install` are expected until then — do NOT pin those with
+  manual `pnpm.overrides`. (The root `pnpm.overrides` pinning `react`/`react-dom` to 19.2.3 is
+  intentional and separate — it forces the single SDK-matched React version repo-wide so the
+  native renderer's exact-match check passes; see the version table + ENGINEERING_LOG 2026-06-20.)
 
 ### Implemented shared layer — reuse, never recreate
 - UI atoms barrel `@/shared/components/ui`: `Text` (Vazirmatn-enforcing — use INSTEAD of RN
