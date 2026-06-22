@@ -36,15 +36,22 @@ export function ShareSheet({ post, open, onClose }: ShareSheetProps) {
     setPicked((s) => ({ ...s, [id]: !s[id] }));
   };
 
-  const send = () => {
+  // Single exit path for every dismiss (Send, a secondary action, ✕, scrim,
+  // Android back): close, then clear the selection after the sheet animates out
+  // so it neither visibly vanishes mid-close nor persists into the next open.
+  const dismiss = () => {
     onClose();
-    toast.show(`${t('sentTo')} ${count} ${count === 1 ? t('friend') : t('friends')}`);
     setTimeout(() => setPicked({}), 300);
   };
 
+  const send = () => {
+    toast.show(`${t('sentTo')} ${count} ${count === 1 ? t('friend') : t('friends')}`);
+    dismiss();
+  };
+
   const runAction = (toastMsg: string) => {
-    onClose();
     toast.show(toastMsg);
+    dismiss();
   };
 
   const subject =
@@ -72,7 +79,7 @@ export function ShareSheet({ post, open, onClose }: ShareSheetProps) {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={tCommon('close')}
-        onPress={onClose}
+        onPress={dismiss}
         className="h-8 w-8 items-center justify-center rounded-full bg-secondary active:opacity-70"
       >
         <X size={17} color={colors.foreground} />
@@ -81,7 +88,7 @@ export function ShareSheet({ post, open, onClose }: ShareSheetProps) {
   );
 
   return (
-    <BottomSheet open={open} onClose={onClose} label={t('title')} header={header}>
+    <BottomSheet open={open} onClose={dismiss} label={t('title')} header={header}>
       <View style={{ height: sheetHeight }}>
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
           {/* friend grid (multi-select) */}
