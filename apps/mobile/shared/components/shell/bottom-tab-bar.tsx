@@ -92,7 +92,10 @@ export function BottomTabBar() {
           accessibilityRole="button"
           accessibilityLabel={t('tabAi')}
           onPress={() => openLio(true)}
-          className="w-16 items-center gap-0.5 active:opacity-60"
+          // No fixed width here (unlike the side tabs): the "AI Assistant" label
+          // is two words, so let the tab size to its content and keep it on one
+          // line instead of wrapping inside a 64px slot.
+          className="items-center gap-0.5 px-1 active:opacity-60"
         >
           <BrandGradient
             className="-mt-3.5 h-12 w-12 items-center justify-center rounded-full"
@@ -106,7 +109,10 @@ export function BottomTabBar() {
           >
             <Sparkles size={20} color="#FFFFFF" />
           </BrandGradient>
-          <Text className="-mt-1 font-sans-medium text-[10px] text-muted-foreground">
+          <Text
+            numberOfLines={1}
+            className="-mt-1 font-sans-medium text-[10px] text-muted-foreground"
+          >
             {t('tabAi')}
           </Text>
         </Pressable>
