@@ -30,9 +30,13 @@ const amara = commenter('Amara Collins', 'amara');
 const priya = commenter('Priya Nair', 'priya.reads');
 const marco = commenter('Marco Bianchi', 'marco.b');
 const lina = commenter('Lina Køhler', 'lina');
+const sofia = commenter('Sofia Reyes', 'sofiareads');
+const theo = commenter('Theo Park', 'theop');
+const nadia = commenter('Nadia Hassan', 'nadia.h');
 
-// Mention autocomplete source (handoff: MENTION_USERS = DM friends).
-export const MENTION_USERS: User[] = [daniel, amara, priya, marco, lina];
+// Mention autocomplete source — and the DM friend grid for the Share sheet
+// (handoff: MENTION_USERS === DM_FRIENDS, the same eight people).
+export const MENTION_USERS: User[] = [daniel, amara, priya, marco, lina, sofia, theo, nadia];
 
 export const COMMENTS: Comment[] = [
   {
