@@ -9,6 +9,55 @@ that nobody debugs the same thing twice.
 
 ---
 
+## 2026-06-22 — Comments-sheet drag-to-dismiss removed; global-testing (ngrok/EAS) dead-ends
+
+Context: polishing the Social Home comments sheet (`feat/mobile-home-comments`) on a real
+device via Expo Go. Three notable things, all from this session.
+
+**1. Drag-to-dismiss on `BottomSheet` — attempted, never worked on-device, removed.**
+*Symptom.* Dragging the grabber/header down did nothing — the sheet never followed the
+finger and never dismissed (Android, Expo Go). *Root cause (most likely, compounded).*
+(a) `translateY` was animated with `useNativeDriver: true`; on Android a value owned by the
+native driver ignores JS-side `.setValue()` mid-gesture, so finger-tracking never rendered.
+(b) `Animated.Value` is created in `useRef`, which **survives Fast Refresh** — so after
+flipping the timings to `useNativeDriver: false`, the *live* value was still the old
+native-bound instance and stayed broken until a full reload (which we couldn't reliably get
+the device to do). Hardening (`onMoveShouldSetPanResponderCapture`, `collapsable={false}`,
+velocity dismiss, opacity fade) didn't help in the time available. *Fix.* Removed the
+feature per owner's call — `BottomSheet` is back to a static slide-up sheet (native-driven
+enter/exit), dismiss via scrim tap or a close control. Kept the green (`bg-primary`) grabber
+as a visual handle and the `header` prop (used for layout, below). *Prevention.* For any
+future RN gesture/drag work without reanimated/gesture-handler: keep the dragged
+`Animated.Value` **JS-driven** (`useNativeDriver: false`) end-to-end, and **fully reload**
+(not Fast Refresh) when changing an `Animated.Value`'s driver — the useRef instance persists
+and keeps its old native binding.
+
+**2. Composer hidden behind the Android nav bar — fixed (kept).** *Symptom.* The comments
+composer (input + send) sat behind the 3-button nav bar, untappable. *Root cause.*
+`BottomSheet` caps content at `maxHeight: 90%`; the grabber + header + fixed-height body +
+bottom pad together exceeded that, so the bottom (composer) overflowed below the box, into
+the nav-bar inset. *Fix.* The comments body height is capped against the chrome:
+`min(height*0.84, height*0.9 - SHEET_CHROME - pad)` where `SHEET_CHROME ≈ 72` (grabber ~30 +
+header ~42) and `pad` is the keyboard overlap when open else `useBottomInset()`. The sheet
+header is rendered via `BottomSheet`'s `header` prop (non-scrolling region) so it's counted
+in the cap. Keyboard-rise of the composer works and must not be "fixed" again.
+
+**3. Global device testing over the internet — both routes dead-ended here, reverted.**
+Tried to share the dev app beyond LAN. *(a) Expo tunnel (`expo start --tunnel`)* repeatedly
+failed with `ngrok tunnel took too long to connect`; root cause is the bundled agent in
+`@expo/ngrok` 4.1.3 is **ngrok v2 (2.3.41)** and ngrok has sunset the v2 session protocol
+(`failed to reconnect session … i/o timeout`, even with a valid authtoken). *(b) EAS Update*
+(`eas update`) bundled + exported fine but the asset upload failed with **`403 Forbidden`** —
+API calls (login/init/configure) worked but the binary upload to Expo's storage CDN was
+refused, the signature of an IP/region restriction (a VPN that didn't cover the upload host).
+*Outcome.* Owner abandoned both; testing stays on **LAN** (`exp://<LAN-IP>:8081`, phone on
+same Wi-Fi). Reverted all of it off the feature branch: `expo-updates` + `@expo/ngrok` deps,
+the EAS block in `app.json` (`extra.eas`/`owner`/`updates`/`runtimeVersion`), and the
+lockfile churn. (The `@mhg1998/libolink` EAS project on expo.dev and the local
+`~/.ngrok2/ngrok.yml` authtoken were left in place — harmless, outside the repo.)
+
+---
+
 ## 2026-06-20 — React/renderer mismatch on first native run; web-preview removed
 
 **Symptom.** First run on a real device (Expo Go, SDK 56) crashed: *"Incompatible React

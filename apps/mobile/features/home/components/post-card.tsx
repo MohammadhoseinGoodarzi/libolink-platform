@@ -2,13 +2,14 @@ import { useDictionary } from '@repo/i18n';
 import type { Post } from '@repo/types';
 import { formatCompactNumber, formatShortRelativeTime, getInitials } from '@repo/utils';
 import { Bookmark, Heart, MessageCircle, MoreHorizontal, Share2 } from 'lucide-react-native';
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { Avatar, Text, useToast, VerifiedBadge } from '@/shared/components/ui';
 import { useShadow, useThemeColors } from '@/shared/theme';
 import { usePostCard } from '../hooks/use-feed';
 import type { FeedCover } from '../types';
+import { CommentsSheet } from './comments-sheet';
 
 // Fixed brand-hex gradient pairs for the book banner (handoff §3.1 — no new hex).
 const COVERS: Record<FeedCover, readonly [string, string]> = {
@@ -108,6 +109,7 @@ export function PostCard({ post }: { post: Post }) {
   const shadow = useShadow('card');
   const toast = useToast();
   const { liked, likeCount, saved, toggleLiked, toggleSaved } = usePostCard(post);
+  const [commentsOpen, setCommentsOpen] = useState(false);
 
   const onSave = () => {
     const nowSaved = toggleSaved();
@@ -155,11 +157,17 @@ export function PostCard({ post }: { post: Post }) {
           activeColor={colors.destructive}
           onPress={toggleLiked}
         />
-        <Stat icon={MessageCircle} label={formatCompactNumber(post.commentCount)} />
+        <Stat
+          icon={MessageCircle}
+          label={formatCompactNumber(post.commentCount)}
+          onPress={() => setCommentsOpen(true)}
+        />
         <Stat icon={Share2} label={formatCompactNumber(post.shareCount)} />
         <View className="flex-1" />
         <Stat icon={Bookmark} active={saved} activeColor={colors.primary} onPress={onSave} />
       </View>
+
+      <CommentsSheet post={post} open={commentsOpen} onClose={() => setCommentsOpen(false)} />
     </View>
   );
 }

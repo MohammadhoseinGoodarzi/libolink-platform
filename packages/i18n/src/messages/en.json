@@ -334,5 +334,27 @@
     "sponsoredPresenter": "Presented by Penguin Books",
     "learnMore": "Learn more",
     "footer": "The world's largest gathering place for readers"
+  },
+  "Comments": {
+    "title": "Comments",
+    "placeholder": "Add a comment…  use @ to mention",
+    "reply": "Reply",
+    "like": "Like",
+    "options": "Comment options",
+    "you": "You",
+    "viewReplies": "View replies",
+    "hideReplies": "Hide replies",
+    "replyingTo": "Replying to",
+    "editing": "Editing your comment",
+    "edit": "Edit",
+    "copyText": "Copy text",
+    "copied": "Comment copied",
+    "delete": "Delete",
+    "deleted": "Comment deleted",
+    "report": "Report",
+    "reported": "Comment reported",
+    "updated": "Comment updated",
+    "empty": "No comments yet. Start the conversation.",
+    "send": "Send"
   }
 }
