@@ -16,6 +16,8 @@ import {
   Text,
   useToast,
 } from '@/shared/components/ui';
+import { useBottomInset } from '@/shared/hooks/use-bottom-inset';
+import { useKeyboardHeight } from '@/shared/hooks/use-keyboard-height';
 import { useThemeColors } from '@/shared/theme';
 import { MENTION_USERS } from '../services/comments-data';
 import { ME } from '../services/feed-data';
@@ -24,6 +26,10 @@ import type { CommentsSheetProps } from '../types';
 import { CommentRow } from './comment-row';
 
 const MENTION_RE = /@([\w.]*)$/;
+// Height of BottomSheet's non-scrolling chrome that shares its 90%-max box with
+// this sheet: the grabber strip (~30) + the header row (~42). The body height is
+// capped against this so the composer never overflows behind the nav bar.
+const SHEET_CHROME = 72;
 
 // Comments bottom sheet (handoff §6.2): pinned post, nested thread, @mention
 // autocomplete, reply/edit context, a fixed composer, and a per-comment action
@@ -34,6 +40,16 @@ export function CommentsSheet({ post, open, onClose }: CommentsSheetProps) {
   const colors = useThemeColors();
   const toast = useToast();
   const { height } = useWindowDimensions();
+  const keyboardHeight = useKeyboardHeight();
+  const bottomInset = useBottomInset();
+  // The body targets ~84% of the screen, but it shares BottomSheet's 90%-max box
+  // with the chrome and a bottom pad (the keyboard overlap when open, else the
+  // nav-bar inset). Cap the height so grabber + header + body + pad never exceed
+  // that box — otherwise the composer overflows below it and hides behind the
+  // Android nav bar. The pad term also shrinks the body when the keyboard opens,
+  // lifting the composer above it.
+  const pad = keyboardHeight > 0 ? keyboardHeight : bottomInset;
+  const sheetHeight = Math.max(320, Math.min(height * 0.84, height * 0.9 - SHEET_CHROME - pad));
   const me = useAtomValue(userAtom) ?? ME;
   const { thread, total, addComment, toggleLike, editComment, deleteComment } = useCommentThread(
     feedClient,
@@ -146,24 +162,27 @@ export function CommentsSheet({ post, open, onClose }: CommentsSheetProps) {
 
   const canSend = draft.trim().length > 0;
 
-  return (
-    <BottomSheet open={open} onClose={onClose} label={t('title')}>
-      <View style={{ height: height * 0.84 }}>
-        {/* header */}
-        <View className="flex-row items-center justify-center border-border border-b px-4 pb-3">
-          <Text className="font-sans-bold text-[15px] text-foreground">
-            {total} {t('title')}
-          </Text>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={tCommon('close')}
-            onPress={onClose}
-            className="absolute right-3 h-8 w-8 items-center justify-center rounded-full bg-secondary active:opacity-70"
-          >
-            <X size={17} color={colors.foreground} />
-          </Pressable>
-        </View>
+  // Fixed title bar rendered in BottomSheet's non-scrolling top region (above
+  // the scroll body) so it stays put and is counted in SHEET_CHROME.
+  const header = (
+    <View className="flex-row items-center justify-center border-border border-b px-4 pb-3">
+      <Text className="font-sans-bold text-[15px] text-foreground">
+        {total} {t('title')}
+      </Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={tCommon('close')}
+        onPress={onClose}
+        className="absolute right-3 h-8 w-8 items-center justify-center rounded-full bg-secondary active:opacity-70"
+      >
+        <X size={17} color={colors.foreground} />
+      </Pressable>
+    </View>
+  );
 
+  return (
+    <BottomSheet open={open} onClose={onClose} label={t('title')} header={header}>
+      <View style={{ height: sheetHeight }}>
         {/* pinned post + thread */}
         <ScrollView
           ref={scrollRef}

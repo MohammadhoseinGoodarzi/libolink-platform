@@ -2,7 +2,7 @@ import { useDictionary } from '@repo/i18n';
 import type { ComponentType } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Modal, Pressable, useWindowDimensions, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useBottomInset } from '@/shared/hooks/use-bottom-inset';
 import { useThemeColors } from '@/shared/theme';
 import { Text } from './text';
 
@@ -28,7 +28,7 @@ type ActionSheetProps = {
 function ActionSheet({ open, onClose, title, actions }: ActionSheetProps) {
   const colors = useThemeColors();
   const t = useDictionary('Common');
-  const insets = useSafeAreaInsets();
+  const bottomInset = useBottomInset();
   const { height: windowHeight } = useWindowDimensions();
   const translateY = useRef(new Animated.Value(windowHeight)).current;
   const scrim = useRef(new Animated.Value(0)).current;
@@ -86,7 +86,7 @@ function ActionSheet({ open, onClose, title, actions }: ActionSheetProps) {
         </Animated.View>
 
         <Animated.View
-          style={{ transform: [{ translateY }], paddingBottom: insets.bottom + 8 }}
+          style={{ transform: [{ translateY }], paddingBottom: bottomInset + 8 }}
           className="px-2"
         >
           <View className="mb-2 overflow-hidden rounded-lg border border-border bg-card">
