@@ -356,5 +356,20 @@
     "updated": "Comment updated",
     "empty": "No comments yet. Start the conversation.",
     "send": "Send"
+  },
+  "Share": {
+    "title": "Share",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link copied",
+    "save": "Save",
+    "saved": "Saved",
+    "report": "Report",
+    "reported": "Reported",
+    "selectFriends": "Select friends",
+    "send": "Send",
+    "sendTo": "Send to",
+    "sentTo": "Sent to",
+    "friend": "friend",
+    "friends": "friends"
   }
 }

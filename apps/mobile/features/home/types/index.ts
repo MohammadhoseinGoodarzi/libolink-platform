@@ -49,6 +49,12 @@ export type CommentsSheetProps = {
   onClose: () => void;
 };
 
+export type ShareSheetProps = {
+  post: Post;
+  open: boolean;
+  onClose: () => void;
+};
+
 export type CommentRowProps = {
   node: Comment;
   depth: number;
