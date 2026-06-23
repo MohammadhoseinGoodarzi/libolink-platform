@@ -6,5 +6,6 @@ export * from './queries/message';
 export * from './queries/notification';
 export * from './queries/post';
 export * from './queries/profile';
+export * from './queries/search';
 export * from './queries/user';
 export * from './query-client';

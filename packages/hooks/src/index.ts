@@ -5,3 +5,4 @@ export * from './use-create-post';
 export * from './use-notifications';
 export * from './use-post-actions';
 export * from './use-post-interactions';
+export * from './use-search';
