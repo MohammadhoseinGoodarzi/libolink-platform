@@ -1,14 +1,8 @@
 import { cn } from '@repo/utils';
 import { Check } from 'lucide-react-native';
-import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { useThemeColors } from '@/shared/theme';
-
-type CheckboxProps = {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  children: ReactNode;
-};
+import type { CheckboxProps } from '../types';
 
 export function Checkbox({ checked, onChange, children }: CheckboxProps) {
   const colors = useThemeColors();

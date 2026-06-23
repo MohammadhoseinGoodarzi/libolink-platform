@@ -1,16 +1,8 @@
 import { cn } from '@repo/utils';
-import type { ReactNode } from 'react';
 import { ActivityIndicator, type ViewStyle } from 'react-native';
 import { Button } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
-
-type AuthButtonProps = {
-  children: ReactNode;
-  onPress?: () => void;
-  variant?: 'primary' | 'outline';
-  disabled?: boolean;
-  loading?: boolean;
-};
+import type { AuthButtonProps } from '../types';
 
 // Auth CTA (handoff §6.1): primary = crimson with a soft glow; outline = green.
 // 54px tall, 20px radius, bold. Wraps the shared Button (no raw Pressable).
