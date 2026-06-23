@@ -387,5 +387,17 @@
     "translated": "Translated to English",
     "reportPost": "Report Post",
     "postReported": "Post reported"
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "markedAllRead": "All marked as read",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "accepted": "Friend request accepted",
+    "declined": "Request declined",
+    "nowFriendsText": "is now your reading friend",
+    "declinedText": "request declined",
+    "empty": "You're all caught up."
   }
 }
