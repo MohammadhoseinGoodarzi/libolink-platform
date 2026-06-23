@@ -1,10 +1,10 @@
 import { useDictionary } from '@repo/i18n';
-import { Bell, Search } from 'lucide-react-native';
+import { Search } from 'lucide-react-native';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ComposeDock, HomeFeed, StoryViewer } from '@/features/home';
+import { ComposeDock, HomeFeed, NotificationsBell, StoryViewer } from '@/features/home';
 import { Header } from '@/shared/components/shell';
-import { CountBadge, IconButton } from '@/shared/components/ui';
+import { IconButton } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 
 function HomeHeaderActions() {
@@ -15,14 +15,7 @@ function HomeHeaderActions() {
       <IconButton accessibilityLabel={tCommon('search')}>
         <Search size={21} color={colors.primary} />
       </IconButton>
-      <View>
-        <IconButton accessibilityLabel={tCommon('notifications')}>
-          <Bell size={21} color={colors.primary} />
-        </IconButton>
-        <View className="absolute right-1.5 top-1.5">
-          <CountBadge count={9} />
-        </View>
-      </View>
+      <NotificationsBell />
     </View>
   );
 }

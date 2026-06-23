@@ -3,6 +3,7 @@ export * from './interceptors';
 export * from './queries/auth';
 export * from './queries/club';
 export * from './queries/message';
+export * from './queries/notification';
 export * from './queries/post';
 export * from './queries/profile';
 export * from './queries/user';

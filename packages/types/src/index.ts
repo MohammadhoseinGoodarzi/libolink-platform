@@ -5,6 +5,7 @@ export type * from './club';
 export type * from './comment';
 export type * from './common';
 export type * from './conversation';
+export type * from './notification';
 export type * from './post';
 export type * from './profile';
 export type * from './story';

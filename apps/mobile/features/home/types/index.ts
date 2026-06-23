@@ -1,4 +1,4 @@
-import type { Comment, Post } from '@repo/types';
+import type { AppNotification, Comment, Post } from '@repo/types';
 
 // View-only types for the Social Home feed (handoff §6.2). The feed's domain
 // shapes (Post, Story, Comment, User) live in @repo/types and are consumed
@@ -74,4 +74,18 @@ export type CommentRowProps = {
   onLike: (id: string) => void;
   onReply: (node: Comment, rootId: string) => void;
   onMenu: (node: Comment, rootId: string) => void;
+};
+
+export type NotificationsSheetProps = {
+  open: boolean;
+  onClose: () => void;
+  notifications: AppNotification[];
+  onMarkAllRead: () => void;
+  /** Accept (true) / decline (false) a friend request. */
+  onRespondToRequest: (id: string, accept: boolean) => void;
+};
+
+export type NotificationRowProps = {
+  notification: AppNotification;
+  onRespond: (id: string, accept: boolean) => void;
 };
