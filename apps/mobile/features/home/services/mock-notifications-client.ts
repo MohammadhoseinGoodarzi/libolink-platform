@@ -30,6 +30,8 @@ export function createMockNotificationsClient(): HttpClient {
 
   async function post<T>(path: string): Promise<T> {
     if (path === '/notifications/read-all' || REQUEST_RESPONSE.test(path)) {
+      // Boundary cast (`undefined as T`): these routes return no body; T is the
+      // void owned by the @repo/api factories.
       return delay(undefined as T);
     }
     return unsupported();
