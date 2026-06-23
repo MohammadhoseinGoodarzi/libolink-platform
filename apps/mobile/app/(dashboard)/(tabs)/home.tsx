@@ -1,20 +1,12 @@
-import { useDictionary } from '@repo/i18n';
-import { Search } from 'lucide-react-native';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ComposeDock, HomeFeed, NotificationsBell, StoryViewer } from '@/features/home';
+import { ComposeDock, HomeFeed, HomeSearch, NotificationsBell, StoryViewer } from '@/features/home';
 import { Header } from '@/shared/components/shell';
-import { IconButton } from '@/shared/components/ui';
-import { useThemeColors } from '@/shared/theme';
 
 function HomeHeaderActions() {
-  const colors = useThemeColors();
-  const tCommon = useDictionary('Common');
   return (
     <View className="flex-row items-center">
-      <IconButton accessibilityLabel={tCommon('search')}>
-        <Search size={21} color={colors.primary} />
-      </IconButton>
+      <HomeSearch />
       <NotificationsBell />
     </View>
   );

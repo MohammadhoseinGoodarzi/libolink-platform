@@ -399,5 +399,17 @@
     "nowFriendsText": "is now your reading friend",
     "declinedText": "request declined",
     "empty": "You're all caught up."
+  },
+  "Search": {
+    "placeholder": "Search people, clubs, tags…",
+    "scopeAll": "All",
+    "scopePeople": "People",
+    "scopeTags": "Tags",
+    "scopeClubs": "Clubs",
+    "trending": "Trending",
+    "suggested": "Suggested for you",
+    "clubs": "Clubs to join",
+    "emptyTitle": "No results",
+    "emptyBody": "Try a different name or tag."
   }
 }
