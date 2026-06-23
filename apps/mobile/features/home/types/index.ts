@@ -55,6 +55,17 @@ export type ShareSheetProps = {
   onClose: () => void;
 };
 
+export type PostMenuProps = {
+  post: Post;
+  open: boolean;
+  onClose: () => void;
+  /** Current saved state, to label Save vs Remove from Saved. */
+  saved: boolean;
+  onToggleSave: () => void;
+  /** Open the DM share sheet for this post. */
+  onShareViaDm: () => void;
+};
+
 export type CommentRowProps = {
   node: Comment;
   depth: number;

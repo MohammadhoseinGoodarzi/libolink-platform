@@ -32,27 +32,43 @@ function ActionSheet({ open, onClose, title, actions }: ActionSheetProps) {
   const { height: windowHeight } = useWindowDimensions();
   const translateY = useRef(new Animated.Value(windowHeight)).current;
   const scrim = useRef(new Animated.Value(0)).current;
+  // Dedicated fade value, so the menu visibly eases in/out rather than tracking
+  // the slide's ease-out position (which snaps to opaque almost instantly).
+  const opacity = useRef(new Animated.Value(0)).current;
   const [mounted, setMounted] = useState(open);
 
   useEffect(() => {
     if (open) {
       setMounted(true);
       translateY.setValue(windowHeight);
+      opacity.setValue(0);
       Animated.parallel([
-        Animated.timing(scrim, { toValue: 1, duration: 220, easing: EASE, useNativeDriver: true }),
+        Animated.timing(scrim, { toValue: 1, duration: 1000, easing: EASE, useNativeDriver: true }),
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 1000,
+          easing: EASE,
+          useNativeDriver: true,
+        }),
         Animated.timing(translateY, {
           toValue: 0,
-          duration: 320,
+          duration: 1000,
           easing: EASE,
           useNativeDriver: true,
         }),
       ]).start();
     } else {
       Animated.parallel([
-        Animated.timing(scrim, { toValue: 0, duration: 180, easing: EASE, useNativeDriver: true }),
+        Animated.timing(scrim, { toValue: 0, duration: 750, easing: EASE, useNativeDriver: true }),
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 750,
+          easing: EASE,
+          useNativeDriver: true,
+        }),
         Animated.timing(translateY, {
           toValue: windowHeight,
-          duration: 220,
+          duration: 750,
           easing: EASE,
           useNativeDriver: true,
         }),
@@ -62,7 +78,7 @@ function ActionSheet({ open, onClose, title, actions }: ActionSheetProps) {
         }
       });
     }
-  }, [open, windowHeight, scrim, translateY]);
+  }, [open, windowHeight, scrim, translateY, opacity]);
 
   if (!mounted) {
     return null;
@@ -86,7 +102,11 @@ function ActionSheet({ open, onClose, title, actions }: ActionSheetProps) {
         </Animated.View>
 
         <Animated.View
-          style={{ transform: [{ translateY }], paddingBottom: bottomInset + 8 }}
+          style={{
+            transform: [{ translateY }],
+            opacity,
+            paddingBottom: bottomInset + 8,
+          }}
           className="px-2"
         >
           <View className="mb-2 overflow-hidden rounded-lg border border-border bg-card">
