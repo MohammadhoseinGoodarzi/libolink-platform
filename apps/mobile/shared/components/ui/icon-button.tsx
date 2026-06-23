@@ -1,14 +1,6 @@
 import { cn } from '@repo/utils';
-import type { ReactNode } from 'react';
 import { Pressable } from 'react-native';
-
-type IconButtonProps = {
-  children: ReactNode;
-  accessibilityLabel: string;
-  onPress?: (() => void) | undefined;
-  size?: number;
-  className?: string;
-};
+import type { IconButtonProps } from './types';
 
 // Round, transparent icon button (handoff §2 small icon buttons = pill). Press
 // feedback is opacity only (§3.4 / §12 — no springs).

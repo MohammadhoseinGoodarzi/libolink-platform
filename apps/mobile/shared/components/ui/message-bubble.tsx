@@ -1,17 +1,9 @@
 import { cn } from '@repo/utils';
 import { CheckCheck } from 'lucide-react-native';
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useShadow, useThemeColors } from '@/shared/theme';
 import { Text } from './text';
-
-type MessageBubbleProps = {
-  mine: boolean;
-  text?: string;
-  time?: string;
-  read?: boolean;
-  children?: ReactNode;
-};
+import type { MessageBubbleProps } from './types';
 
 // Chat bubble (handoff §5 / Messages reference). Outgoing = forest fill, white
 // text, 6px bottom-right tail; incoming = card surface, thin border, 6px

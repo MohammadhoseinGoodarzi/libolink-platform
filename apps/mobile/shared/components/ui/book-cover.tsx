@@ -2,6 +2,7 @@ import { useId } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { Text } from './text';
+import type { BookCoverProps } from './types';
 
 // Muted cloth-hardcover tones (forest / oxblood / navy / plum / teal / umber).
 const COVER_TONES: ReadonlyArray<readonly [string, string]> = [
@@ -23,16 +24,6 @@ function toneFromString(value: string): number {
   }
   return hash;
 }
-
-type BookCoverProps = {
-  title: string;
-  author?: string;
-  /** Width in px; height is derived at the 1:1.4 hardcover ratio. */
-  width?: number;
-  /** Tone index; omit to derive deterministically from the title. */
-  tone?: number;
-  radius?: number;
-};
 
 // Generated, offline-safe cover (handoff §5). Real cover photos use <expo-image>
 // + picker; this is the fallback for any book without user-supplied art.

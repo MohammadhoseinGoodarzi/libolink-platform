@@ -1,27 +1,12 @@
 import { useDictionary } from '@repo/i18n';
-import type { ComponentType } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Modal, Pressable, useWindowDimensions, View } from 'react-native';
 import { useBottomInset } from '@/shared/hooks/use-bottom-inset';
 import { useThemeColors } from '@/shared/theme';
 import { Text } from './text';
+import type { ActionSheetProps } from './types';
 
 const EASE = Easing.bezier(0.32, 0.72, 0, 1);
-
-export type ActionSheetAction = {
-  label: string;
-  icon?: ComponentType<{ size?: number; color?: string }>;
-  danger?: boolean;
-  bold?: boolean;
-  onPress?: () => void;
-};
-
-type ActionSheetProps = {
-  open: boolean;
-  onClose: () => void;
-  title?: string;
-  actions: ActionSheetAction[];
-};
 
 // iOS-style contextual menu (handoff §5): grouped action card + separate Cancel.
 // Danger actions are crimson; everything else is brand green.
