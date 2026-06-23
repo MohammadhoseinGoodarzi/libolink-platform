@@ -1,7 +1,6 @@
 import { useDictionary } from '@repo/i18n';
 import { useSetAtom } from 'jotai';
 import { ArrowLeft, Menu } from 'lucide-react-native';
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { drawerOpenAtom } from '@/shared/store/ui';
@@ -10,18 +9,7 @@ import { BrandLogo } from '../brand-logo';
 import { ProChip } from '../ui/badges';
 import { IconButton } from '../ui/icon-button';
 import { Text } from '../ui/text';
-
-type HeaderProps = {
-  /** Right-side contextual actions (search, compose, gear, Premium pill, …). */
-  right?: ReactNode;
-  /** Centered title instead of the brand lockup (e.g. "Saved"). */
-  title?: string;
-  /** Small PRO chip after the logo (handoff §5 social header). */
-  showProChip?: boolean;
-  /** Back chevron instead of the hamburger. */
-  showBack?: boolean;
-  onBack?: (() => void) | undefined;
-};
+import type { HeaderProps } from './types';
 
 // App-wide header (handoff §5): hamburger · centered logo/title · right actions.
 // The hamburger opens the shared left drawer.

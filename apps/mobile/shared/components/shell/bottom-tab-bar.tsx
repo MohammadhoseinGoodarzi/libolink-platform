@@ -1,9 +1,9 @@
-import { type MessageKey, useDictionary } from '@repo/i18n';
+import { useDictionary } from '@repo/i18n';
 import { userAtom } from '@repo/stores';
 import { cn } from '@repo/utils';
 import { usePathname, useRouter } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { Home, type LucideIcon, MessageCircle, Sparkles, UsersRound } from 'lucide-react-native';
+import { Home, MessageCircle, Sparkles, UsersRound } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { lioOpenAtom } from '@/shared/store/ui';
@@ -11,14 +11,7 @@ import { useThemeColors } from '@/shared/theme';
 import { Avatar } from '../ui/avatar';
 import { BrandGradient } from '../ui/brand-gradient';
 import { Text } from '../ui/text';
-
-type Tab = {
-  key: string;
-  labelKey: MessageKey<'Shell'>;
-  route: string;
-  icon?: LucideIcon;
-  avatar?: boolean;
-};
+import type { Tab } from './types';
 
 // Home · Messages · [AI center] · Clubs · Profile (handoff §5). Friends is in
 // the drawer, not here. The centre AI button opens Lio (it is not a route).

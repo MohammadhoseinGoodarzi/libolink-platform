@@ -2,19 +2,7 @@ import { UsersRound } from 'lucide-react-native';
 import { View } from 'react-native';
 import { avatarColors, hueFromString, ONLINE_DOT, useThemeColors } from '@/shared/theme';
 import { Text } from './text';
-
-type AvatarProps = {
-  /** Initials to render (1–2 chars). */
-  initials: string;
-  /** Stable hue 0–360. Omit to derive deterministically from `name`/initials. */
-  hue?: number;
-  name?: string | undefined;
-  size?: number;
-  online?: boolean;
-  group?: boolean;
-  /** People are round; clubs/communities use a rounded-square monogram (§5). */
-  shape?: 'round' | 'square';
-};
+import type { AvatarProps } from './types';
 
 // Initials avatar with a cohesive per-person OKLCH colour (handoff §5).
 function Avatar({

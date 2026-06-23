@@ -2,13 +2,7 @@ import { cn } from '@repo/utils';
 import { Pressable } from 'react-native';
 import { CountBadge } from './badges';
 import { Text } from './text';
-
-type FilterChipProps = {
-  label: string;
-  active?: boolean;
-  count?: number;
-  onPress?: () => void;
-};
+import type { FilterChipProps } from './types';
 
 // 32px pill (handoff §5). Active = primary fill + white; inactive = secondary
 // fill + green text. Optional trailing count badge (e.g. Unread · 2).

@@ -1,25 +1,13 @@
 import { useDictionary } from '@repo/i18n';
-import type { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Modal, Pressable, useWindowDimensions, View } from 'react-native';
 import { useBottomInset } from '@/shared/hooks/use-bottom-inset';
 import { useKeyboardHeight } from '@/shared/hooks/use-keyboard-height';
 import { useThemeColors } from '@/shared/theme';
+import type { BottomSheetProps } from './types';
 
 // Soft ease-out (no spring/bounce, handoff §3.8) matching the prototype curve.
 const EASE = Easing.bezier(0.32, 0.72, 0, 1);
-
-type BottomSheetProps = {
-  open: boolean;
-  onClose: () => void;
-  children: ReactNode;
-  /** Accessible label for the dialog. */
-  label?: string;
-  /** Fixed (non-scrolling) region rendered below the grabber, above children —
-      e.g. a sheet title bar. Stays put while the body scrolls, and is counted
-      against the sheet's height so the body never overflows the 90% box. */
-  header?: ReactNode;
-};
 
 // Bottom sheet shell (handoff §5): grabber, ease slide-up, scrim. Built on RN
 // Modal + Animated (no gesture-handler dep). Dismiss via the scrim tap or a

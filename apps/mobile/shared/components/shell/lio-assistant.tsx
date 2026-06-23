@@ -11,8 +11,7 @@ import { BrandGradient } from '../ui/brand-gradient';
 import { IconButton } from '../ui/icon-button';
 import { Text } from '../ui/text';
 import { lioReply } from './lio-data';
-
-type LioMessage = { id: number; role: 'lio' | 'user'; text: string };
+import type { LioMessage } from './types';
 
 function TypingDots() {
   const colors = useThemeColors();
