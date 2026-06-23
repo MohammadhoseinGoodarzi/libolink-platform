@@ -43,32 +43,32 @@ function ActionSheet({ open, onClose, title, actions }: ActionSheetProps) {
       translateY.setValue(windowHeight);
       opacity.setValue(0);
       Animated.parallel([
-        Animated.timing(scrim, { toValue: 1, duration: 1000, easing: EASE, useNativeDriver: true }),
+        Animated.timing(scrim, { toValue: 1, duration: 800, easing: EASE, useNativeDriver: true }),
         Animated.timing(opacity, {
           toValue: 1,
-          duration: 1000,
+          duration: 800,
           easing: EASE,
           useNativeDriver: true,
         }),
         Animated.timing(translateY, {
           toValue: 0,
-          duration: 1000,
+          duration: 800,
           easing: EASE,
           useNativeDriver: true,
         }),
       ]).start();
     } else {
       Animated.parallel([
-        Animated.timing(scrim, { toValue: 0, duration: 750, easing: EASE, useNativeDriver: true }),
+        Animated.timing(scrim, { toValue: 0, duration: 500, easing: EASE, useNativeDriver: true }),
         Animated.timing(opacity, {
           toValue: 0,
-          duration: 750,
+          duration: 500,
           easing: EASE,
           useNativeDriver: true,
         }),
         Animated.timing(translateY, {
           toValue: windowHeight,
-          duration: 750,
+          duration: 500,
           easing: EASE,
           useNativeDriver: true,
         }),
