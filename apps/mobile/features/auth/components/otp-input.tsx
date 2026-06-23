@@ -2,15 +2,9 @@ import { useRef } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
+import type { OtpInputProps } from '../types';
 
 const CELLS = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5'] as const;
-
-type OtpInputProps = {
-  value: string;
-  onChange: (value: string) => void;
-  error?: boolean;
-  autoFocus?: boolean;
-};
 
 // 6-digit code input (handoff auth kit): a hidden field captures input; the
 // cells render the digits with an active/error ring.

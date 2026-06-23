@@ -1,20 +1,12 @@
-import { type MessageKey, useDictionary } from '@repo/i18n';
-import {
-  ArrowRight,
-  BookOpen,
-  Check,
-  Compass,
-  type LucideIcon,
-  UsersRound,
-} from 'lucide-react-native';
+import { useDictionary } from '@repo/i18n';
+import { ArrowRight, BookOpen, Check, Compass, UsersRound } from 'lucide-react-native';
 import { View } from 'react-native';
 import { Card, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
+import type { Perk } from '../types';
 import { AuthBadgeArt } from './auth-badge-art';
 import { AuthButton } from './auth-button';
 import { AuthScreen } from './auth-screen';
-
-type Perk = { key: string; icon: LucideIcon; title: MessageKey<'Auth'>; desc: MessageKey<'Auth'> };
 
 const PERKS: Perk[] = [
   { key: 'discover', icon: Compass, title: 'perkDiscoverTitle', desc: 'perkDiscoverDesc' },

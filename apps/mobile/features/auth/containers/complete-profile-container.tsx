@@ -26,23 +26,7 @@ import { PickerSheet } from '../components/picker-sheet';
 import { ProfilePhoto } from '../components/profile-photo';
 import { SelectField } from '../components/select-field';
 import { COUNTRIES, citiesFor, DEGREES, GENRES, PROFESSIONS } from '../services/profile-options';
-
-type SelectKey = 'country' | 'city' | 'profession' | 'degree' | 'favGenre';
-type Picker = { key: SelectKey; title: string; options: string[]; search: boolean };
-type ProfileForm = {
-  first: string;
-  last: string;
-  username: string;
-  country: string;
-  city: string;
-  profession: string;
-  university: string;
-  degree: string;
-  bio: string;
-  favBook: string;
-  favAuthor: string;
-  favGenre: string;
-};
+import type { Picker, ProfileForm } from '../types';
 
 function SectionLabel({ children }: { children: string }) {
   return (

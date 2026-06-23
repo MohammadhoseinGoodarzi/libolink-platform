@@ -1,20 +1,12 @@
 import { useDictionary } from '@repo/i18n';
 import { useRouter } from 'expo-router';
 import { ChevronLeft } from 'lucide-react-native';
-import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IconButton } from '@/shared/components/ui';
 import { ROUTES } from '@/shared/constants';
 import { useShadow, useThemeColors } from '@/shared/theme';
-
-type AuthScreenProps = {
-  children: ReactNode;
-  footer?: ReactNode;
-  showBack?: boolean;
-  center?: boolean;
-  padTop?: number;
-};
+import type { AuthScreenProps } from '../types';
 
 // Auth screen shell (handoff auth kit): scrollable body with a pinned footer and
 // an optional floating back button. Keyboard-aware for the form screens.

@@ -1,17 +1,9 @@
 import { cn } from '@repo/utils';
 import { ChevronDown } from 'lucide-react-native';
-import type { ComponentType } from 'react';
 import { Pressable, View } from 'react-native';
 import { Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
-
-type SelectFieldProps = {
-  label?: string;
-  value: string;
-  placeholder: string;
-  icon?: ComponentType<{ size?: number; color?: string }>;
-  onPress: () => void;
-};
+import type { SelectFieldProps } from '../types';
 
 // Filled select that opens a PickerSheet (handoff auth kit).
 export function SelectField({ label, value, placeholder, icon: Icon, onPress }: SelectFieldProps) {

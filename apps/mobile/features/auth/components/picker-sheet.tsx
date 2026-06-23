@@ -5,16 +5,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, TextInput, useWindowDimensions, View } from 'react-native';
 import { BottomSheet, IconButton, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
-
-type PickerSheetProps = {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  options: string[];
-  value: string;
-  onPick: (value: string) => void;
-  search?: boolean;
-};
+import type { PickerSheetProps } from '../types';
 
 // Single-choice bottom-sheet picker with optional live search (handoff auth kit).
 export function PickerSheet({
