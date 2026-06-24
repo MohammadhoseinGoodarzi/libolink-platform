@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { Sparkles } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 import { ProfileView } from '@/features/profile';
+import { GlobalSearch } from '@/features/search';
 import { Header } from '@/shared/components/shell';
 import { BrandGradient, Text } from '@/shared/components/ui';
 import { ROUTES } from '@/shared/constants';
@@ -30,7 +31,14 @@ function PremiumButton() {
 export default function ProfileScreen() {
   return (
     <View className="flex-1 bg-background">
-      <Header right={<PremiumButton />} />
+      <Header
+        right={
+          <View className="flex-row items-center gap-1">
+            <PremiumButton />
+            <GlobalSearch />
+          </View>
+        }
+      />
       <ProfileView />
     </View>
   );

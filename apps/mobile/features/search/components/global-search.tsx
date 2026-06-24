@@ -5,8 +5,9 @@ import { IconButton } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { SearchOverlay } from './search-overlay';
 
-// Header search entry (handoff §6.2): the icon opens the full-screen overlay.
-export function HomeSearch() {
+// Global header search entry (handoff §6.2): the icon opens the full-screen
+// search overlay. Used by every tab's header (Home, Messages, Clubs, Profile).
+export function GlobalSearch() {
   const colors = useThemeColors();
   const tCommon = useDictionary('Common');
   const [open, setOpen] = useState(false);
