@@ -45,6 +45,21 @@ export function SwipeableRow({
   const leadingWidth = leadingActions.length * LEADING_W;
   const trailingWidth = trailingActions.length * TRAILING_W;
 
+  // Leading + trailing panels overlap in the middle on a narrow row, so show only
+  // the one being revealed: leading when swiping right (translateX > 0), trailing
+  // when swiping left (< 0). Otherwise the trailing panel bleeds over the leading
+  // buttons (and vice-versa).
+  const leadingOpacity = translateX.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+  const trailingOpacity = translateX.interpolate({
+    inputRange: [-1, 0],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  });
+
   const settle = (to: number) => {
     openRef.current = to !== 0;
     Animated.timing(translateX, {
@@ -96,18 +111,24 @@ export function SwipeableRow({
   return (
     <View className="relative overflow-hidden">
       {leadingActions.length > 0 ? (
-        <View className="absolute top-0 bottom-0 left-0 flex-row">
+        <Animated.View
+          style={{ opacity: leadingOpacity }}
+          className="absolute top-0 bottom-0 left-0 flex-row"
+        >
           {leadingActions.map((a) => (
             <ActionButton key={a.key} action={a} width={LEADING_W} />
           ))}
-        </View>
+        </Animated.View>
       ) : null}
       {trailingActions.length > 0 ? (
-        <View className="absolute top-0 right-0 bottom-0 flex-row">
+        <Animated.View
+          style={{ opacity: trailingOpacity }}
+          className="absolute top-0 right-0 bottom-0 flex-row"
+        >
           {trailingActions.map((a) => (
             <ActionButton key={a.key} action={a} width={TRAILING_W} />
           ))}
-        </View>
+        </Animated.View>
       ) : null}
 
       {/* Opaque foreground (matches the list background) so the action buttons
