@@ -3,3 +3,8 @@
 
 // Conversation-list filter tabs (no "Groups" tab — handoff §6.3).
 export type FilterKey = 'all' | 'unread' | 'friends' | 'clubs';
+
+export interface NewMessageSheetProps {
+  open: boolean;
+  onClose: () => void;
+}

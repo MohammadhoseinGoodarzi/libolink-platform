@@ -245,7 +245,14 @@
     "sharedBook": "Shared a book",
     "viewBook": "View Book",
     "now": "now",
-    "send": "Send"
+    "send": "Send",
+    "newMessageTitle": "New Message",
+    "newMessageSearchPlaceholder": "Search readers, friends, book clubs",
+    "friendsAndReaders": "Friends & Readers",
+    "communities": "Communities",
+    "bookClub": "Book club",
+    "community": "Community",
+    "newMessageEmpty": "No readers or clubs match your search."
   },
   "Profile": {
     "premium": "Premium",

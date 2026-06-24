@@ -27,3 +27,18 @@ export interface Conversation {
   lastMessageMine: boolean;
   lastMessageRead: boolean;
 }
+
+// A startable conversation target in the new-message sheet (handoff §6.3): a
+// reader, friend, book club, or community you can open a fresh chat with. Carries
+// just enough to render the picker row and synthesize a fresh Conversation when
+// the chat opens (no inbox metadata — preview/unread/etc. only exist once a
+// conversation is under way).
+export interface ConversationCandidate {
+  id: string;
+  kind: ConversationKind;
+  title: string;
+  handle: string;
+  online: boolean;
+  memberCount: Nullable<number>;
+  book: Nullable<PostBook>;
+}
