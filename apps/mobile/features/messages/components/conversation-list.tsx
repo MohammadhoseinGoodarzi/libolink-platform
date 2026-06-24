@@ -2,9 +2,19 @@ import { useConversationList } from '@repo/hooks';
 import { type MessageKey, useDictionary } from '@repo/i18n';
 import type { Conversation } from '@repo/types';
 import { useRouter } from 'expo-router';
-import { Archive, Bell, BellOff, Lock, Mail, MailOpen, Pin, Trash2 } from 'lucide-react-native';
+import {
+  Archive,
+  Bell,
+  BellOff,
+  ChevronRight,
+  Lock,
+  Mail,
+  MailOpen,
+  Pin,
+  Trash2,
+} from 'lucide-react-native';
 import { Fragment, useState } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import {
   Button,
   FilterChip,
@@ -65,6 +75,7 @@ export function ConversationList() {
   const toast = useToast();
   const {
     conversations,
+    archived,
     isLoading,
     isError,
     refetch,
@@ -207,6 +218,28 @@ export function ConversationList() {
         </View>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
+          {archived.length > 0 ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('archivedFolder')}
+              onPress={() => router.push('/archived')}
+              className="flex-row items-center gap-3 border-border border-b px-4 py-3 active:opacity-70"
+            >
+              <View className="h-11 w-11 items-center justify-center rounded-full bg-secondary">
+                <Archive size={20} color={colors.mutedForeground} />
+              </View>
+              <Text className="flex-1 font-sans-semibold text-[15px] text-foreground">
+                {t('archivedFolder')}
+              </Text>
+              <View className="min-w-[22px] items-center rounded-full bg-secondary px-2 py-0.5">
+                <Text className="font-sans-semibold text-[12px] text-muted-foreground">
+                  {archived.length}
+                </Text>
+              </View>
+              <ChevronRight size={18} color={colors.mutedForeground} />
+            </Pressable>
+          ) : null}
+
           {pinned.length > 0 ? (
             <>
               <SectionLabel icon={<Pin size={13} color={colors.mutedForeground} />}>

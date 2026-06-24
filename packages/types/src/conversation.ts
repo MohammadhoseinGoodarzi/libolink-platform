@@ -26,6 +26,8 @@ export interface Conversation {
   /** Last message was sent by me — show the read receipt on the preview. */
   lastMessageMine: boolean;
   lastMessageRead: boolean;
+  /** Hidden from the main list into the Archived folder. */
+  archived: boolean;
 }
 
 // A startable conversation target in the new-message sheet (handoff §6.3): a

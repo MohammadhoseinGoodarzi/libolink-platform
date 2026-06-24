@@ -1,10 +1,17 @@
-import { conversationsQueryOptions, createMessageApi, type HttpClient } from '@repo/api';
-import type { Conversation } from '@repo/types';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import {
+  conversationsQueryOptions,
+  createMessageApi,
+  type HttpClient,
+  messageKeys,
+} from '@repo/api';
+import type { Conversation, Paginated } from '@repo/types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface ConversationListController {
+  /** Active conversations (not archived). */
   conversations: Conversation[];
+  /** Conversations moved to the Archived folder. */
+  archived: Conversation[];
   isLoading: boolean;
   isError: boolean;
   refetch: () => void;
@@ -14,61 +21,68 @@ export interface ConversationListController {
   markUnread: (id: string) => void;
   /** Toggle mute; returns the new muted state for UI feedback. */
   toggleMute: (id: string) => boolean;
-  /** Archive — drops the row from the list. */
+  /** Move to the Archived folder. */
   archive: (id: string) => void;
-  /** Delete — drops the row from the list. */
+  /** Restore from the Archived folder. */
+  unarchive: (id: string) => void;
+  /** Delete — drops the row entirely. */
   remove: (id: string) => void;
 }
 
-// Shared conversation-list controller (handoff §6.3). Seeds from the @repo/api
-// conversations query, then owns the list locally so swipe actions are optimistic;
-// each mutation is persisted best-effort through the api (mirrors useNotifications).
+// Shared conversation-list controller (handoff §6.3). Optimistic swipe actions
+// are written straight into the React Query cache (not local state) so every
+// screen observing the conversations query — the list and the Archived folder —
+// stays in sync; each mutation is then persisted best-effort through the api.
 export function useConversationList(client: HttpClient): ConversationListController {
   const api = createMessageApi(client);
+  const queryClient = useQueryClient();
   const query = useQuery(conversationsQueryOptions(client));
-  const [list, setList] = useState<Conversation[]>([]);
+  const items = query.data?.items ?? [];
 
-  useEffect(() => {
-    if (query.data) {
-      setList(query.data.items);
-    }
-  }, [query.data]);
-
-  const patch = (id: string, fn: (c: Conversation) => Conversation) => {
-    setList((items) => items.map((c) => (c.id === id ? fn(c) : c)));
+  const patchItems = (fn: (items: Conversation[]) => Conversation[]) => {
+    queryClient.setQueryData<Paginated<Conversation>>(messageKeys.conversations(), (old) =>
+      old ? { ...old, items: fn(old.items) } : old,
+    );
+  };
+  const patchOne = (id: string, fn: (c: Conversation) => Conversation) => {
+    patchItems((list) => list.map((c) => (c.id === id ? fn(c) : c)));
   };
 
   const markRead = (id: string) => {
-    patch(id, (c) => ({ ...c, unreadCount: 0 }));
+    patchOne(id, (c) => ({ ...c, unreadCount: 0 }));
     api.setRead(id, true).catch(() => undefined);
   };
 
   const markUnread = (id: string) => {
-    patch(id, (c) => ({ ...c, unreadCount: c.unreadCount || 1 }));
+    patchOne(id, (c) => ({ ...c, unreadCount: c.unreadCount || 1 }));
     api.setRead(id, false).catch(() => undefined);
   };
 
   const toggleMute = (id: string): boolean => {
-    // Read the current state from the latest snapshot (rapid mute toggles are
-    // not a realistic race); the api call mirrors usePostInteractions.
-    const next = !(list.find((c) => c.id === id)?.muted ?? false);
-    patch(id, (c) => ({ ...c, muted: next }));
+    const next = !(items.find((c) => c.id === id)?.muted ?? false);
+    patchOne(id, (c) => ({ ...c, muted: next }));
     api.setMuted(id, next).catch(() => undefined);
     return next;
   };
 
   const archive = (id: string) => {
-    setList((items) => items.filter((c) => c.id !== id));
+    patchOne(id, (c) => ({ ...c, archived: true }));
     api.archive(id).catch(() => undefined);
   };
 
+  const unarchive = (id: string) => {
+    patchOne(id, (c) => ({ ...c, archived: false }));
+    api.unarchive(id).catch(() => undefined);
+  };
+
   const remove = (id: string) => {
-    setList((items) => items.filter((c) => c.id !== id));
+    patchItems((list) => list.filter((c) => c.id !== id));
     api.remove(id).catch(() => undefined);
   };
 
   return {
-    conversations: list,
+    conversations: items.filter((c) => !c.archived),
+    archived: items.filter((c) => c.archived),
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: () => void query.refetch(),
@@ -76,6 +90,7 @@ export function useConversationList(client: HttpClient): ConversationListControl
     markUnread,
     toggleMute,
     archive,
+    unarchive,
     remove,
   };
 }

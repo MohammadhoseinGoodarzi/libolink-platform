@@ -18,6 +18,7 @@ export interface MessageApi {
   setRead(conversationId: string, read: boolean): Promise<void>;
   setMuted(conversationId: string, muted: boolean): Promise<void>;
   archive(conversationId: string): Promise<void>;
+  unarchive(conversationId: string): Promise<void>;
   remove(conversationId: string): Promise<void>;
 }
 
@@ -30,6 +31,7 @@ export function createMessageApi(client: HttpClient): MessageApi {
     setRead: (conversationId, read) => client.post<void>(`${at(conversationId)}/read`, { read }),
     setMuted: (conversationId, muted) => client.post<void>(`${at(conversationId)}/mute`, { muted }),
     archive: (conversationId) => client.post<void>(`${at(conversationId)}/archive`),
+    unarchive: (conversationId) => client.post<void>(`${at(conversationId)}/unarchive`),
     remove: (conversationId) => client.delete<void>(at(conversationId)),
   };
 }

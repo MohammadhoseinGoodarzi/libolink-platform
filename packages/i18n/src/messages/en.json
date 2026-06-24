@@ -261,7 +261,11 @@
     "archived": "Conversation archived",
     "deleted": "Conversation deleted",
     "muted": "Muted",
-    "unmuted": "Unmuted"
+    "unmuted": "Unmuted",
+    "unarchive": "Unarchive",
+    "unarchived": "Conversation restored",
+    "archivedFolder": "Archived",
+    "archivedEmpty": "No archived conversations."
   },
   "Profile": {
     "premium": "Premium",
