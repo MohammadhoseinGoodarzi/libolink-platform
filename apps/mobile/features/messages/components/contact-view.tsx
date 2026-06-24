@@ -1,12 +1,14 @@
 import { useConversationList } from '@repo/hooks';
 import { useDictionary } from '@repo/i18n';
 import { cn, getInitials } from '@repo/utils';
+import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
 import {
   ArrowLeft,
   Ban,
   Bell,
   BellOff,
+  Copy,
   MessageCircle,
   UserRound,
   UsersRound,
@@ -76,6 +78,11 @@ export function ContactView({ id }: { id: string }) {
     router.push({ pathname: '/reader/[id]', params: { id } });
   };
 
+  const copyHandle = () => {
+    void Clipboard.setStringAsync(contact.handle);
+    toast.show(t('copied'));
+  };
+
   const actions = [
     {
       key: 'message',
@@ -120,9 +127,15 @@ export function ContactView({ id }: { id: string }) {
             online={contact.online}
           />
           <Text className="mt-3 font-sans-bold text-[22px] text-foreground">{contact.name}</Text>
-          <Text className="mt-0.5 font-sans text-[13.5px] text-muted-foreground">
-            {contact.handle}
-          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('copyUsername')}
+            onPress={copyHandle}
+            className="mt-0.5 flex-row items-center gap-1 active:opacity-60"
+          >
+            <Text className="font-sans text-[13.5px] text-muted-foreground">{contact.handle}</Text>
+            <Copy size={13} color={colors.mutedForeground} />
+          </Pressable>
           <Text
             className={cn(
               'mt-1 font-sans-medium text-[12.5px]',
@@ -196,12 +209,20 @@ export function ContactView({ id }: { id: string }) {
           <Text className="mt-1.5 font-sans text-[14.5px] leading-[21px] text-foreground">
             {contact.bio}
           </Text>
-          <View className="mt-3 border-border border-t pt-3">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('copyUsername')}
+            onPress={copyHandle}
+            className="mt-3 border-border border-t pt-3 active:opacity-60"
+          >
             <Text className="font-sans-semibold text-[11.5px] uppercase tracking-wide text-muted-foreground">
               {t('usernameLabel')}
             </Text>
-            <Text className="mt-1 font-sans-medium text-[14.5px] text-link">{contact.handle}</Text>
-          </View>
+            <View className="mt-1 flex-row items-center gap-1.5">
+              <Text className="font-sans-medium text-[14.5px] text-link">{contact.handle}</Text>
+              <Copy size={14} color={colors.link} />
+            </View>
+          </Pressable>
         </View>
 
         {/* mutual clubs */}

@@ -26,6 +26,7 @@ both apps, stop — it belongs in a package.
 | react-native-reusables | — | CLI 0.7.1 | — | Copy-in components via `@react-native-reusables/cli`; not a runtime dep |
 | @react-native-async-storage/async-storage | — | 2.2.0 | — | `expo install`-pinned (SDK 56); theme + settings persistence, future session token |
 | expo-image-picker | — | ~56.0.18 | — | `expo install`-pinned (SDK 56); Complete-Profile photo (camera/gallery) |
+| expo-clipboard | — | ~56.0.4 | — | `expo install`-pinned (SDK 56); copy username on the chat contact page |
 | Vazirmatn (font) | woff2 (web) | ttf 400/500/600/700 (mobile) | — | Bundled asset, NOT a dependency. Mobile `.ttf` in `assets/fonts/` from the Google Fonts release |
 | @tanstack/react-query | 5.101.0 | 5.101.0 | 5.101.0 | catalog |
 | jotai | 2.20.1 | 2.20.1 | 2.20.1 | catalog |

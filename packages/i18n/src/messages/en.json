@@ -279,6 +279,8 @@
     "message": "Message",
     "viewProfile": "View Profile",
     "viewClub": "View Club",
+    "copyUsername": "Copy username",
+    "copied": "Copied to clipboard",
     "mute": "Mute",
     "unmute": "Unmute",
     "block": "Block",
