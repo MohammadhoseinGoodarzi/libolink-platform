@@ -82,7 +82,9 @@ export function CommentsSheet({ post, open, onClose }: CommentsSheetProps) {
   const onDraft = (value: string) => {
     setDraft(value);
     const match = value.match(MENTION_RE);
-    setMentionQuery(match ? (match[1] ?? '') : null);
+    // Lower-case so the filter below (against lower-cased usernames/display names)
+    // is case-insensitive — "@Dan" must match "dan".
+    setMentionQuery(match ? (match[1] ?? '').toLowerCase() : null);
   };
 
   const pickMention = (username: string) => {
