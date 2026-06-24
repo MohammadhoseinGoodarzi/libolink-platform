@@ -1,14 +1,7 @@
 import { TextInput, View } from 'react-native';
 import { Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
-
-type BioFieldProps = {
-  label: string;
-  value: string;
-  onChangeText: (value: string) => void;
-  placeholder?: string;
-  maxLength?: number;
-};
+import type { BioFieldProps } from '../types';
 
 export function BioField({
   label,

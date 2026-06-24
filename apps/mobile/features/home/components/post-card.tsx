@@ -2,13 +2,16 @@ import { useDictionary } from '@repo/i18n';
 import type { Post } from '@repo/types';
 import { formatCompactNumber, formatShortRelativeTime, getInitials } from '@repo/utils';
 import { Bookmark, Heart, MessageCircle, MoreHorizontal, Share2 } from 'lucide-react-native';
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { Avatar, Text, useToast, VerifiedBadge } from '@/shared/components/ui';
 import { useShadow, useThemeColors } from '@/shared/theme';
 import { usePostCard } from '../hooks/use-feed';
 import type { FeedCover } from '../types';
+import { CommentsSheet } from './comments-sheet';
+import { PostMenu } from './post-menu';
+import { ShareSheet } from './share-sheet';
 
 // Fixed brand-hex gradient pairs for the book banner (handoff §3.1 — no new hex).
 const COVERS: Record<FeedCover, readonly [string, string]> = {
@@ -108,6 +111,9 @@ export function PostCard({ post }: { post: Post }) {
   const shadow = useShadow('card');
   const toast = useToast();
   const { liked, likeCount, saved, toggleLiked, toggleSaved } = usePostCard(post);
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const onSave = () => {
     const nowSaved = toggleSaved();
@@ -136,9 +142,14 @@ export function PostCard({ post }: { post: Post }) {
             @{post.author.username} · {formatShortRelativeTime(post.createdAt)}
           </Text>
         </View>
-        <View className="h-[30px] w-[30px] items-center justify-center">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('postOptions')}
+          onPress={() => setMenuOpen(true)}
+          className="h-[30px] w-[30px] items-center justify-center active:opacity-60"
+        >
           <MoreHorizontal size={19} color={colors.mutedForeground} />
-        </View>
+        </Pressable>
       </View>
 
       <View className="px-3.5 pt-2.5">
@@ -155,11 +166,30 @@ export function PostCard({ post }: { post: Post }) {
           activeColor={colors.destructive}
           onPress={toggleLiked}
         />
-        <Stat icon={MessageCircle} label={formatCompactNumber(post.commentCount)} />
-        <Stat icon={Share2} label={formatCompactNumber(post.shareCount)} />
+        <Stat
+          icon={MessageCircle}
+          label={formatCompactNumber(post.commentCount)}
+          onPress={() => setCommentsOpen(true)}
+        />
+        <Stat
+          icon={Share2}
+          label={formatCompactNumber(post.shareCount)}
+          onPress={() => setShareOpen(true)}
+        />
         <View className="flex-1" />
         <Stat icon={Bookmark} active={saved} activeColor={colors.primary} onPress={onSave} />
       </View>
+
+      <CommentsSheet post={post} open={commentsOpen} onClose={() => setCommentsOpen(false)} />
+      <ShareSheet post={post} open={shareOpen} onClose={() => setShareOpen(false)} />
+      <PostMenu
+        post={post}
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        saved={saved}
+        onToggleSave={onSave}
+        onShareViaDm={() => setShareOpen(true)}
+      />
     </View>
   );
 }

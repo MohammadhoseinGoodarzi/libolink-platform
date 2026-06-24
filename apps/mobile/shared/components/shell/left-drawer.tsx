@@ -1,4 +1,4 @@
-import { type MessageKey, useDictionary } from '@repo/i18n';
+import { useDictionary } from '@repo/i18n';
 import { userAtom } from '@repo/stores';
 import { cn } from '@repo/utils';
 import { useRouter } from 'expo-router';
@@ -9,7 +9,6 @@ import {
   CircleHelp,
   X as Close,
   LogOut,
-  type LucideIcon,
   MessageCircle,
   Settings,
   Sparkles,
@@ -26,17 +25,10 @@ import { Avatar } from '../ui/avatar';
 import { IconButton } from '../ui/icon-button';
 import { Text } from '../ui/text';
 import { useToast } from '../ui/toast';
+import type { DrawerItem } from './types';
 
 const EASE = Easing.bezier(0.4, 0, 0.2, 1);
 const DRAWER_WIDTH = 290;
-
-type DrawerItem = {
-  key: string;
-  labelKey: MessageKey<'Shell'>;
-  icon: LucideIcon;
-  badge?: number | 'PRO';
-  route?: string;
-};
 
 // Premium first (PRO badge). Friends lives here, not the tab bar (handoff §5).
 const DRAWER_ITEMS: DrawerItem[] = [

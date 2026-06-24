@@ -3,10 +3,9 @@ import { createContext, useCallback, useContext, useMemo, useRef, useState } fro
 import { Animated, Easing, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from './text';
+import type { ToastContextValue } from './types';
 
 const EASE = Easing.bezier(0.32, 0.72, 0, 1);
-
-type ToastContextValue = { show: (message: string) => void };
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 

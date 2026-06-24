@@ -1,58 +1,59 @@
 import { useDictionary } from '@repo/i18n';
-import type { ComponentType } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Modal, Pressable, useWindowDimensions, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useBottomInset } from '@/shared/hooks/use-bottom-inset';
 import { useThemeColors } from '@/shared/theme';
 import { Text } from './text';
+import type { ActionSheetProps } from './types';
 
 const EASE = Easing.bezier(0.32, 0.72, 0, 1);
-
-export type ActionSheetAction = {
-  label: string;
-  icon?: ComponentType<{ size?: number; color?: string }>;
-  danger?: boolean;
-  bold?: boolean;
-  onPress?: () => void;
-};
-
-type ActionSheetProps = {
-  open: boolean;
-  onClose: () => void;
-  title?: string;
-  actions: ActionSheetAction[];
-};
 
 // iOS-style contextual menu (handoff §5): grouped action card + separate Cancel.
 // Danger actions are crimson; everything else is brand green.
 function ActionSheet({ open, onClose, title, actions }: ActionSheetProps) {
   const colors = useThemeColors();
   const t = useDictionary('Common');
-  const insets = useSafeAreaInsets();
+  const bottomInset = useBottomInset();
   const { height: windowHeight } = useWindowDimensions();
   const translateY = useRef(new Animated.Value(windowHeight)).current;
   const scrim = useRef(new Animated.Value(0)).current;
+  // Dedicated fade value, so the menu visibly eases in/out rather than tracking
+  // the slide's ease-out position (which snaps to opaque almost instantly).
+  const opacity = useRef(new Animated.Value(0)).current;
   const [mounted, setMounted] = useState(open);
 
   useEffect(() => {
     if (open) {
       setMounted(true);
       translateY.setValue(windowHeight);
+      opacity.setValue(0);
       Animated.parallel([
-        Animated.timing(scrim, { toValue: 1, duration: 220, easing: EASE, useNativeDriver: true }),
+        Animated.timing(scrim, { toValue: 1, duration: 800, easing: EASE, useNativeDriver: true }),
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 800,
+          easing: EASE,
+          useNativeDriver: true,
+        }),
         Animated.timing(translateY, {
           toValue: 0,
-          duration: 320,
+          duration: 800,
           easing: EASE,
           useNativeDriver: true,
         }),
       ]).start();
     } else {
       Animated.parallel([
-        Animated.timing(scrim, { toValue: 0, duration: 180, easing: EASE, useNativeDriver: true }),
+        Animated.timing(scrim, { toValue: 0, duration: 500, easing: EASE, useNativeDriver: true }),
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 500,
+          easing: EASE,
+          useNativeDriver: true,
+        }),
         Animated.timing(translateY, {
           toValue: windowHeight,
-          duration: 220,
+          duration: 500,
           easing: EASE,
           useNativeDriver: true,
         }),
@@ -62,7 +63,7 @@ function ActionSheet({ open, onClose, title, actions }: ActionSheetProps) {
         }
       });
     }
-  }, [open, windowHeight, scrim, translateY]);
+  }, [open, windowHeight, scrim, translateY, opacity]);
 
   if (!mounted) {
     return null;
@@ -86,7 +87,11 @@ function ActionSheet({ open, onClose, title, actions }: ActionSheetProps) {
         </Animated.View>
 
         <Animated.View
-          style={{ transform: [{ translateY }], paddingBottom: insets.bottom + 8 }}
+          style={{
+            transform: [{ translateY }],
+            opacity,
+            paddingBottom: bottomInset + 8,
+          }}
           className="px-2"
         >
           <View className="mb-2 overflow-hidden rounded-lg border border-border bg-card">

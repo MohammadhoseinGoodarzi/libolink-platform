@@ -1,0 +1,47 @@
+import { cva, type VariantProps } from 'class-variance-authority';
+
+// Variant + size names mirror the web Button exactly — identical developer
+// experience, different (RN) implementation. Kept in a non-component module so
+// ButtonProps (in ./types) can derive from it without a circular import.
+export const buttonVariants = cva('flex-row items-center justify-center gap-2', {
+  variants: {
+    variant: {
+      default: 'bg-primary',
+      outline: 'border border-input bg-background',
+      ghost: 'bg-transparent',
+      destructive: 'bg-destructive',
+      post: 'bg-primary shadow-lg shadow-primary/50',
+    },
+    // Radius lives per-size (handoff §3.3): container buttons use the 20px
+    // family (rounded-lg == --radius); icon/pill buttons stay fully round.
+    size: {
+      default: 'h-[42px] rounded-lg px-6',
+      sm: 'h-8 rounded-md px-3',
+      lg: 'h-[52px] rounded-lg px-8',
+      icon: 'h-9 w-9 rounded-full',
+      'icon-sm': 'h-8 w-8 rounded-full',
+      post: 'h-[19px] rounded-full px-2.5',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+  },
+});
+
+export const buttonTextVariants = cva('font-sans-medium text-sm', {
+  variants: {
+    variant: {
+      default: 'text-primary-foreground',
+      outline: 'text-primary',
+      ghost: 'text-primary',
+      destructive: 'text-destructive-foreground',
+      post: 'text-primary-foreground text-xs',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
+
+export type ButtonVariantProps = VariantProps<typeof buttonVariants>;

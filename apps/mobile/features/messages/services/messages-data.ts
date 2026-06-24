@@ -1,4 +1,4 @@
-import type { Conversation } from '@repo/types';
+import type { Conversation, ConversationCandidate } from '@repo/types';
 
 // Sponsored card shown at the messages-list midpoint (handoff §6.3). Mock ad
 // inventory — content data, not i18n chrome (mirrors the feed's FEED_ADS).
@@ -207,5 +207,122 @@ export const CONVERSATIONS: Conversation[] = [
     typing: false,
     lastMessageMine: true,
     lastMessageRead: false,
+  },
+];
+
+// Startable targets for the new-message sheet (handoff §6.3): friends & readers,
+// book clubs, and communities you can open a fresh chat with. A few overlap with
+// existing inbox entries (open the running thread); the rest are new contacts.
+export const CONVERSATION_CANDIDATES: ConversationCandidate[] = [
+  // friends & readers (dm)
+  {
+    id: 'amara',
+    kind: 'dm',
+    title: 'Amara Collins',
+    handle: '@amara',
+    online: true,
+    memberCount: null,
+    book: null,
+  },
+  {
+    id: 'james',
+    kind: 'dm',
+    title: 'James Park',
+    handle: '@jpark',
+    online: true,
+    memberCount: null,
+    book: null,
+  },
+  {
+    id: 'theo',
+    kind: 'dm',
+    title: 'Theo Ng',
+    handle: '@theo',
+    online: true,
+    memberCount: null,
+    book: null,
+  },
+  {
+    id: 'sofia',
+    kind: 'dm',
+    title: 'Sofia Reyes',
+    handle: '@sofia',
+    online: false,
+    memberCount: null,
+    book: null,
+  },
+  {
+    id: 'nadia',
+    kind: 'dm',
+    title: 'Nadia Haddad',
+    handle: '@nadia',
+    online: true,
+    memberCount: null,
+    book: null,
+  },
+  {
+    id: 'oliver',
+    kind: 'dm',
+    title: 'Oliver Bennett',
+    handle: '@oliver',
+    online: false,
+    memberCount: null,
+    book: null,
+  },
+  // book clubs
+  {
+    id: 'tuesday',
+    kind: 'club',
+    title: 'Tuesday Readers',
+    handle: '@tuesday',
+    online: false,
+    memberCount: 12,
+    book: { title: 'Prairie Winds', author: 'Eleanor Clare' },
+  },
+  {
+    id: 'scifi',
+    kind: 'club',
+    title: 'Sci-Fi Sundays',
+    handle: '@scifi-sun',
+    online: false,
+    memberCount: 28,
+    book: { title: 'Project Hail Mary', author: 'Andy Weir' },
+  },
+  {
+    id: 'poetry',
+    kind: 'club',
+    title: 'Midnight Poetry',
+    handle: '@midnight-poets',
+    online: false,
+    memberCount: 34,
+    book: { title: 'Devotions', author: 'Mary Oliver' },
+  },
+  // communities (group)
+  {
+    id: 'crew',
+    kind: 'group',
+    title: 'Weekend Reads Crew',
+    handle: '@weekend-crew',
+    online: false,
+    memberCount: 6,
+    book: null,
+  },
+  {
+    id: 'event',
+    kind: 'group',
+    title: 'Hay Festival 2026',
+    handle: '@hay-26',
+    online: false,
+    memberCount: 41,
+    book: null,
+  },
+  {
+    id: 'translators',
+    kind: 'group',
+    title: 'World Lit Translators',
+    handle: '@world-lit',
+    online: false,
+    memberCount: 73,
+    book: null,
   },
 ];

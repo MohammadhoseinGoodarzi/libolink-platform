@@ -2,16 +2,11 @@ import { useDictionary } from '@repo/i18n';
 import { View } from 'react-native';
 import { BrandLogo } from '@/shared/components/brand-logo';
 import { Text } from '@/shared/components/ui';
+import type { WelcomeViewProps } from '../types';
 import { AuthButton } from './auth-button';
 import { AuthScreen } from './auth-screen';
 import { GoogleButton } from './google-button';
 import { WelcomeHero } from './welcome-hero';
-
-type WelcomeViewProps = {
-  onCreateAccount: () => void;
-  onSignIn: () => void;
-  onGoogle: () => void;
-};
 
 export function WelcomeView({ onCreateAccount, onSignIn, onGoogle }: WelcomeViewProps) {
   const t = useDictionary('Auth');

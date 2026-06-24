@@ -1,4 +1,4 @@
-import type { Post } from '@repo/types';
+import type { AppNotification, Comment, Post, SearchResult } from '@repo/types';
 
 // View-only types for the Social Home feed (handoff §6.2). The feed's domain
 // shapes (Post, Story, Comment, User) live in @repo/types and are consumed
@@ -41,4 +41,64 @@ export type StoryViewerProps = {
   /** Story to open first; the viewer can page to neighbours from here. */
   startId: string;
   onClose: () => void;
+};
+
+export type CommentsSheetProps = {
+  post: Post;
+  open: boolean;
+  onClose: () => void;
+};
+
+export type ShareSheetProps = {
+  post: Post;
+  open: boolean;
+  onClose: () => void;
+};
+
+export type PostMenuProps = {
+  post: Post;
+  open: boolean;
+  onClose: () => void;
+  /** Current saved state, to label Save vs Remove from Saved. */
+  saved: boolean;
+  onToggleSave: () => void;
+  /** Open the DM share sheet for this post. */
+  onShareViaDm: () => void;
+};
+
+export type CommentRowProps = {
+  node: Comment;
+  depth: number;
+  /** Top-level ancestor id — replies attach to the root. */
+  rootId: string;
+  onLike: (id: string) => void;
+  onReply: (node: Comment, rootId: string) => void;
+  onMenu: (node: Comment, rootId: string) => void;
+};
+
+export type NotificationsSheetProps = {
+  open: boolean;
+  onClose: () => void;
+  notifications: AppNotification[];
+  onMarkAllRead: () => void;
+  /** Accept (true) / decline (false) a friend request. */
+  onRespondToRequest: (id: string, accept: boolean) => void;
+};
+
+export type NotificationRowProps = {
+  notification: AppNotification;
+  onRespond: (id: string, accept: boolean) => void;
+};
+
+// Header search overlay (handoff §6.2). Scope filters the live results client-side.
+export type SearchScope = 'all' | 'people' | 'tags' | 'clubs';
+
+export type SearchOverlayProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+export type SearchResultRowProps = {
+  result: SearchResult;
+  onPress: () => void;
 };

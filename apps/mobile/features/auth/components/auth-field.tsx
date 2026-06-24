@@ -1,28 +1,13 @@
 import { cn } from '@repo/utils';
 import { Check, Eye, EyeOff } from 'lucide-react-native';
-import { type ComponentType, useState } from 'react';
-import { Pressable, TextInput, type TextInputProps, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, TextInput, View } from 'react-native';
 import { Text } from '@/shared/components/ui';
 import { oklchToHex, useThemeColors } from '@/shared/theme';
+import type { AuthFieldProps } from '../types';
 
 // Brighter success green for the inline "valid" check (matches the prototype).
 const SUCCESS = oklchToHex(0.6, 0.15, 150);
-
-type AuthFieldProps = Pick<
-  TextInputProps,
-  'autoCapitalize' | 'keyboardType' | 'autoFocus' | 'onSubmitEditing' | 'returnKeyType'
-> & {
-  value: string;
-  onChangeText: (value: string) => void;
-  label?: string;
-  placeholder?: string;
-  icon?: ComponentType<{ size?: number; color?: string }>;
-  prefix?: string;
-  secure?: boolean;
-  ok?: boolean;
-  error?: string;
-  hint?: string;
-};
 
 // Filled, native-feel field with inline validation (handoff auth kit): recessed
 // fill, 16px radius, 52px tall, leading icon, focus/error ring, ok check, secure

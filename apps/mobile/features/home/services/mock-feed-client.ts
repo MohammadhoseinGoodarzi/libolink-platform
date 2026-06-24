@@ -1,12 +1,13 @@
 import type { HttpClient, RequestOptions } from '@repo/api';
 import type { Comment, CreatePostPayload, Paginated, Post, Story } from '@repo/types';
+import { COMMENTS as MOCK_COMMENTS } from './comments-data';
 import { FEED_POSTS, ME, STORIES } from './feed-data';
 
 // Offline feed backend (handoff §7). A minimal HttpClient fulfilling the routes
 // `createPostApi` calls, backed by mutable in-memory state so like/save survive
 // TanStack Query's invalidate→refetch — exactly like the real server would.
-// Swap `feedClient` in feed-service.ts for the real httpClient when it exists;
-// the api factories, hooks, and screens stay untouched.
+// Comment mutations are accepted as no-ops; useCommentThread owns the live tree.
+// Swap `feedClient` in feed-service.ts for the real httpClient when it exists.
 const NETWORK_DELAY = 450;
 
 function delay<T>(value: T): Promise<T> {
@@ -14,7 +15,9 @@ function delay<T>(value: T): Promise<T> {
 }
 
 const LIKE_OR_SAVE = /^\/posts\/([^/]+)\/(like|save)$/;
-const COMMENTS = /^\/posts\/([^/]+)\/comments$/;
+const COMMENTS_PATH = /^\/posts\/([^/]+)\/comments$/;
+const COMMENT_LIKE = /^\/posts\/[^/]+\/comments\/[^/]+\/like$/;
+const COMMENT_ONE = /^\/posts\/([^/]+)\/comments\/[^/]+$/;
 
 function isCreatePostPayload(value: unknown): value is CreatePostPayload {
   if (typeof value !== 'object' || value === null) {
@@ -26,6 +29,40 @@ function isCreatePostPayload(value: unknown): value is CreatePostPayload {
     typeof candidate.content === 'string' &&
     (candidate.imageUrl === undefined || typeof candidate.imageUrl === 'string')
   );
+}
+
+function commentContent(body: unknown): string {
+  if (typeof body !== 'object' || body === null) {
+    return '';
+  }
+  // Narrow the unknown request body to read its content (justified: type guard).
+  const candidate = body as { content?: unknown };
+  return typeof candidate.content === 'string' ? candidate.content : '';
+}
+
+function cloneComment(comment: Comment, postId: string): Comment {
+  return {
+    ...comment,
+    postId,
+    author: { ...comment.author },
+    replies: comment.replies.map((reply) => cloneComment(reply, postId)),
+  };
+}
+
+// Echo a created/edited comment so the api contract returns a Comment; the
+// useCommentThread hook drives the UI from its own optimistic state.
+function echoComment(postId: string, content: string): Comment {
+  return {
+    id: `c_srv_${Date.now()}`,
+    postId,
+    author: { ...ME },
+    content,
+    likeCount: 0,
+    likedByMe: false,
+    mine: true,
+    createdAt: new Date().toISOString(),
+    replies: [],
+  };
 }
 
 export function createMockFeedClient(): HttpClient {
@@ -86,8 +123,10 @@ export function createMockFeedClient(): HttpClient {
       const stories: Story[] = STORIES.map((s) => ({ ...s, author: { ...s.author } }));
       return delay(stories) as Promise<T>;
     }
-    if (COMMENTS.test(path)) {
-      return delay<Comment[]>([]) as Promise<T>;
+    const comments = COMMENTS_PATH.exec(path);
+    if (comments) {
+      const postId = comments[1] ?? '';
+      return delay(MOCK_COMMENTS.map((c) => cloneComment(c, postId))) as Promise<T>;
     }
     return unsupported();
   }
@@ -125,11 +164,29 @@ export function createMockFeedClient(): HttpClient {
       // Boundary cast (`as Promise<T>`): T is owned by the @repo/api factories.
       return delay(createPost(body)) as Promise<T>;
     }
+    const comments = COMMENTS_PATH.exec(path);
+    if (comments) {
+      return delay(echoComment(comments[1] ?? '', commentContent(body))) as Promise<T>;
+    }
+    if (COMMENT_LIKE.test(path)) {
+      return delay(undefined as T);
+    }
     mutateFlag(path, true);
     return delay(undefined as T);
   }
 
+  async function patch<T>(path: string, body?: unknown): Promise<T> {
+    const comment = COMMENT_ONE.exec(path);
+    if (comment) {
+      return delay(echoComment(comment[1] ?? '', commentContent(body))) as Promise<T>;
+    }
+    return unsupported();
+  }
+
   async function del<T>(path: string): Promise<T> {
+    if (COMMENT_LIKE.test(path) || COMMENT_ONE.test(path)) {
+      return delay(undefined as T);
+    }
     mutateFlag(path, false);
     return delay(undefined as T);
   }
@@ -139,7 +196,7 @@ export function createMockFeedClient(): HttpClient {
     get,
     post,
     put: unsupported,
-    patch: unsupported,
+    patch,
     delete: del,
     addRequestInterceptor: () => undefined,
     addResponseInterceptor: () => undefined,

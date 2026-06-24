@@ -1,60 +1,63 @@
 import { useDictionary } from '@repo/i18n';
-import type { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  Easing,
-  Modal,
-  PanResponder,
-  Pressable,
-  useWindowDimensions,
-  View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Animated, Easing, Modal, Pressable, useWindowDimensions, View } from 'react-native';
+import { useBottomInset } from '@/shared/hooks/use-bottom-inset';
+import { useKeyboardHeight } from '@/shared/hooks/use-keyboard-height';
 import { useThemeColors } from '@/shared/theme';
+import type { BottomSheetProps } from './types';
 
 // Soft ease-out (no spring/bounce, handoff §3.8) matching the prototype curve.
 const EASE = Easing.bezier(0.32, 0.72, 0, 1);
-const DISMISS_THRESHOLD = 90;
 
-type BottomSheetProps = {
-  open: boolean;
-  onClose: () => void;
-  children: ReactNode;
-  /** Accessible label for the dialog. */
-  label?: string;
-};
-
-// Bottom sheet shell (handoff §5): grabber, ease slide-up, drag-to-dismiss,
-// scrim. Built on RN Modal + Animated + PanResponder (no gesture-handler dep).
-function BottomSheet({ open, onClose, children, label }: BottomSheetProps) {
+// Bottom sheet shell (handoff §5): grabber, ease slide-up, scrim. Built on RN
+// Modal + Animated (no gesture-handler dep). Dismiss via the scrim tap or a
+// close control in the header/children. (Drag-to-dismiss was attempted and
+// removed — see docs/ENGINEERING_LOG.md 2026-06-22.)
+function BottomSheet({ open, onClose, children, label, header }: BottomSheetProps) {
   const colors = useThemeColors();
   const t = useDictionary('Common');
-  const insets = useSafeAreaInsets();
+  const bottomInset = useBottomInset();
+  const keyboardHeight = useKeyboardHeight();
   const { height: windowHeight } = useWindowDimensions();
   const translateY = useRef(new Animated.Value(windowHeight)).current;
   const scrim = useRef(new Animated.Value(0)).current;
+  // Dedicated fade value, so the sheet visibly eases in/out rather than tracking
+  // the slide's ease-out position (which snaps to opaque almost instantly).
+  const opacity = useRef(new Animated.Value(0)).current;
   const [mounted, setMounted] = useState(open);
 
   useEffect(() => {
     if (open) {
       setMounted(true);
       translateY.setValue(windowHeight);
+      opacity.setValue(0);
       Animated.parallel([
-        Animated.timing(scrim, { toValue: 1, duration: 240, easing: EASE, useNativeDriver: true }),
+        Animated.timing(scrim, { toValue: 1, duration: 800, easing: EASE, useNativeDriver: true }),
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 800,
+          easing: EASE,
+          useNativeDriver: true,
+        }),
         Animated.timing(translateY, {
           toValue: 0,
-          duration: 380,
+          duration: 800,
           easing: EASE,
           useNativeDriver: true,
         }),
       ]).start();
     } else {
       Animated.parallel([
-        Animated.timing(scrim, { toValue: 0, duration: 200, easing: EASE, useNativeDriver: true }),
+        Animated.timing(scrim, { toValue: 0, duration: 500, easing: EASE, useNativeDriver: true }),
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 500,
+          easing: EASE,
+          useNativeDriver: true,
+        }),
         Animated.timing(translateY, {
           toValue: windowHeight,
-          duration: 240,
+          duration: 500,
           easing: EASE,
           useNativeDriver: true,
         }),
@@ -64,30 +67,7 @@ function BottomSheet({ open, onClose, children, label }: BottomSheetProps) {
         }
       });
     }
-  }, [open, windowHeight, scrim, translateY]);
-
-  const pan = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_evt, gesture) => gesture.dy > 4,
-      onPanResponderMove: (_evt, gesture) => {
-        if (gesture.dy > 0) {
-          translateY.setValue(gesture.dy);
-        }
-      },
-      onPanResponderRelease: (_evt, gesture) => {
-        if (gesture.dy > DISMISS_THRESHOLD) {
-          onClose();
-        } else {
-          Animated.timing(translateY, {
-            toValue: 0,
-            duration: 200,
-            easing: EASE,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-    }),
-  ).current;
+  }, [open, windowHeight, scrim, translateY, opacity]);
 
   if (!mounted) {
     return null;
@@ -115,16 +95,23 @@ function BottomSheet({ open, onClose, children, label }: BottomSheetProps) {
           accessibilityLabel={label}
           style={{
             transform: [{ translateY }],
+            opacity,
             maxHeight: '90%',
             backgroundColor: colors.background,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
-            paddingBottom: insets.bottom,
+            // Closed: clear the Android nav bar. Open: the Modal doesn't resize
+            // for the keyboard, so pad by the measured keyboard overlap to sit
+            // the composer exactly on top of it (the comments sheet shrinks to
+            // match). The overlap already spans any nav bar, so no extra gap.
+            paddingBottom: keyboardHeight > 0 ? keyboardHeight : bottomInset,
           }}
         >
-          <View {...pan.panHandlers} className="items-center pt-2 pb-1.5">
-            <View className="h-1.5 w-10 rounded-full bg-border" />
+          {/* Grabber handle — visual affordance for the sheet. */}
+          <View className="items-center pt-3 pb-3">
+            <View className="h-1.5 w-12 rounded-full bg-primary" />
           </View>
+          {header}
           {children}
         </Animated.View>
       </View>

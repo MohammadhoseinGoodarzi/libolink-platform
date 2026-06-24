@@ -1,13 +1,7 @@
 import { cn } from '@repo/utils';
 import { View } from 'react-native';
 import { Text } from '@/shared/components/ui';
-
-type AuthHeadingProps = {
-  title: string;
-  subtitle?: string;
-  align?: 'left' | 'center';
-  size?: number;
-};
+import type { AuthHeadingProps } from '../types';
 
 export function AuthHeading({ title, subtitle, align = 'left', size = 28 }: AuthHeadingProps) {
   return (

@@ -153,7 +153,8 @@
     "removedFromSaved": "Removed from Saved",
     "postEmpty": "Post cannot be empty",
     "postTooLong": "Posts are limited to 500 characters",
-    "invalidImageUrl": "Image link must be a valid URL"
+    "invalidImageUrl": "Image link must be a valid URL",
+    "postOptions": "Post options"
   },
   "Landing": {
     "headline": "Where readers connect",
@@ -244,7 +245,14 @@
     "sharedBook": "Shared a book",
     "viewBook": "View Book",
     "now": "now",
-    "send": "Send"
+    "send": "Send",
+    "newMessageTitle": "New Message",
+    "newMessageSearchPlaceholder": "Search readers, friends, book clubs",
+    "friendsAndReaders": "Friends & Readers",
+    "communities": "Communities",
+    "bookClub": "Book club",
+    "community": "Community",
+    "newMessageEmpty": "No readers or clubs match your search."
   },
   "Profile": {
     "premium": "Premium",
@@ -334,5 +342,81 @@
     "sponsoredPresenter": "Presented by Penguin Books",
     "learnMore": "Learn more",
     "footer": "The world's largest gathering place for readers"
+  },
+  "Comments": {
+    "title": "Comments",
+    "placeholder": "Add a comment…  use @ to mention",
+    "reply": "Reply",
+    "like": "Like",
+    "options": "Comment options",
+    "you": "You",
+    "viewReplies": "View replies",
+    "hideReplies": "Hide replies",
+    "replyingTo": "Replying to",
+    "editing": "Editing your comment",
+    "edit": "Edit",
+    "copyText": "Copy text",
+    "copied": "Comment copied",
+    "delete": "Delete",
+    "deleted": "Comment deleted",
+    "report": "Report",
+    "reported": "Comment reported",
+    "updated": "Comment updated",
+    "empty": "No comments yet. Start the conversation.",
+    "send": "Send"
+  },
+  "Share": {
+    "title": "Share",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link copied",
+    "save": "Save",
+    "saved": "Saved",
+    "report": "Report",
+    "reported": "Reported",
+    "selectFriends": "Select friends",
+    "send": "Send",
+    "sendTo": "Send to",
+    "sentTo": "Sent to",
+    "friend": "friend",
+    "friends": "friends"
+  },
+  "PostMenu": {
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "following": "Following",
+    "unfollowed": "Unfollowed",
+    "shareViaDm": "Share via Direct Message",
+    "savePost": "Save Post",
+    "removeFromSaved": "Remove from Saved",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link copied",
+    "translate": "Translate",
+    "translated": "Translated to English",
+    "reportPost": "Report Post",
+    "postReported": "Post reported"
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "markedAllRead": "All marked as read",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "accepted": "Friend request accepted",
+    "declined": "Request declined",
+    "nowFriendsText": "is now your reading friend",
+    "declinedText": "request declined",
+    "empty": "You're all caught up."
+  },
+  "Search": {
+    "placeholder": "Search people, clubs, tags…",
+    "scopeAll": "All",
+    "scopePeople": "People",
+    "scopeTags": "Tags",
+    "scopeClubs": "Clubs",
+    "trending": "Trending",
+    "suggested": "Suggested for you",
+    "clubs": "Clubs to join",
+    "emptyTitle": "No results",
+    "emptyBody": "Try a different name or tag."
   }
 }

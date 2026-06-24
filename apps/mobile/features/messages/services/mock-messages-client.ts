@@ -1,6 +1,6 @@
 import type { HttpClient } from '@repo/api';
-import type { ChatMessage, Conversation, Paginated } from '@repo/types';
-import { CONVERSATIONS } from './messages-data';
+import type { ChatMessage, Conversation, ConversationCandidate, Paginated } from '@repo/types';
+import { CONVERSATION_CANDIDATES, CONVERSATIONS } from './messages-data';
 import { getThread } from './thread-data';
 
 const THREAD = /^\/conversations\/([^/]+)\/thread$/;
@@ -32,6 +32,10 @@ export function createMockMessagesClient(): HttpClient {
         totalPages: 1,
       };
       return delay(page) as Promise<T>;
+    }
+    if (path === '/conversations/candidates') {
+      const candidates: ConversationCandidate[] = CONVERSATION_CANDIDATES.map((c) => ({ ...c }));
+      return delay(candidates) as Promise<T>;
     }
     const threadMatch = THREAD.exec(path);
     const conversationId = threadMatch?.[1];

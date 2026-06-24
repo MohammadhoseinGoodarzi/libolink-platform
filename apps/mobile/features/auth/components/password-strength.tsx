@@ -4,6 +4,7 @@ import { Check } from 'lucide-react-native';
 import { View } from 'react-native';
 import { Text } from '@/shared/components/ui';
 import { oklchToHex, useThemeColors } from '@/shared/theme';
+import type { Requirement } from '../types';
 
 const SUCCESS = oklchToHex(0.6, 0.15, 150);
 
@@ -61,8 +62,6 @@ export function PasswordStrength({ password }: { password: string }) {
     </View>
   );
 }
-
-type Requirement = { key: string; labelKey: MessageKey<'Auth'>; ok: boolean };
 
 // Live requirements checklist (handoff New Password screen).
 export function PasswordRequirements({ password }: { password: string }) {
