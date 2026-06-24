@@ -1,14 +1,15 @@
 import { useDictionary } from '@repo/i18n';
 import { useRouter } from 'expo-router';
-import { Eye } from 'lucide-react-native';
+import { ArrowLeft, Eye } from 'lucide-react-native';
 import { useState } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BrandLogo } from '@/shared/components/brand-logo';
 import { Button, Text, useToast } from '@/shared/components/ui';
 import { ROUTES } from '@/shared/constants';
 import { useThemeColors } from '@/shared/theme';
 import { useProfile } from '../hooks/use-profile';
-import type { ProfileMode } from '../types';
+import type { ProfileMode, ProfileViewProps } from '../types';
 import { BioSection } from './bio-section';
 import { FavoritesSection } from './favorites-section';
 import { FollowCounts } from './follow-counts';
@@ -23,14 +24,17 @@ import { WriterSection } from './writer-section';
 // shared @repo/api factory and stacks the read-surface sections. Owns the
 // owner⇄visitor preview mode and the follow state; deeper actions (edit, share,
 // invite, see-all, per-card nav) are profile phase-2 and acknowledge taps.
-export function ProfileView() {
+export function ProfileView({ readerId }: ProfileViewProps = {}) {
   const t = useDictionary('Profile');
   const tCommon = useDictionary('Common');
   const colors = useThemeColors();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const toast = useToast();
-  const { data, isLoading, isError, refetch } = useProfile();
-  const [mode, setMode] = useState<ProfileMode>('owner');
+  // Another reader → visitor mode, pushed over a back button; own profile → owner.
+  const isReader = !!readerId;
+  const { data, isLoading, isError, refetch } = useProfile(readerId);
+  const [mode, setMode] = useState<ProfileMode>(isReader ? 'visitor' : 'owner');
   const [following, setFollowing] = useState(false);
 
   if (isLoading) {
@@ -60,6 +64,18 @@ export function ProfileView() {
 
   return (
     <View className="flex-1 bg-background">
+      {isReader ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={tCommon('back')}
+          onPress={() => router.back()}
+          style={{ top: insets.top + 6, left: 10 }}
+          className="absolute z-10 h-9 w-9 items-center justify-center rounded-full bg-black/35 active:opacity-70"
+        >
+          <ArrowLeft size={22} color="#FFFFFF" />
+        </Pressable>
+      ) : null}
+
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
         <ProfileHero
           identity={profile.identity}
@@ -96,8 +112,8 @@ export function ProfileView() {
         </View>
       </ScrollView>
 
-      {/* visitor-preview banner */}
-      {owner ? null : (
+      {/* owner-only visitor-preview banner (not shown when viewing another reader) */}
+      {owner || isReader ? null : (
         <View
           className="flex-row items-center gap-2.5 px-4 py-3"
           style={{ backgroundColor: colors.foreground }}

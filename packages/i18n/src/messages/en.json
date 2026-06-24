@@ -269,6 +269,7 @@
   },
   "Contact": {
     "message": "Message",
+    "viewProfile": "View Profile",
     "mute": "Mute",
     "unmute": "Unmute",
     "block": "Block",

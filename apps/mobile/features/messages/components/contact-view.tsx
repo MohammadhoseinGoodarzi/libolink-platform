@@ -2,7 +2,15 @@ import { useConversationList } from '@repo/hooks';
 import { useDictionary } from '@repo/i18n';
 import { cn, getInitials } from '@repo/utils';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, Ban, Bell, BellOff, MessageCircle, UsersRound } from 'lucide-react-native';
+import {
+  ArrowLeft,
+  Ban,
+  Bell,
+  BellOff,
+  MessageCircle,
+  UserRound,
+  UsersRound,
+} from 'lucide-react-native';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -111,6 +119,24 @@ export function ContactView({ id }: { id: string }) {
           >
             {contact.online ? t('online') : t('offline')}
           </Text>
+        </View>
+
+        {/* view full app profile (visitor mode) */}
+        <View className="px-4 pb-4">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('viewProfile')}
+            onPress={() => router.push({ pathname: '/reader/[id]', params: { id } })}
+            className="h-12 flex-row items-center justify-center gap-2 rounded-2xl bg-primary active:opacity-90"
+          >
+            <UserRound size={18} color={colors.primaryForeground} />
+            <Text
+              className="font-sans-bold text-[15px]"
+              style={{ color: colors.primaryForeground }}
+            >
+              {t('viewProfile')}
+            </Text>
+          </Pressable>
         </View>
 
         {/* quick actions */}
