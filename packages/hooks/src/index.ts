@@ -1,6 +1,7 @@
 export * from './use-auth';
 export * from './use-comment-thread';
 export * from './use-comments';
+export * from './use-conversation-list';
 export * from './use-create-post';
 export * from './use-notifications';
 export * from './use-post-actions';

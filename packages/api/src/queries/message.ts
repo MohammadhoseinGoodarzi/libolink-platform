@@ -14,14 +14,23 @@ export interface MessageApi {
   thread(conversationId: string): Promise<ChatMessage[]>;
   /** Startable targets for the new-message sheet (readers, clubs, communities). */
   candidates(): Promise<ConversationCandidate[]>;
+  /** Row swipe actions (handoff §6.3). */
+  setRead(conversationId: string, read: boolean): Promise<void>;
+  setMuted(conversationId: string, muted: boolean): Promise<void>;
+  archive(conversationId: string): Promise<void>;
+  remove(conversationId: string): Promise<void>;
 }
 
 export function createMessageApi(client: HttpClient): MessageApi {
+  const at = (id: string) => `/conversations/${encodeURIComponent(id)}`;
   return {
     conversations: () => client.get<Paginated<Conversation>>('/conversations'),
-    thread: (conversationId) =>
-      client.get<ChatMessage[]>(`/conversations/${encodeURIComponent(conversationId)}/thread`),
+    thread: (conversationId) => client.get<ChatMessage[]>(`${at(conversationId)}/thread`),
     candidates: () => client.get<ConversationCandidate[]>('/conversations/candidates'),
+    setRead: (conversationId, read) => client.post<void>(`${at(conversationId)}/read`, { read }),
+    setMuted: (conversationId, muted) => client.post<void>(`${at(conversationId)}/mute`, { muted }),
+    archive: (conversationId) => client.post<void>(`${at(conversationId)}/archive`),
+    remove: (conversationId) => client.delete<void>(at(conversationId)),
   };
 }
 

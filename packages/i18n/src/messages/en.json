@@ -252,7 +252,16 @@
     "communities": "Communities",
     "bookClub": "Book club",
     "community": "Community",
-    "newMessageEmpty": "No readers or clubs match your search."
+    "newMessageEmpty": "No readers or clubs match your search.",
+    "archive": "Archive",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "actionRead": "Read",
+    "actionUnread": "Unread",
+    "archived": "Conversation archived",
+    "deleted": "Conversation deleted",
+    "muted": "Muted",
+    "unmuted": "Unmuted"
   },
   "Profile": {
     "premium": "Premium",
