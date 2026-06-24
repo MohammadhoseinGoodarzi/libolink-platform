@@ -11,13 +11,26 @@ const LEADING_W = 90; // the leading action (Read / Unread)
 // How far past the threshold a release must travel to latch the row open.
 const LATCH = 0.45;
 
-function ActionButton({ action, width }: { action: SwipeAction; width: number }) {
+function ActionButton({
+  action,
+  width,
+  onClose,
+}: {
+  action: SwipeAction;
+  width: number;
+  onClose: () => void;
+}) {
   const Icon = action.icon;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={action.label}
-      onPress={action.onPress}
+      onPress={() => {
+        action.onPress();
+        // Collapse the row after acting — non-removing actions (Read/Mute/Pin)
+        // would otherwise stay open; removing ones unmount harmlessly mid-close.
+        onClose();
+      }}
       style={{ width, backgroundColor: action.background }}
       className="items-center justify-center gap-1 active:opacity-80"
     >
@@ -116,7 +129,7 @@ export function SwipeableRow({
           className="absolute top-0 bottom-0 left-0 flex-row"
         >
           {leadingActions.map((a) => (
-            <ActionButton key={a.key} action={a} width={LEADING_W} />
+            <ActionButton key={a.key} action={a} width={LEADING_W} onClose={() => settle(0)} />
           ))}
         </Animated.View>
       ) : null}
@@ -126,7 +139,7 @@ export function SwipeableRow({
           className="absolute top-0 right-0 bottom-0 flex-row"
         >
           {trailingActions.map((a) => (
-            <ActionButton key={a.key} action={a} width={TRAILING_W} />
+            <ActionButton key={a.key} action={a} width={TRAILING_W} onClose={() => settle(0)} />
           ))}
         </Animated.View>
       ) : null}

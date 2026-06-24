@@ -12,7 +12,7 @@ export function useTypingSimulation(eligibleIds: string[]): Set<string> {
 
   useEffect(() => {
     let active = true;
-    const stops: ReturnType<typeof setTimeout>[] = [];
+    const stops = new Set<ReturnType<typeof setTimeout>>();
 
     const tick = () => {
       const pool = idsRef.current;
@@ -33,6 +33,8 @@ export function useTypingSimulation(eligibleIds: string[]): Set<string> {
       });
       const stop = setTimeout(
         () => {
+          // Prune this handle so `stops` doesn't grow unbounded over a long session.
+          stops.delete(stop);
           if (!active) {
             return;
           }
@@ -44,7 +46,7 @@ export function useTypingSimulation(eligibleIds: string[]): Set<string> {
         },
         2500 + Math.random() * 2000,
       );
-      stops.push(stop);
+      stops.add(stop);
     };
 
     const interval = setInterval(tick, 5000);

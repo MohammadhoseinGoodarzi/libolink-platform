@@ -75,7 +75,9 @@ export function ContactView({ id }: { id: string }) {
       toast.show(tCommon('comingSoon'));
       return;
     }
-    router.push({ pathname: '/reader/[id]', params: { id } });
+    // The reader route resolves the profile by handle (api.byHandle), so pass the
+    // profile handle — not the conversation id.
+    router.push({ pathname: '/reader/[id]', params: { id: contact.handle } });
   };
 
   const copyHandle = () => {

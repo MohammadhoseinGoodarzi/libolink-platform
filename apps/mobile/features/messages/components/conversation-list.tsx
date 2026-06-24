@@ -180,6 +180,32 @@ export function ConversationList() {
     );
   };
 
+  // Archived folder entry point — shown whenever there are archived chats,
+  // independent of the active filter/search (so it never vanishes on an empty
+  // result; the archive lives outside the filtered view).
+  const archivedEntry =
+    archived.length > 0 ? (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('archivedFolder')}
+        onPress={() => router.push('/archived')}
+        className="flex-row items-center gap-3 border-border border-b px-4 py-3 active:opacity-70"
+      >
+        <View className="h-11 w-11 items-center justify-center rounded-full bg-secondary">
+          <Archive size={20} color={colors.mutedForeground} />
+        </View>
+        <Text className="flex-1 font-sans-semibold text-[15px] text-foreground">
+          {t('archivedFolder')}
+        </Text>
+        <View className="min-w-[22px] items-center rounded-full bg-secondary px-2 py-0.5">
+          <Text className="font-sans-semibold text-[12px] text-muted-foreground">
+            {archived.length}
+          </Text>
+        </View>
+        <ChevronRight size={18} color={colors.mutedForeground} />
+      </Pressable>
+    ) : null;
+
   return (
     <View className="flex-1 bg-background">
       {/* title + search + filters (fixed above the scrolling list) */}
@@ -229,34 +255,17 @@ export function ConversationList() {
           </Button>
         </View>
       ) : filtered.length === 0 ? (
-        <View className="flex-1 items-center justify-center px-10">
-          <Text className="text-center font-sans text-[14px] text-muted-foreground">
-            {filter === 'unread' ? t('emptyUnread') : t('emptyAll')}
-          </Text>
+        <View className="flex-1">
+          {archivedEntry}
+          <View className="flex-1 items-center justify-center px-10">
+            <Text className="text-center font-sans text-[14px] text-muted-foreground">
+              {filter === 'unread' ? t('emptyUnread') : t('emptyAll')}
+            </Text>
+          </View>
         </View>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
-          {archived.length > 0 ? (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={t('archivedFolder')}
-              onPress={() => router.push('/archived')}
-              className="flex-row items-center gap-3 border-border border-b px-4 py-3 active:opacity-70"
-            >
-              <View className="h-11 w-11 items-center justify-center rounded-full bg-secondary">
-                <Archive size={20} color={colors.mutedForeground} />
-              </View>
-              <Text className="flex-1 font-sans-semibold text-[15px] text-foreground">
-                {t('archivedFolder')}
-              </Text>
-              <View className="min-w-[22px] items-center rounded-full bg-secondary px-2 py-0.5">
-                <Text className="font-sans-semibold text-[12px] text-muted-foreground">
-                  {archived.length}
-                </Text>
-              </View>
-              <ChevronRight size={18} color={colors.mutedForeground} />
-            </Pressable>
-          ) : null}
+          {archivedEntry}
 
           {pinned.length > 0 ? (
             <>
