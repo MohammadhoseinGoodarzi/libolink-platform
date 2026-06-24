@@ -109,3 +109,14 @@ const AMARA_THREAD: ChatMessage[] = [
 export function getThread(conversationId: string): ChatMessage[] {
   return conversationId === 'amara' ? AMARA_THREAD : [];
 }
+
+// Canned peer replies for the simulated "they're typing → they reply" flow after
+// you send a message (no backend yet). Content data, not i18n chrome.
+export const REPLY_SNIPPETS: readonly string[] = [
+  'Haha totally 😄',
+  'Oh nice — tell me more!',
+  'Adding that to my list 📚',
+  'Let me check and get back to you 👀',
+  'Same here honestly 🙌',
+  'Ooh good call ✨',
+];

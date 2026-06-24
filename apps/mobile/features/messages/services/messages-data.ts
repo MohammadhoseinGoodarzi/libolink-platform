@@ -34,7 +34,7 @@ export const CONVERSATIONS: Conversation[] = [
     unreadCount: 0,
     pinned: true,
     muted: false,
-    typing: true,
+    typing: false,
     lastMessageMine: false,
     lastMessageRead: false,
   },

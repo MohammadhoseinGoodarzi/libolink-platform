@@ -3,11 +3,12 @@ import type { ChatMessage } from '@repo/types';
 import { getInitials } from '@repo/utils';
 import { useRouter } from 'expo-router';
 import { Lock } from 'lucide-react-native';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { Avatar, BookCover, Button, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useConversation, useThread } from '../hooks/use-conversations';
+import { REPLY_SNIPPETS } from '../services/thread-data';
 import { ChatComposer } from './chat-composer';
 import { ChatHeader } from './chat-header';
 import { MessageRow } from './message-row';
@@ -25,6 +26,18 @@ export function ChatView({ id }: { id: string }) {
   const thread = useThread(id);
   const scrollRef = useRef<ScrollView>(null);
   const [sent, setSent] = useState<ChatMessage[]>([]);
+  const [theyTyping, setTheyTyping] = useState(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // Clear any pending typing/reply timers on unmount.
+  useEffect(() => {
+    const pending = timers.current;
+    return () => {
+      for (const id of pending) {
+        clearTimeout(id);
+      }
+    };
+  }, []);
 
   const messages: ChatMessage[] = [...(thread.data ?? []), ...sent];
   const isEmpty = !thread.isLoading && messages.length === 0;
@@ -34,6 +47,18 @@ export function ChatView({ id }: { id: string }) {
       ...prev,
       { id: `u${Date.now()}`, kind: 'text', from: 'me', time: t('now'), read: false, text },
     ]);
+    // Simulate the peer typing, then replying (no backend yet) so the thread
+    // feels alive. Swap for real presence/messages when the backend exists.
+    const typing = setTimeout(() => setTheyTyping(true), 700);
+    const reply = setTimeout(() => {
+      setTheyTyping(false);
+      const snippet = REPLY_SNIPPETS[Math.floor(Math.random() * REPLY_SNIPPETS.length)] ?? '👍';
+      setSent((prev) => [
+        ...prev,
+        { id: `t${Date.now()}`, kind: 'text', from: 'them', time: t('now'), text: snippet },
+      ]);
+    }, 2600);
+    timers.current.push(typing, reply);
   };
 
   if (conversationLoading) {
@@ -59,7 +84,7 @@ export function ChatView({ id }: { id: string }) {
 
   return (
     <View className="flex-1 bg-background">
-      <ChatHeader conversation={conversation} onBack={() => router.back()} />
+      <ChatHeader conversation={conversation} onBack={() => router.back()} typing={theyTyping} />
 
       {isEmpty ? (
         <View className="flex-1 items-center justify-center gap-3 px-8">

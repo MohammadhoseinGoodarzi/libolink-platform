@@ -14,6 +14,7 @@ import {
   useToast,
 } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
+import { useTypingSimulation } from '../hooks/use-typing-simulation';
 import { MESSAGES_AD } from '../services/messages-data';
 import { messagesClient } from '../services/messages-service';
 import type { FilterKey, SwipeAction } from '../types';
@@ -77,6 +78,11 @@ export function ConversationList() {
   const [filter, setFilter] = useState<FilterKey>('all');
   const [query, setQuery] = useState('');
 
+  // Simulated "is typing" presence over the 1:1 chats (no backend yet).
+  const typingIds = useTypingSimulation(
+    conversations.filter((c) => c.kind === 'dm').map((c) => c.id),
+  );
+
   const totalUnread = conversations.filter((c) => c.unreadCount > 0).length;
 
   const q = query.trim().toLowerCase();
@@ -137,9 +143,10 @@ export function ConversationList() {
 
   const renderRow = (c: Conversation) => {
     const { leading, trailing } = swipeActions(c);
+    const display = typingIds.has(c.id) ? { ...c, typing: true } : c;
     return (
       <SwipeableRow onPress={() => open(c.id)} leadingActions={leading} trailingActions={trailing}>
-        <ConversationRow conversation={c} />
+        <ConversationRow conversation={display} />
       </SwipeableRow>
     );
   };
