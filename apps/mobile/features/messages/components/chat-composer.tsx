@@ -5,11 +5,13 @@ import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@/shared/components/ui';
+import { useKeyboardHeight } from '@/shared/hooks/use-keyboard-height';
 
 // Chat composer (handoff §6.3): pill text field + crimson send. Attachment /
 // camera / voice and the share-in-chat sheet land in phase-2.
 export function ChatComposer({ onSend }: { onSend: (text: string) => void }) {
   const insets = useSafeAreaInsets();
+  const keyboardHeight = useKeyboardHeight();
   const t = useDictionary('Messages');
   const [text, setText] = useState('');
   const canSend = text.trim().length > 0;
@@ -24,7 +26,10 @@ export function ChatComposer({ onSend }: { onSend: (text: string) => void }) {
   };
 
   return (
-    <View style={{ paddingBottom: insets.bottom }} className="border-border border-t bg-card">
+    <View
+      style={{ paddingBottom: keyboardHeight > 0 ? keyboardHeight : insets.bottom }}
+      className="border-border border-t bg-card"
+    >
       <View className="flex-row items-end gap-2 px-3 py-2">
         <View className="min-h-[40px] flex-1 justify-center rounded-[20px] border border-border bg-background px-4">
           <Input

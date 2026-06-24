@@ -2,20 +2,15 @@ import { useDictionary } from '@repo/i18n';
 import type { Conversation } from '@repo/types';
 import { cn, formatShortRelativeTime, getInitials } from '@repo/utils';
 import { BellOff, CheckCheck, Pin, User, UsersRound } from 'lucide-react-native';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { Avatar, BookCover, CountBadge, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 
 // One conversation row (handoff §6.3): person/club/group thumbnail, name + type
 // icon (+ member count, mute, pin), preview with read-receipt or typing state,
-// timestamp, and unread badge. Unread rows carry a subtle tint.
-export function ConversationRow({
-  conversation: c,
-  onOpen,
-}: {
-  conversation: Conversation;
-  onOpen: (id: string) => void;
-}) {
+// timestamp, and unread badge. Unread rows carry a subtle tint. Presentational —
+// the press/tap and swipe actions are owned by the wrapping SwipeableRow.
+export function ConversationRow({ conversation: c }: { conversation: Conversation }) {
   const colors = useThemeColors();
   const t = useDictionary('Messages');
 
@@ -25,12 +20,9 @@ export function ConversationRow({
   const TypeIcon = isCommunity ? UsersRound : User;
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={c.title}
-      onPress={() => onOpen(c.id)}
+    <View
       className={cn(
-        'flex-row items-center gap-3 border-border border-b px-4 py-3 active:opacity-70',
+        'flex-row items-center gap-3 border-border border-b px-4 py-3',
         unread && 'bg-primary/5',
       )}
     >
@@ -116,6 +108,6 @@ export function ConversationRow({
         </Text>
         {unread ? <CountBadge count={c.unreadCount} muted={c.muted} /> : <View className="h-5" />}
       </View>
-    </Pressable>
+    </View>
   );
 }

@@ -15,7 +15,7 @@ import {
   UserPlus,
 } from 'lucide-react-native';
 import { View } from 'react-native';
-import { Avatar, BrandGradient, Button, Text, VerifiedBadge } from '@/shared/components/ui';
+import { AvatarRing, BrandGradient, Button, Text, VerifiedBadge } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import type { ProfileHeroProps } from '../types';
 
@@ -62,27 +62,22 @@ function ProfileHero({
 
       {/* avatar overlapping the cover */}
       <View className="px-4" style={{ marginTop: -46 }}>
-        <View style={{ width: 96, height: 96 }}>
-          <View
-            className="rounded-full"
-            style={{ borderWidth: 4, borderColor: colors.card, borderRadius: 9999 }}
-          >
-            <Avatar
-              initials={identity.initials}
-              hue={identity.hue}
-              name={identity.name}
-              size={96}
-            />
-          </View>
+        <AvatarRing
+          variant="frame"
+          size={96}
+          initials={identity.initials}
+          hue={identity.hue}
+          name={identity.name}
+        >
           {identity.verified ? (
             <View
               className="absolute items-center justify-center rounded-full bg-card"
-              style={{ right: 0, bottom: 4, width: 28, height: 28 }}
+              style={{ right: 2, bottom: 6, width: 28, height: 28 }}
             >
               <VerifiedBadge size={22} />
             </View>
           ) : null}
-        </View>
+        </AvatarRing>
 
         {/* name + handle */}
         <View className="mt-3">

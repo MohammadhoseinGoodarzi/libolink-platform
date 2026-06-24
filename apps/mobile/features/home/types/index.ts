@@ -1,4 +1,4 @@
-import type { AppNotification, Comment, Post, SearchResult } from '@repo/types';
+import type { AppNotification, Comment, Post } from '@repo/types';
 
 // View-only types for the Social Home feed (handoff §6.2). The feed's domain
 // shapes (Post, Story, Comment, User) live in @repo/types and are consumed
@@ -88,17 +88,4 @@ export type NotificationsSheetProps = {
 export type NotificationRowProps = {
   notification: AppNotification;
   onRespond: (id: string, accept: boolean) => void;
-};
-
-// Header search overlay (handoff §6.2). Scope filters the live results client-side.
-export type SearchScope = 'all' | 'people' | 'tags' | 'clubs';
-
-export type SearchOverlayProps = {
-  open: boolean;
-  onClose: () => void;
-};
-
-export type SearchResultRowProps = {
-  result: SearchResult;
-  onPress: () => void;
 };

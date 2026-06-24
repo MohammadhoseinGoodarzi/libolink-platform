@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ComposeDock, HomeFeed, HomeSearch, NotificationsBell, StoryViewer } from '@/features/home';
+import { ComposeDock, HomeFeed, NotificationsBell, StoryViewer } from '@/features/home';
+import { GlobalSearch } from '@/features/search';
 import { Header } from '@/shared/components/shell';
 
 function HomeHeaderActions() {
   return (
     <View className="flex-row items-center">
-      <HomeSearch />
+      <GlobalSearch />
       <NotificationsBell />
     </View>
   );

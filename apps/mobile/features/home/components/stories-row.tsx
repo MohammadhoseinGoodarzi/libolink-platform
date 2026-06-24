@@ -4,32 +4,12 @@ import type { Story } from '@repo/types';
 import { cn, getInitials } from '@repo/utils';
 import { useAtomValue } from 'jotai';
 import { Plus } from 'lucide-react-native';
-import { type ReactNode, useId } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
-import { Avatar, Text } from '@/shared/components/ui';
+import type { ReactNode } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
+import { AvatarRing, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 
-const RING = 64;
-const INNER = 54;
-
-// Crimson→navy story ring for unseen stories (handoff §6.2). Seen stories fall
-// back to a muted ring. Uses react-native-svg (no expo-linear-gradient).
-function GradientRing() {
-  const colors = useThemeColors();
-  const id = `sr${useId().replace(/:/g, '')}`;
-  return (
-    <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
-      <Defs>
-        <LinearGradient id={id} x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0" stopColor={colors.destructive} />
-          <Stop offset="1" stopColor={colors.link} />
-        </LinearGradient>
-      </Defs>
-      <Rect x="0" y="0" width="100%" height="100%" rx={RING / 2} fill={`url(#${id})`} />
-    </Svg>
-  );
-}
+const STORY_AVATAR = 54;
 
 function StoryBubble({
   initials,
@@ -46,7 +26,6 @@ function StoryBubble({
   onPress?: () => void;
   children?: ReactNode;
 }) {
-  const colors = useThemeColors();
   return (
     <Pressable
       accessibilityRole="button"
@@ -54,21 +33,14 @@ function StoryBubble({
       onPress={onPress}
       className="w-[70px] items-center gap-1.5 active:opacity-60"
     >
-      <View style={{ width: RING, height: RING }}>
-        <View
-          className="h-full w-full items-center justify-center rounded-full"
-          style={{ padding: 2.5, backgroundColor: seen ? colors.border : undefined }}
-        >
-          {!seen ? <GradientRing /> : null}
-          <View
-            className="h-full w-full items-center justify-center overflow-hidden rounded-full"
-            style={{ borderWidth: 2, borderColor: colors.card }}
-          >
-            <Avatar initials={initials} name={name} size={INNER} />
-          </View>
-        </View>
+      <AvatarRing
+        variant={seen ? 'muted' : 'gradient'}
+        size={STORY_AVATAR}
+        initials={initials}
+        name={name}
+      >
         {children}
-      </View>
+      </AvatarRing>
       <Text
         numberOfLines={1}
         className={cn(

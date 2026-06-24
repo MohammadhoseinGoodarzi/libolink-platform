@@ -20,7 +20,7 @@ function isoMinutesAgo(minutes: number): string {
   return new Date(NOW - minutes * MINUTE).toISOString();
 }
 
-export const CONVERSATIONS: Conversation[] = [
+const RAW_CONVERSATIONS: Omit<Conversation, 'archived' | 'blocked'>[] = [
   {
     id: 'amara',
     kind: 'dm',
@@ -34,7 +34,7 @@ export const CONVERSATIONS: Conversation[] = [
     unreadCount: 0,
     pinned: true,
     muted: false,
-    typing: true,
+    typing: false,
     lastMessageMine: false,
     lastMessageRead: false,
   },
@@ -209,6 +209,16 @@ export const CONVERSATIONS: Conversation[] = [
     lastMessageRead: false,
   },
 ];
+
+// A couple seeded into the Archived folder so the archived row is visible in the
+// demo; everything else starts in the main list.
+const ARCHIVED_SEED = new Set(['elena', 'priya']);
+
+export const CONVERSATIONS: Conversation[] = RAW_CONVERSATIONS.map((c) => ({
+  ...c,
+  archived: ARCHIVED_SEED.has(c.id),
+  blocked: false,
+}));
 
 // Startable targets for the new-message sheet (handoff §6.3): friends & readers,
 // book clubs, and communities you can open a fresh chat with. A few overlap with

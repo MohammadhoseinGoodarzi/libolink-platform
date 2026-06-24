@@ -1,15 +1,36 @@
+import { useConversationList } from '@repo/hooks';
 import { type MessageKey, useDictionary } from '@repo/i18n';
 import type { Conversation } from '@repo/types';
 import { useRouter } from 'expo-router';
-import { Lock, Pin } from 'lucide-react-native';
+import {
+  Archive,
+  Bell,
+  BellOff,
+  ChevronRight,
+  Lock,
+  Mail,
+  MailOpen,
+  Pin,
+  PinOff,
+  Trash2,
+} from 'lucide-react-native';
 import { Fragment, useState } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
-import { Button, FilterChip, SearchInput, SponsoredCard, Text } from '@/shared/components/ui';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import {
+  Button,
+  FilterChip,
+  SearchInput,
+  SponsoredCard,
+  Text,
+  useToast,
+} from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
-import { useConversations } from '../hooks/use-conversations';
+import { useTypingSimulation } from '../hooks/use-typing-simulation';
 import { MESSAGES_AD } from '../services/messages-data';
-import type { FilterKey } from '../types';
+import { messagesClient } from '../services/messages-service';
+import type { FilterKey, SwipeAction } from '../types';
 import { ConversationRow } from './conversation-row';
+import { SwipeableRow } from './swipeable-row';
 
 const FILTERS: { key: FilterKey; labelKey: MessageKey<'Messages'> }[] = [
   { key: 'all', labelKey: 'filterAll' },
@@ -44,19 +65,37 @@ function SectionLabel({ icon, children }: { icon?: React.ReactNode; children: st
 
 // Messages list (handoff §6.3): big title + unread count, search, filter chips,
 // Pinned / All Messages sections, a Sponsored card at the list midpoint, and an
-// end-to-end-encryption footer. Data flows through shared @repo/api via
-// useConversations. Row tap pushes the chat screen.
+// end-to-end-encryption footer. Data + optimistic swipe actions flow through the
+// shared useConversationList controller. Row tap pushes the chat screen; swipe
+// reveals Read/Unread (leading) and Archive/Mute/Delete (trailing).
 export function ConversationList() {
   const t = useDictionary('Messages');
   const tCommon = useDictionary('Common');
   const colors = useThemeColors();
   const router = useRouter();
-  const { data, isLoading, isError, refetch } = useConversations();
+  const toast = useToast();
+  const {
+    conversations,
+    archived,
+    isLoading,
+    isError,
+    refetch,
+    markRead,
+    markUnread,
+    toggleMute,
+    togglePin,
+    archive,
+    remove,
+  } = useConversationList(messagesClient);
 
   const [filter, setFilter] = useState<FilterKey>('all');
   const [query, setQuery] = useState('');
 
-  const conversations = data?.items ?? [];
+  // Simulated "is typing" presence over the 1:1 chats (no backend yet).
+  const typingIds = useTypingSimulation(
+    conversations.filter((c) => c.kind === 'dm').map((c) => c.id),
+  );
+
   const totalUnread = conversations.filter((c) => c.unreadCount > 0).length;
 
   const q = query.trim().toLowerCase();
@@ -68,6 +107,104 @@ export function ConversationList() {
   const adAt = rest.length > 1 ? Math.floor(rest.length / 2) : -1;
 
   const open = (id: string) => router.push({ pathname: '/chat/[id]', params: { id } });
+
+  // Swipe actions for a row (handoff §6.3) — leading: Read/Unread; trailing:
+  // Archive · Mute/Unmute · Delete. Each fires the optimistic controller + toast.
+  const swipeActions = (c: Conversation): { leading: SwipeAction[]; trailing: SwipeAction[] } => {
+    const unread = c.unreadCount > 0;
+    return {
+      leading: [
+        {
+          key: 'pin',
+          label: c.pinned ? t('unpin') : t('pin'),
+          icon: c.pinned ? PinOff : Pin,
+          background: colors.link,
+          onPress: () => {
+            const r = togglePin(c.id);
+            toast.show(
+              r === 'limit'
+                ? t('pinLimit')
+                : r === 'pinned'
+                  ? t('pinnedToast')
+                  : t('unpinnedToast'),
+            );
+          },
+        },
+        {
+          key: 'read',
+          label: unread ? t('actionRead') : t('actionUnread'),
+          icon: unread ? MailOpen : Mail,
+          background: colors.primary,
+          onPress: () => (unread ? markRead(c.id) : markUnread(c.id)),
+        },
+      ],
+      trailing: [
+        {
+          key: 'archive',
+          label: t('archive'),
+          icon: Archive,
+          background: colors.link,
+          onPress: () => {
+            archive(c.id);
+            toast.show(t('archived'));
+          },
+        },
+        {
+          key: 'mute',
+          label: c.muted ? t('unmute') : t('mute'),
+          icon: c.muted ? Bell : BellOff,
+          background: colors.mutedForeground,
+          onPress: () => toast.show(toggleMute(c.id) ? t('muted') : t('unmuted')),
+        },
+        {
+          key: 'delete',
+          label: tCommon('delete'),
+          icon: Trash2,
+          background: colors.destructive,
+          onPress: () => {
+            remove(c.id);
+            toast.show(t('deleted'));
+          },
+        },
+      ],
+    };
+  };
+
+  const renderRow = (c: Conversation) => {
+    const { leading, trailing } = swipeActions(c);
+    const display = typingIds.has(c.id) ? { ...c, typing: true } : c;
+    return (
+      <SwipeableRow onPress={() => open(c.id)} leadingActions={leading} trailingActions={trailing}>
+        <ConversationRow conversation={display} />
+      </SwipeableRow>
+    );
+  };
+
+  // Archived folder entry point — shown whenever there are archived chats,
+  // independent of the active filter/search (so it never vanishes on an empty
+  // result; the archive lives outside the filtered view).
+  const archivedEntry =
+    archived.length > 0 ? (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('archivedFolder')}
+        onPress={() => router.push('/archived')}
+        className="flex-row items-center gap-3 border-border border-b px-4 py-3 active:opacity-70"
+      >
+        <View className="h-11 w-11 items-center justify-center rounded-full bg-secondary">
+          <Archive size={20} color={colors.mutedForeground} />
+        </View>
+        <Text className="flex-1 font-sans-semibold text-[15px] text-foreground">
+          {t('archivedFolder')}
+        </Text>
+        <View className="min-w-[22px] items-center rounded-full bg-secondary px-2 py-0.5">
+          <Text className="font-sans-semibold text-[12px] text-muted-foreground">
+            {archived.length}
+          </Text>
+        </View>
+        <ChevronRight size={18} color={colors.mutedForeground} />
+      </Pressable>
+    ) : null;
 
   return (
     <View className="flex-1 bg-background">
@@ -118,20 +255,25 @@ export function ConversationList() {
           </Button>
         </View>
       ) : filtered.length === 0 ? (
-        <View className="flex-1 items-center justify-center px-10">
-          <Text className="text-center font-sans text-[14px] text-muted-foreground">
-            {filter === 'unread' ? t('emptyUnread') : t('emptyAll')}
-          </Text>
+        <View className="flex-1">
+          {archivedEntry}
+          <View className="flex-1 items-center justify-center px-10">
+            <Text className="text-center font-sans text-[14px] text-muted-foreground">
+              {filter === 'unread' ? t('emptyUnread') : t('emptyAll')}
+            </Text>
+          </View>
         </View>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
+          {archivedEntry}
+
           {pinned.length > 0 ? (
             <>
               <SectionLabel icon={<Pin size={13} color={colors.mutedForeground} />}>
                 {t('pinned')}
               </SectionLabel>
               {pinned.map((c) => (
-                <ConversationRow key={c.id} conversation={c} onOpen={open} />
+                <Fragment key={c.id}>{renderRow(c)}</Fragment>
               ))}
             </>
           ) : null}
@@ -141,7 +283,7 @@ export function ConversationList() {
               {pinned.length > 0 ? <SectionLabel>{t('allMessages')}</SectionLabel> : null}
               {rest.map((c, index) => (
                 <Fragment key={c.id}>
-                  <ConversationRow conversation={c} onOpen={open} />
+                  {renderRow(c)}
                   {index === adAt ? (
                     <SponsoredCard
                       letter={MESSAGES_AD.letter}

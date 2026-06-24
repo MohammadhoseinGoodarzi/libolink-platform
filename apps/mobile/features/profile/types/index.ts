@@ -22,6 +22,12 @@ import type { ReactNode } from 'react';
 // Whether the screen renders the owner's own controls or the visitor view.
 export type ProfileMode = 'owner' | 'visitor';
 
+export type ProfileViewProps = {
+  /** Load another reader's profile (visitor mode, pushed screen with a back
+      button). Omit for the signed-in user's own profile on the Profile tab. */
+  readerId?: string;
+};
+
 export type SectionProps = {
   title: string;
   sub?: string;

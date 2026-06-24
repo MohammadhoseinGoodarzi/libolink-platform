@@ -4,6 +4,10 @@ import { CONVERSATION_CANDIDATES, CONVERSATIONS } from './messages-data';
 import { getThread } from './thread-data';
 
 const THREAD = /^\/conversations\/([^/]+)\/thread$/;
+// Swipe-action routes (read/mute/archive POST, delete DELETE) — accepted as
+// no-ops; useConversationList owns the optimistic list state.
+const ROW_ACTION = /^\/conversations\/[^/]+\/(read|mute|pin|block|archive|unarchive)$/;
+const ONE = /^\/conversations\/([^/]+)$/;
 
 // Offline messages backend (handoff §7) — a minimal HttpClient fulfilling the
 // routes createMessageApi calls. Swap `messagesClient` in messages-service.ts
@@ -46,13 +50,27 @@ export function createMockMessagesClient(): HttpClient {
     return unsupported();
   }
 
+  async function post<T>(path: string): Promise<T> {
+    if (ROW_ACTION.test(path)) {
+      return delay(undefined as T);
+    }
+    return unsupported();
+  }
+
+  async function remove<T>(path: string): Promise<T> {
+    if (ONE.test(path)) {
+      return delay(undefined as T);
+    }
+    return unsupported();
+  }
+
   return {
     request: unsupported,
     get,
-    post: unsupported,
+    post,
     put: unsupported,
     patch: unsupported,
-    delete: unsupported,
+    delete: remove,
     addRequestInterceptor: () => undefined,
     addResponseInterceptor: () => undefined,
   };

@@ -1,12 +1,12 @@
 import { useDictionary } from '@repo/i18n';
 import { useRouter } from 'expo-router';
-import { Search, Sparkles } from 'lucide-react-native';
+import { Sparkles } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 import { ClubsView } from '@/features/clubs';
+import { GlobalSearch } from '@/features/search';
 import { Header } from '@/shared/components/shell';
-import { BrandGradient, IconButton, Text, useToast } from '@/shared/components/ui';
+import { BrandGradient, Text } from '@/shared/components/ui';
 import { ROUTES } from '@/shared/constants';
-import { useThemeColors } from '@/shared/theme';
 
 // Brand-gradient "Premium" pill (handoff §6.5) — a custom gradient affordance
 // the Button atom can't express, so a Pressable wraps BrandGradient with a role.
@@ -29,19 +29,10 @@ function PremiumPill() {
 }
 
 function ClubsHeaderActions() {
-  const tCommon = useDictionary('Common');
-  const colors = useThemeColors();
-  const toast = useToast();
-  // The header search opens the phase-2 search overlay; acknowledge the tap.
   return (
     <View className="flex-row items-center gap-1">
       <PremiumPill />
-      <IconButton
-        accessibilityLabel={tCommon('search')}
-        onPress={() => toast.show(tCommon('comingSoon'))}
-      >
-        <Search size={21} color={colors.primary} />
-      </IconButton>
+      <GlobalSearch />
     </View>
   );
 }

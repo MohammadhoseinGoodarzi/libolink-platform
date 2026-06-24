@@ -20,9 +20,9 @@ function Avatar({
   const radius = shape === 'square' ? size * 0.3 : size / 2;
 
   return (
-    <View style={{ width: size, height: size }} className="shrink-0">
+    <View style={{ width: size, height: size, aspectRatio: 1 }} className="shrink-0">
       <View
-        className="h-full w-full items-center justify-center"
+        className="h-full w-full items-center justify-center overflow-hidden"
         style={{ backgroundColor: background, borderRadius: radius }}
       >
         <Text

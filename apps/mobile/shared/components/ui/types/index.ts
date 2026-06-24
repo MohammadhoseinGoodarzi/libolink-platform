@@ -38,6 +38,22 @@ export type AvatarProps = {
   shape?: 'round' | 'square';
 };
 
+// A ringed avatar shared by the profile hero and the stories row (one component
+// so both stay identical). `gradient` = crimson→navy story ring (unseen),
+// `muted` = seen story ring, `frame` = the profile's thick card frame.
+export type AvatarRingVariant = 'gradient' | 'muted' | 'frame';
+
+export type AvatarRingProps = {
+  variant: AvatarRingVariant;
+  /** Inner avatar diameter; the ring/gap are added around it. */
+  size: number;
+  initials: string;
+  name?: string | undefined;
+  hue?: number;
+  /** Overlay badges (story "+", verified tick) positioned over the outer ring. */
+  children?: ReactNode;
+};
+
 export type BookCoverProps = {
   title: string;
   author?: string;
