@@ -9,19 +9,13 @@ import { Avatar, BookCover, BottomSheet, SearchInput, Text } from '@/shared/comp
 import { useBottomInset } from '@/shared/hooks/use-bottom-inset';
 import { useThemeColors } from '@/shared/theme';
 import { useConversationCandidates } from '../hooks/use-conversations';
-import type { NewMessageSheetProps } from '../types';
+import type { CandidateRowProps, GroupSectionProps, NewMessageSheetProps } from '../types';
 
 // Grabber (~30) + the header row (~44) share BottomSheet's 90% box, so the list
 // never overflows behind the Android nav bar (mirror of the share sheet).
 const SHEET_CHROME = 74;
 
-function CandidateRow({
-  candidate: c,
-  onPick,
-}: {
-  candidate: ConversationCandidate;
-  onPick: (c: ConversationCandidate) => void;
-}) {
+function CandidateRow({ candidate: c, onPick }: CandidateRowProps) {
   const colors = useThemeColors();
   const t = useDictionary('Messages');
   const isClub = c.kind === 'club';
@@ -75,15 +69,7 @@ function CandidateRow({
   );
 }
 
-function GroupSection({
-  label,
-  rows,
-  onPick,
-}: {
-  label: string;
-  rows: ConversationCandidate[];
-  onPick: (c: ConversationCandidate) => void;
-}) {
+function GroupSection({ label, rows, onPick }: GroupSectionProps) {
   if (rows.length === 0) {
     return null;
   }
