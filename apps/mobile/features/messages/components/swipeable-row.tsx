@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { Animated, Easing, PanResponder, Pressable, View } from 'react-native';
 import { Text } from '@/shared/components/ui';
+import { useThemeColors } from '@/shared/theme';
 import type { SwipeAction, SwipeableRowProps } from '../types';
 
 // Soft ease-out matching the app's sheet/menu curve (handoff §3.8).
@@ -36,6 +37,7 @@ export function SwipeableRow({
   leadingActions = [],
   trailingActions = [],
 }: SwipeableRowProps) {
+  const colors = useThemeColors();
   const translateX = useRef(new Animated.Value(0)).current;
   const startX = useRef(0);
   const openRef = useRef(false);
@@ -92,7 +94,7 @@ export function SwipeableRow({
   };
 
   return (
-    <View className="relative overflow-hidden bg-card">
+    <View className="relative overflow-hidden">
       {leadingActions.length > 0 ? (
         <View className="absolute top-0 bottom-0 left-0 flex-row">
           {leadingActions.map((a) => (
@@ -108,7 +110,12 @@ export function SwipeableRow({
         </View>
       ) : null}
 
-      <Animated.View style={{ transform: [{ translateX }] }} {...pan.panHandlers}>
+      {/* Opaque foreground (matches the list background) so the action buttons
+          behind stay hidden until the row is swiped open. */}
+      <Animated.View
+        style={{ transform: [{ translateX }], backgroundColor: colors.background }}
+        {...pan.panHandlers}
+      >
         <Pressable onPress={handlePress} className="active:opacity-70">
           {children}
         </Pressable>

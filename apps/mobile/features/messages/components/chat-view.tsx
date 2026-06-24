@@ -4,7 +4,7 @@ import { getInitials } from '@repo/utils';
 import { useRouter } from 'expo-router';
 import { Lock } from 'lucide-react-native';
 import { useRef, useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
 import { Avatar, BookCover, Button, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useConversation, useThread } from '../hooks/use-conversations';
@@ -58,10 +58,7 @@ export function ChatView({ id }: { id: string }) {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      className="flex-1 bg-background"
-    >
+    <View className="flex-1 bg-background">
       <ChatHeader conversation={conversation} onBack={() => router.back()} />
 
       {isEmpty ? (
@@ -111,6 +108,6 @@ export function ChatView({ id }: { id: string }) {
       )}
 
       <ChatComposer onSend={send} />
-    </KeyboardAvoidingView>
+    </View>
   );
 }
