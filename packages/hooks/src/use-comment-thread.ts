@@ -74,21 +74,25 @@ export function useCommentThread(client: HttpClient, postId: string, me: User): 
     if (!node) {
       return;
     }
-    const nextLiked = !node.likedByMe;
+    const wasLiked = node.likedByMe;
+    // Toggle from each node's CURRENT state inside the updater (not a captured
+    // constant) so rapid taps flip the latest committed state instead of
+    // re-applying the same delta and corrupting the count.
     setThread((list) =>
       mapTree(list, id, (n) => ({
         ...n,
-        likedByMe: nextLiked,
-        likeCount: n.likeCount + (nextLiked ? 1 : -1),
+        likedByMe: !n.likedByMe,
+        likeCount: n.likeCount + (n.likedByMe ? -1 : 1),
       })),
     );
-    const request = nextLiked ? api.likeComment(postId, id) : api.unlikeComment(postId, id);
+    const request = wasLiked ? api.unlikeComment(postId, id) : api.likeComment(postId, id);
     request.catch(() => undefined);
   };
 
   const addComment = (content: string, parentId?: string) => {
+    const localId = `c_local_${Date.now()}`;
     const fresh: Comment = {
-      id: `c_local_${Date.now()}`,
+      id: localId,
       postId,
       author: me,
       content,
@@ -103,7 +107,15 @@ export function useCommentThread(client: HttpClient, postId: string, me: User): 
         ? mapTree(list, parentId, (n) => ({ ...n, replies: [...n.replies, fresh] }))
         : [...list, fresh],
     );
-    api.addComment({ postId, content, ...(parentId ? { parentId } : {}) }).catch(() => undefined);
+    // Reconcile the optimistic placeholder with the server comment so its real id
+    // backs later edit/delete/like (mapTree finds the local id at any depth);
+    // keep any replies that accreted while the request was in flight.
+    api
+      .addComment({ postId, content, ...(parentId ? { parentId } : {}) })
+      .then((saved) => {
+        setThread((list) => mapTree(list, localId, (n) => ({ ...saved, replies: n.replies })));
+      })
+      .catch(() => undefined);
   };
 
   const editComment = (id: string, content: string) => {
