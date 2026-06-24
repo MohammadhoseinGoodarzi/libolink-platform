@@ -6,7 +6,7 @@ import { getThread } from './thread-data';
 const THREAD = /^\/conversations\/([^/]+)\/thread$/;
 // Swipe-action routes (read/mute/archive POST, delete DELETE) — accepted as
 // no-ops; useConversationList owns the optimistic list state.
-const ROW_ACTION = /^\/conversations\/[^/]+\/(read|mute|archive|unarchive)$/;
+const ROW_ACTION = /^\/conversations\/[^/]+\/(read|mute|pin|block|archive|unarchive)$/;
 const ONE = /^\/conversations\/([^/]+)$/;
 
 // Offline messages backend (handoff §7) — a minimal HttpClient fulfilling the

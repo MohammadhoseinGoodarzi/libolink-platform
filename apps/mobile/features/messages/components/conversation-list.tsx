@@ -11,6 +11,7 @@ import {
   Mail,
   MailOpen,
   Pin,
+  PinOff,
   Trash2,
 } from 'lucide-react-native';
 import { Fragment, useState } from 'react';
@@ -82,6 +83,7 @@ export function ConversationList() {
     markRead,
     markUnread,
     toggleMute,
+    togglePin,
     archive,
     remove,
   } = useConversationList(messagesClient);
@@ -112,6 +114,22 @@ export function ConversationList() {
     const unread = c.unreadCount > 0;
     return {
       leading: [
+        {
+          key: 'pin',
+          label: c.pinned ? t('unpin') : t('pin'),
+          icon: c.pinned ? PinOff : Pin,
+          background: colors.link,
+          onPress: () => {
+            const r = togglePin(c.id);
+            toast.show(
+              r === 'limit'
+                ? t('pinLimit')
+                : r === 'pinned'
+                  ? t('pinnedToast')
+                  : t('unpinnedToast'),
+            );
+          },
+        },
         {
           key: 'read',
           label: unread ? t('actionRead') : t('actionUnread'),

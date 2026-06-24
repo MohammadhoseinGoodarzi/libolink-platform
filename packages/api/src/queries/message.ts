@@ -17,6 +17,8 @@ export interface MessageApi {
   /** Row swipe actions (handoff §6.3). */
   setRead(conversationId: string, read: boolean): Promise<void>;
   setMuted(conversationId: string, muted: boolean): Promise<void>;
+  setPinned(conversationId: string, pinned: boolean): Promise<void>;
+  setBlocked(conversationId: string, blocked: boolean): Promise<void>;
   archive(conversationId: string): Promise<void>;
   unarchive(conversationId: string): Promise<void>;
   remove(conversationId: string): Promise<void>;
@@ -30,6 +32,10 @@ export function createMessageApi(client: HttpClient): MessageApi {
     candidates: () => client.get<ConversationCandidate[]>('/conversations/candidates'),
     setRead: (conversationId, read) => client.post<void>(`${at(conversationId)}/read`, { read }),
     setMuted: (conversationId, muted) => client.post<void>(`${at(conversationId)}/mute`, { muted }),
+    setPinned: (conversationId, pinned) =>
+      client.post<void>(`${at(conversationId)}/pin`, { pinned }),
+    setBlocked: (conversationId, blocked) =>
+      client.post<void>(`${at(conversationId)}/block`, { blocked }),
     archive: (conversationId) => client.post<void>(`${at(conversationId)}/archive`),
     unarchive: (conversationId) => client.post<void>(`${at(conversationId)}/unarchive`),
     remove: (conversationId) => client.delete<void>(at(conversationId)),

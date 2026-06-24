@@ -1,13 +1,23 @@
+import { useConversationList } from '@repo/hooks';
 import { useDictionary } from '@repo/i18n';
 import type { ChatMessage } from '@repo/types';
 import { getInitials } from '@repo/utils';
 import { useRouter } from 'expo-router';
-import { Lock } from 'lucide-react-native';
+import { Ban, ChevronDown, Lock } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import {
+  ActivityIndicator,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  Pressable,
+  ScrollView,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Avatar, BookCover, Button, Text } from '@/shared/components/ui';
-import { useThemeColors } from '@/shared/theme';
+import { useShadow, useThemeColors } from '@/shared/theme';
 import { useConversation, useThread } from '../hooks/use-conversations';
+import { messagesClient } from '../services/messages-service';
 import { REPLY_SNIPPETS } from '../services/thread-data';
 import { ChatComposer } from './chat-composer';
 import { ChatHeader } from './chat-header';
@@ -22,12 +32,23 @@ export function ChatView({ id }: { id: string }) {
   const t = useDictionary('Messages');
   const tCommon = useDictionary('Common');
   const colors = useThemeColors();
+  const insets = useSafeAreaInsets();
   const { conversation, isLoading: conversationLoading } = useConversation(id);
+  const { toggleBlock } = useConversationList(messagesClient);
   const thread = useThread(id);
   const scrollRef = useRef<ScrollView>(null);
+  const shadow = useShadow('card');
   const [sent, setSent] = useState<ChatMessage[]>([]);
   const [theyTyping, setTheyTyping] = useState(false);
+  const [showScrollDown, setShowScrollDown] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // Show the jump-to-latest button once scrolled a screenful up from the bottom.
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
+    const fromBottom = contentSize.height - (contentOffset.y + layoutMeasurement.height);
+    setShowScrollDown(fromBottom > 240);
+  };
 
   // Clear any pending typing/reply timers on unmount.
   useEffect(() => {
@@ -109,35 +130,68 @@ export function ChatView({ id }: { id: string }) {
           </Text>
         </View>
       ) : (
-        <ScrollView
-          ref={scrollRef}
-          onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: false })}
-          showsVerticalScrollIndicator={false}
-          contentContainerClassName="gap-2.5 px-3.5 py-2"
-          className="flex-1"
-        >
-          <View className="my-1 max-w-[300px] flex-row items-center gap-1.5 self-center rounded-[16px] bg-primary/5 px-3.5 py-2">
-            <Lock size={13} color={colors.primary} />
-            <Text className="shrink text-center font-sans text-[11.5px] text-muted-foreground">
-              {t('encryptedBanner')}
-            </Text>
-          </View>
+        <View className="flex-1">
+          <ScrollView
+            ref={scrollRef}
+            onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: false })}
+            onScroll={onScroll}
+            scrollEventThrottle={32}
+            showsVerticalScrollIndicator={false}
+            contentContainerClassName="gap-2.5 px-3.5 py-2"
+            className="flex-1"
+          >
+            <View className="my-1 max-w-[300px] flex-row items-center gap-1.5 self-center rounded-[16px] bg-primary/5 px-3.5 py-2">
+              <Lock size={13} color={colors.primary} />
+              <Text className="shrink text-center font-sans text-[11.5px] text-muted-foreground">
+                {t('encryptedBanner')}
+              </Text>
+            </View>
 
-          {messages.map((m) =>
-            m.kind === 'day' ? (
-              <View key={m.id} className="my-0.5 self-center rounded-full bg-primary/5 px-3 py-1">
-                <Text className="font-sans-semibold text-[11px] text-muted-foreground">
-                  {m.label}
-                </Text>
-              </View>
-            ) : (
-              <MessageRow key={m.id} message={m} />
-            ),
-          )}
-        </ScrollView>
+            {messages.map((m) =>
+              m.kind === 'day' ? (
+                <View key={m.id} className="my-0.5 self-center rounded-full bg-primary/5 px-3 py-1">
+                  <Text className="font-sans-semibold text-[11px] text-muted-foreground">
+                    {m.label}
+                  </Text>
+                </View>
+              ) : (
+                <MessageRow key={m.id} message={m} />
+              ),
+            )}
+          </ScrollView>
+
+          {showScrollDown ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('scrollToLatest')}
+              onPress={() => scrollRef.current?.scrollToEnd({ animated: true })}
+              style={shadow}
+              className="absolute right-3.5 bottom-3 h-11 w-11 items-center justify-center rounded-full border border-border bg-card active:opacity-80"
+            >
+              <ChevronDown size={24} color={colors.foreground} />
+            </Pressable>
+          ) : null}
+        </View>
       )}
 
-      <ChatComposer onSend={send} />
+      {conversation.blocked ? (
+        <View
+          style={{ paddingBottom: insets.bottom }}
+          className="border-border border-t bg-card px-4 pt-3"
+        >
+          <View className="flex-row items-center gap-2 pb-2.5">
+            <Ban size={16} color={colors.destructive} />
+            <Text className="flex-1 font-sans text-[13px] text-muted-foreground">
+              {t('blockedComposer')}
+            </Text>
+          </View>
+          <Button variant="outline" size="sm" onPress={() => toggleBlock(id)}>
+            {t('unblock')}
+          </Button>
+        </View>
+      ) : (
+        <ChatComposer onSend={send} />
+      )}
     </View>
   );
 }

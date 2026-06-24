@@ -7,6 +7,11 @@ import {
 import type { Conversation, Paginated } from '@repo/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
+/** Telegram-style cap on how many conversations can be pinned at once. */
+export const MAX_PINNED_CONVERSATIONS = 10;
+
+export type PinResult = 'pinned' | 'unpinned' | 'limit';
+
 export interface ConversationListController {
   /** Active conversations (not archived). */
   conversations: Conversation[];
@@ -21,6 +26,11 @@ export interface ConversationListController {
   markUnread: (id: string) => void;
   /** Toggle mute; returns the new muted state for UI feedback. */
   toggleMute: (id: string) => boolean;
+  /** Toggle pin (capped at MAX_PINNED_CONVERSATIONS); returns the outcome so the
+      UI can confirm or warn that the limit was hit. */
+  togglePin: (id: string) => PinResult;
+  /** Block/unblock the other party; returns the new blocked state. */
+  toggleBlock: (id: string) => boolean;
   /** Move to the Archived folder. */
   archive: (id: string) => void;
   /** Restore from the Archived folder. */
@@ -65,6 +75,28 @@ export function useConversationList(client: HttpClient): ConversationListControl
     return next;
   };
 
+  const togglePin = (id: string): PinResult => {
+    const isPinned = items.find((c) => c.id === id)?.pinned ?? false;
+    // Pinning a new one is capped; unpinning is always allowed. Count pins in the
+    // active list only (archived chats aren't shown in the pinned section).
+    if (!isPinned) {
+      const pinnedCount = items.filter((c) => c.pinned && !c.archived).length;
+      if (pinnedCount >= MAX_PINNED_CONVERSATIONS) {
+        return 'limit';
+      }
+    }
+    patchOne(id, (c) => ({ ...c, pinned: !isPinned }));
+    api.setPinned(id, !isPinned).catch(() => undefined);
+    return isPinned ? 'unpinned' : 'pinned';
+  };
+
+  const toggleBlock = (id: string): boolean => {
+    const next = !(items.find((c) => c.id === id)?.blocked ?? false);
+    patchOne(id, (c) => ({ ...c, blocked: next }));
+    api.setBlocked(id, next).catch(() => undefined);
+    return next;
+  };
+
   const archive = (id: string) => {
     patchOne(id, (c) => ({ ...c, archived: true }));
     api.archive(id).catch(() => undefined);
@@ -89,6 +121,8 @@ export function useConversationList(client: HttpClient): ConversationListControl
     markRead,
     markUnread,
     toggleMute,
+    togglePin,
+    toggleBlock,
     archive,
     unarchive,
     remove,

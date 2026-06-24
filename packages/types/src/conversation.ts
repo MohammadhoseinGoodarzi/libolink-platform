@@ -28,6 +28,8 @@ export interface Conversation {
   lastMessageRead: boolean;
   /** Hidden from the main list into the Archived folder. */
   archived: boolean;
+  /** The other party is blocked — chat is read-only until unblocked. */
+  blocked: boolean;
 }
 
 // A startable conversation target in the new-message sheet (handoff §6.3): a

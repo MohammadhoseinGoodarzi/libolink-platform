@@ -41,7 +41,7 @@ export function ContactView({ id }: { id: string }) {
   const tMsg = useDictionary('Messages');
   const toast = useToast();
   const { conversation, isLoading, notFound } = useConversation(id);
-  const { toggleMute } = useConversationList(messagesClient);
+  const { toggleMute, toggleBlock } = useConversationList(messagesClient);
 
   if (isLoading) {
     return (
@@ -63,6 +63,7 @@ export function ContactView({ id }: { id: string }) {
 
   const contact = getContact(conversation);
   const muted = conversation.muted;
+  const blocked = conversation.blocked;
 
   const actions = [
     {
@@ -81,10 +82,10 @@ export function ContactView({ id }: { id: string }) {
     },
     {
       key: 'block',
-      label: t('block'),
+      label: blocked ? t('unblock') : t('block'),
       icon: Ban,
       danger: true,
-      onPress: () => toast.show(t('blocked')),
+      onPress: () => toast.show(toggleBlock(id) ? t('blocked') : t('unblocked')),
     },
   ];
 
@@ -120,6 +121,16 @@ export function ContactView({ id }: { id: string }) {
             {contact.online ? t('online') : t('offline')}
           </Text>
         </View>
+
+        {/* blocked banner */}
+        {blocked ? (
+          <View className="mx-4 mb-3 flex-row items-center gap-2 rounded-2xl bg-destructive/10 px-4 py-3">
+            <Ban size={16} color={colors.destructive} />
+            <Text className="flex-1 font-sans-medium text-[13px] text-destructive">
+              {t('blockedBanner')}
+            </Text>
+          </View>
+        ) : null}
 
         {/* view full app profile (visitor mode) */}
         <View className="px-4 pb-4">
@@ -241,16 +252,16 @@ export function ContactView({ id }: { id: string }) {
           </View>
         ) : null}
 
-        {/* block */}
+        {/* block / unblock */}
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={t('blockUser')}
-          onPress={() => toast.show(t('blocked'))}
+          accessibilityLabel={blocked ? t('unblockUser') : t('blockUser')}
+          onPress={() => toast.show(toggleBlock(id) ? t('blocked') : t('unblocked'))}
           className="mx-4 mt-6 flex-row items-center gap-2.5 rounded-2xl border border-border bg-card px-4 py-3.5 active:opacity-70"
         >
           <Ban size={18} color={colors.destructive} />
           <Text className="font-sans-semibold text-[14.5px] text-destructive">
-            {t('blockUser')}
+            {blocked ? t('unblockUser') : t('blockUser')}
           </Text>
         </Pressable>
       </ScrollView>

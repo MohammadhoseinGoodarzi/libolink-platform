@@ -32,6 +32,7 @@ function fromCandidate(candidate: ConversationCandidate): Conversation {
     lastMessageMine: false,
     lastMessageRead: false,
     archived: false,
+    blocked: false,
   };
 }
 
