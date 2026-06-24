@@ -64,6 +64,17 @@ export function ContactView({ id }: { id: string }) {
   const contact = getContact(conversation);
   const muted = conversation.muted;
   const blocked = conversation.blocked;
+  // DMs open a reader profile; clubs and communities are both clubs (not people),
+  // so they share the "View Club" label (a dedicated club info screen is future work).
+  const isCommunity = conversation.kind !== 'dm';
+  const profileLabel = isCommunity ? t('viewClub') : t('viewProfile');
+  const openProfile = () => {
+    if (isCommunity) {
+      toast.show(tCommon('comingSoon'));
+      return;
+    }
+    router.push({ pathname: '/reader/[id]', params: { id } });
+  };
 
   const actions = [
     {
@@ -132,20 +143,24 @@ export function ContactView({ id }: { id: string }) {
           </View>
         ) : null}
 
-        {/* view full app profile (visitor mode) */}
+        {/* view full profile (DM) / club / community */}
         <View className="px-4 pb-4">
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={t('viewProfile')}
-            onPress={() => router.push({ pathname: '/reader/[id]', params: { id } })}
+            accessibilityLabel={profileLabel}
+            onPress={openProfile}
             className="h-12 flex-row items-center justify-center gap-2 rounded-2xl bg-primary active:opacity-90"
           >
-            <UserRound size={18} color={colors.primaryForeground} />
+            {isCommunity ? (
+              <UsersRound size={18} color={colors.primaryForeground} />
+            ) : (
+              <UserRound size={18} color={colors.primaryForeground} />
+            )}
             <Text
               className="font-sans-bold text-[15px]"
               style={{ color: colors.primaryForeground }}
             >
-              {t('viewProfile')}
+              {profileLabel}
             </Text>
           </Pressable>
         </View>

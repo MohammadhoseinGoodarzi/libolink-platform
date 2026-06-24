@@ -1,5 +1,6 @@
 export * from './action-sheet';
 export * from './avatar';
+export * from './avatar-ring';
 export * from './badges';
 export * from './book-cover';
 export * from './bottom-sheet';

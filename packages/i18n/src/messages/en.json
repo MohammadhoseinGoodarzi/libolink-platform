@@ -278,6 +278,7 @@
   "Contact": {
     "message": "Message",
     "viewProfile": "View Profile",
+    "viewClub": "View Club",
     "mute": "Mute",
     "unmute": "Unmute",
     "block": "Block",
