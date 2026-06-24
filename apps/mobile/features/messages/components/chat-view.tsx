@@ -84,7 +84,12 @@ export function ChatView({ id }: { id: string }) {
 
   return (
     <View className="flex-1 bg-background">
-      <ChatHeader conversation={conversation} onBack={() => router.back()} typing={theyTyping} />
+      <ChatHeader
+        conversation={conversation}
+        onBack={() => router.back()}
+        typing={theyTyping}
+        onOpenProfile={() => router.push({ pathname: '/user/[id]', params: { id } })}
+      />
 
       {isEmpty ? (
         <View className="flex-1 items-center justify-center gap-3 px-8">

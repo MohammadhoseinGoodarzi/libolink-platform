@@ -267,6 +267,24 @@
     "archivedFolder": "Archived",
     "archivedEmpty": "No archived conversations."
   },
+  "Contact": {
+    "message": "Message",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "block": "Block",
+    "blocked": "User blocked",
+    "bioLabel": "Bio",
+    "usernameLabel": "Username",
+    "mutualClubs": "Mutual Book Clubs",
+    "sharedBooks": "Shared Books",
+    "sharedMedia": "Shared Media",
+    "photos": "photos",
+    "blockUser": "Block User",
+    "report": "Report",
+    "reported": "Report sent",
+    "online": "Online",
+    "offline": "Last seen recently"
+  },
   "Profile": {
     "premium": "Premium",
     "menu": "Menu",

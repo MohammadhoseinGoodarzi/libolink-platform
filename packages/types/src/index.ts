@@ -4,6 +4,7 @@ export type * from './chat';
 export type * from './club';
 export type * from './comment';
 export type * from './common';
+export type * from './contact';
 export type * from './conversation';
 export type * from './notification';
 export type * from './post';
