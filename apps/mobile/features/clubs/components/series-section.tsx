@@ -1,6 +1,6 @@
 import { useDictionary } from '@repo/i18n';
 import { formatCompactNumber } from '@repo/utils';
-import { ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { Text } from '@/shared/components/ui';
 import { useShadow } from '@/shared/theme';
 import type { SeriesSectionProps } from '../types';
@@ -9,7 +9,7 @@ import { ClubsSection } from './section';
 
 // Book Series Fan Clubs (handoff §6.5): tall gradient posters with a legibility
 // scrim and the club name + member count overlaid.
-function SeriesSection({ series, onSeeAll }: SeriesSectionProps) {
+function SeriesSection({ series, onSeeAll, onOpen }: SeriesSectionProps) {
   const t = useDictionary('Clubs');
   const shadow = useShadow('card');
   return (
@@ -20,7 +20,14 @@ function SeriesSection({ series, onSeeAll }: SeriesSectionProps) {
         contentContainerClassName="gap-3 px-[18px] pb-1"
       >
         {series.map((c) => (
-          <View key={c.id} style={shadow} className="w-[164px] rounded-lg">
+          <Pressable
+            key={c.id}
+            accessibilityRole="button"
+            accessibilityLabel={c.name}
+            onPress={() => onOpen(c.id)}
+            style={shadow}
+            className="w-[164px] rounded-lg active:opacity-80"
+          >
             <ClubBanner tone={c.tone} icon={c.icon} height={206} radius={20}>
               <View
                 className="absolute inset-x-0 bottom-0 px-3.5 pt-9 pb-3.5"
@@ -40,7 +47,7 @@ function SeriesSection({ series, onSeeAll }: SeriesSectionProps) {
                 </Text>
               </View>
             </ClubBanner>
-          </View>
+          </Pressable>
         ))}
       </ScrollView>
     </ClubsSection>

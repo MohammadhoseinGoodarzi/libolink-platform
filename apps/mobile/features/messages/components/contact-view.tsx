@@ -67,12 +67,13 @@ export function ContactView({ id }: { id: string }) {
   const muted = conversation.muted;
   const blocked = conversation.blocked;
   // DMs open a reader profile; clubs and communities are both clubs (not people),
-  // so they share the "View Club" label (a dedicated club info screen is future work).
+  // so they share the "View Club" label and open the community detail page.
   const isCommunity = conversation.kind !== 'dm';
   const profileLabel = isCommunity ? t('viewClub') : t('viewProfile');
   const openProfile = () => {
     if (isCommunity) {
-      toast.show(tCommon('comingSoon'));
+      // Clubs/communities open the community detail page (handoff §6.5 phase-2).
+      router.push({ pathname: '/club/[id]', params: { id } });
       return;
     }
     // The reader route resolves the profile by handle (api.byHandle), so pass the
@@ -119,7 +120,10 @@ export function ContactView({ id }: { id: string }) {
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 28 }}
+      >
         {/* identity */}
         <View className="items-center px-6 pt-6 pb-5">
           <Avatar
