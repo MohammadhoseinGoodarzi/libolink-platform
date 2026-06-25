@@ -4,8 +4,23 @@
 // types inline (CLAUDE.md: no type declarations in component files).
 
 import type { ComponentType, ReactNode } from 'react';
-import type { PressableProps, ViewProps } from 'react-native';
+import type { PressableProps, StyleProp, TextInputProps, ViewProps, ViewStyle } from 'react-native';
 import type { ButtonVariantProps } from '../button-variants';
+
+// The single shared TextInput primitive. Renders bare (just the styled TextInput)
+// unless a box affordance is supplied (`left`/`right`/`containerClassName`/
+// `containerStyle`), in which case it lays out as
+// `‹View flex-row items-center› {left} ‹TextInput flex-1› {right}`.
+export type InputBaseProps = TextInputProps & {
+  /** Leading element inside the box (icon, prefix). Presence switches to boxed mode. */
+  left?: ReactNode;
+  /** Trailing element inside the box (toggle, check). Presence switches to boxed mode. */
+  right?: ReactNode;
+  /** Box-wrapper className (boxed mode). Presence switches to boxed mode. */
+  containerClassName?: string;
+  /** Box-wrapper style for props NativeWind can't read (e.g. a dynamic border). */
+  containerStyle?: StyleProp<ViewStyle>;
+};
 
 export type SponsoredCardProps = {
   /** Monogram letter for the square mark. */
