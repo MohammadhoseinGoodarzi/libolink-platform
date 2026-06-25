@@ -5,7 +5,7 @@ import { type ComponentProps, useState } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { useThemeColors } from '@/shared/theme';
 
-function PasswordInput({ className, ...props }: ComponentProps<typeof TextInput>) {
+function PasswordInput({ className, style, ...props }: ComponentProps<typeof TextInput>) {
   const t = useDictionary('Common');
   const colors = useThemeColors();
   const [visible, setVisible] = useState(false);
@@ -15,6 +15,8 @@ function PasswordInput({ className, ...props }: ComponentProps<typeof TextInput>
       <TextInput
         secureTextEntry={!visible}
         placeholderTextColor={colors.mutedForeground}
+        // Tight glyph box + 1px top nudge for optical centring (same as SearchInput).
+        style={[{ includeFontPadding: false, paddingTop: 1, paddingBottom: 0 }, style]}
         className={cn(
           'h-[52px] rounded-2xl bg-secondary px-3.5 pr-12 font-sans-medium text-base text-foreground',
           className,

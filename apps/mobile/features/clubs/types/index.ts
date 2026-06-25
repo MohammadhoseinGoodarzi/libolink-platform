@@ -1,7 +1,9 @@
 import type {
   AdaptationCommunity,
   AuthorCommunity,
+  ClubListing,
   ClubSummary,
+  ClubsDirectory,
   PublisherCommunity,
 } from '@repo/types';
 import type { ReactNode } from 'react';
@@ -48,8 +50,33 @@ export type ClubsSectionProps = {
 };
 
 export type DirectoryIntroProps = {
-  onSearch: () => void;
+  query: string;
+  onQueryChange: (value: string) => void;
   onCreate: () => void;
+};
+
+// The directory's five carousels, addressable for the "see all" screen.
+export type DirectoryCategory = 'my-clubs' | 'publishers' | 'series' | 'adaptations' | 'authors';
+
+// "See all" sort options (top ranks / trending / newest / A–Z).
+export type ClubSort = 'top' | 'trending' | 'new' | 'az';
+
+// Publish-year (decade) buckets for the "see all" year filter.
+export type ClubYear = 'all' | '2020s' | '2010s' | '2000s' | 'classic';
+
+export type ClubListRowProps = {
+  item: ClubListing;
+  onOpen: (id: string) => void;
+};
+
+export type ClubSearchResultsProps = {
+  directory: ClubsDirectory;
+  query: string;
+  onOpen: (id: string) => void;
+};
+
+export type ClubCategoryViewProps = {
+  section: string;
 };
 
 export type ClubsSponsoredCardProps = {
@@ -59,24 +86,33 @@ export type ClubsSponsoredCardProps = {
 export type MyClubsSectionProps = {
   clubs: ClubSummary[];
   onSeeAll: () => void;
+  onOpen: (id: string) => void;
 };
 
 export type PublisherSectionProps = {
   publishers: PublisherCommunity[];
   onSeeAll: () => void;
+  onOpen: (id: string) => void;
 };
 
 export type SeriesSectionProps = {
   series: ClubSummary[];
   onSeeAll: () => void;
+  onOpen: (id: string) => void;
 };
 
 export type AdaptationsSectionProps = {
   adaptations: AdaptationCommunity[];
   onSeeAll: () => void;
+  onOpen: (id: string) => void;
 };
 
 export type AuthorSectionProps = {
   authors: AuthorCommunity[];
   onSeeAll: () => void;
+  onOpen: (id: string) => void;
+};
+
+export type ClubDetailViewProps = {
+  id: string;
 };

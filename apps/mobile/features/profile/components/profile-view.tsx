@@ -76,7 +76,12 @@ export function ProfileView({ readerId }: ProfileViewProps = {}) {
         </Pressable>
       ) : null}
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        // Visitor mode is pushed full-screen (no tab bar), so it must clear the
+        // bottom system inset itself; the owner tab sits above the tab bar.
+        contentContainerStyle={{ paddingBottom: (isReader ? insets.bottom : 0) + 24 }}
+      >
         <ProfileHero
           identity={profile.identity}
           mode={mode}

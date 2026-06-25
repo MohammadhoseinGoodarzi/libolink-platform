@@ -84,7 +84,10 @@ export function ArchivedList() {
           </Text>
         </View>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+        >
           {archived.map((c) => renderRow(c))}
         </ScrollView>
       )}

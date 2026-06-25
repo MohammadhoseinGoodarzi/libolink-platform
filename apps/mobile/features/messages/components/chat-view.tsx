@@ -19,6 +19,7 @@ import { useShadow, useThemeColors } from '@/shared/theme';
 import { useConversation, useThread } from '../hooks/use-conversations';
 import { messagesClient } from '../services/messages-service';
 import { REPLY_SNIPPETS } from '../services/thread-data';
+import type { ChatViewProps } from '../types';
 import { ChatComposer } from './chat-composer';
 import { ChatHeader } from './chat-header';
 import { MessageRow } from './message-row';
@@ -27,13 +28,13 @@ import { MessageRow } from './message-row';
 // (or a "say hello" empty state), and the composer. Data flows through the
 // shared @repo/api thread factory; sent messages append locally for now. The
 // long-press menu and share-in-chat sheet land in phase-2.
-export function ChatView({ id }: { id: string }) {
+export function ChatView({ id, seed }: ChatViewProps) {
   const router = useRouter();
   const t = useDictionary('Messages');
   const tCommon = useDictionary('Common');
   const colors = useThemeColors();
   const insets = useSafeAreaInsets();
-  const { conversation, isLoading: conversationLoading } = useConversation(id);
+  const { conversation, isLoading: conversationLoading } = useConversation(id, seed);
   const { toggleBlock } = useConversationList(messagesClient);
   const thread = useThread(id);
   const scrollRef = useRef<ScrollView>(null);
@@ -109,7 +110,14 @@ export function ChatView({ id }: { id: string }) {
         conversation={conversation}
         onBack={() => router.back()}
         typing={theyTyping}
-        onOpenProfile={() => router.push({ pathname: '/user/[id]', params: { id } })}
+        onOpenProfile={() =>
+          // Keyed by the conversation id: a DM opens the contact page (/user/[id]
+          // = ContactView, which itself links on to the full reader profile), a
+          // club/group opens the community detail.
+          conversation.kind === 'dm'
+            ? router.push({ pathname: '/user/[id]', params: { id } })
+            : router.push({ pathname: '/club/[id]', params: { id } })
+        }
       />
 
       {isEmpty ? (

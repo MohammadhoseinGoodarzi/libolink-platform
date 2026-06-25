@@ -1,13 +1,14 @@
 import { useDictionary } from '@repo/i18n';
-import { Plus, Search } from 'lucide-react-native';
+import { Plus } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
-import { Text } from '@/shared/components/ui';
+import { SearchInput, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import type { DirectoryIntroProps } from '../types';
 
-// Directory title + subtitle, a Create action, and the search-bar entry point
-// (handoff §6.5). Create and search open phase-2 flows (acknowledge taps).
-function DirectoryIntro({ onSearch, onCreate }: DirectoryIntroProps) {
+// Directory title + subtitle, a Create action, and the in-page search field
+// (handoff §6.5). Typing filters the directory in place (like the Messages list);
+// Create opens a phase-2 flow (acknowledges the tap).
+function DirectoryIntro({ query, onQueryChange, onCreate }: DirectoryIntroProps) {
   const t = useDictionary('Clubs');
   const colors = useThemeColors();
   return (
@@ -31,17 +32,14 @@ function DirectoryIntro({ onSearch, onCreate }: DirectoryIntroProps) {
         </Pressable>
       </View>
 
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={t('searchPlaceholder')}
-        onPress={onSearch}
-        className="mt-4 h-12 flex-row items-center gap-2.5 rounded-lg bg-secondary px-4 active:opacity-80"
-      >
-        <Search size={19} color={colors.mutedForeground} />
-        <Text className="font-sans text-[14.5px] text-muted-foreground">
-          {t('searchPlaceholder')}
-        </Text>
-      </Pressable>
+      <View className="mt-4">
+        <SearchInput
+          value={query}
+          onChangeText={onQueryChange}
+          placeholder={t('searchPlaceholder')}
+          autoCapitalize="none"
+        />
+      </View>
     </View>
   );
 }
