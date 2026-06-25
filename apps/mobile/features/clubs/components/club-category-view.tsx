@@ -87,7 +87,7 @@ export function ClubCategoryView({ section }: ClubCategoryViewProps) {
   };
 
   const { data, isLoading, isError, refetch, hasNextPage, isFetchingNextPage, fetchNextPage } =
-    useClubCategory(category ?? 'my-clubs', { q: debounced, sort, genre, year });
+    useClubCategory(category ?? 'my-clubs', { q: debounced, sort, genre, year }, category !== null);
 
   const items: ClubListing[] = data?.pages.flatMap((p) => p.items) ?? [];
 

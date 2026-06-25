@@ -72,6 +72,10 @@ export function ClubDetailView({ id }: ClubDetailViewProps) {
 
   const onToggleJoin = () => {
     const joined = toggleJoin();
+    // null = a request is already in flight; ignore the tap (no toast).
+    if (joined === null) {
+      return;
+    }
     toast.show(
       joined
         ? follows
@@ -233,6 +237,7 @@ export function ClubDetailView({ id }: ClubDetailViewProps) {
             </Text>
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel={`${t('membersTitle')}: ${formatCompactNumber(club.members)}`}
               onPress={() => toast.show(tCommon('comingSoon'))}
               className="active:opacity-60"
             >

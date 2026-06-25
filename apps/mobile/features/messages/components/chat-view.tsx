@@ -111,8 +111,9 @@ export function ChatView({ id, seed }: ChatViewProps) {
         onBack={() => router.back()}
         typing={theyTyping}
         onOpenProfile={() =>
-          // The id is canonical: a club/group opens the community detail, a DM the
-          // reader profile — both reachable by the same id from anywhere.
+          // Keyed by the conversation id: a DM opens the contact page (/user/[id]
+          // = ContactView, which itself links on to the full reader profile), a
+          // club/group opens the community detail.
           conversation.kind === 'dm'
             ? router.push({ pathname: '/user/[id]', params: { id } })
             : router.push({ pathname: '/club/[id]', params: { id } })

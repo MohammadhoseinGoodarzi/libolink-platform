@@ -87,6 +87,7 @@ export function clubListingInfiniteQueryOptions(
   client: HttpClient,
   category: string,
   filters: ClubListingFilters,
+  enabled = true,
 ) {
   return infiniteQueryOptions({
     queryKey: clubKeys.listing(category, filters),
@@ -94,6 +95,8 @@ export function clubListingInfiniteQueryOptions(
       createClubsApi(client).listing({ category, page: pageParam, ...filters }),
     initialPageParam: 1,
     getNextPageParam: (last) => (last.page < last.totalPages ? last.page + 1 : undefined),
+    // Don't fire for an invalid/absent category (the screen shows a not-found state).
+    enabled,
     // Keep the current results on screen while a new search/sort/filter loads, so
     // the list doesn't blank out and jump on every refinement.
     placeholderData: keepPreviousData,

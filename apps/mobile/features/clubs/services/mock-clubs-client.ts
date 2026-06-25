@@ -139,6 +139,8 @@ export function createMockClubsClient(): HttpClient {
   // just acknowledges with the resulting state (POST joins, DELETE leaves).
   async function post<T>(path: string): Promise<T> {
     if (CLUB_MEMBERSHIP.test(path)) {
+      // Boundary cast (as in `get`): the mock returns the route's concrete type
+      // ({ joined }); the generic T is owned by the @repo/api join() factory.
       return delay({ joined: true }) as Promise<T>;
     }
     return unsupported();
@@ -146,6 +148,8 @@ export function createMockClubsClient(): HttpClient {
 
   async function del<T>(path: string): Promise<T> {
     if (CLUB_MEMBERSHIP.test(path)) {
+      // Boundary cast (as in `get`): concrete { joined } vs the generic T owned by
+      // the @repo/api leave() factory.
       return delay({ joined: false }) as Promise<T>;
     }
     return unsupported();

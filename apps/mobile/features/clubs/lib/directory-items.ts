@@ -14,6 +14,8 @@ export const DIRECTORY_CATEGORIES: readonly DirectoryCategory[] = [
 ];
 
 export function isDirectoryCategory(value: string): value is DirectoryCategory {
+  // Widen to readonly string[] so `.includes` accepts an arbitrary string —
+  // ReadonlyArray<DirectoryCategory>.includes would reject a non-category value.
   return (DIRECTORY_CATEGORIES as readonly string[]).includes(value);
 }
 
