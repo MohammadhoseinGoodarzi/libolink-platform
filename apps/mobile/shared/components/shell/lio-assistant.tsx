@@ -1,14 +1,14 @@
 import { useDictionary } from '@repo/i18n';
-import { cn } from '@repo/utils';
 import { useAtom } from 'jotai';
 import { Send, Sparkles } from 'lucide-react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, ScrollView, TextInput, useWindowDimensions, View } from 'react-native';
+import { Animated, ScrollView, useWindowDimensions, View } from 'react-native';
 import { lioOpenAtom } from '@/shared/store/ui';
 import { useThemeColors } from '@/shared/theme';
 import { BottomSheet } from '../ui/bottom-sheet';
 import { BrandGradient } from '../ui/brand-gradient';
 import { IconButton } from '../ui/icon-button';
+import { Input } from '../ui/input';
 import { Text } from '../ui/text';
 import { lioReply } from './lio-data';
 import type { LioMessage } from './types';
@@ -69,7 +69,6 @@ function TypingDots() {
 // canned replies + typing dots. Opens from the centre tab via lioOpenAtom.
 export function LioAssistant() {
   const [open, setOpen] = useAtom(lioOpenAtom);
-  const colors = useThemeColors();
   const t = useDictionary('Lio');
   const { height } = useWindowDimensions();
 
@@ -200,16 +199,13 @@ export function LioAssistant() {
 
         {/* input */}
         <View className="flex-row items-center gap-2 border-border border-t px-3 py-2.5">
-          <TextInput
+          <Input
             value={draft}
             onChangeText={setDraft}
             placeholder={t('inputPlaceholder')}
-            placeholderTextColor={colors.mutedForeground}
             onSubmitEditing={() => send(draft)}
             returnKeyType="send"
-            className={cn(
-              'h-11 flex-1 rounded-full bg-secondary px-4 font-sans text-base text-foreground',
-            )}
+            className="h-11 flex-1 rounded-full bg-secondary px-4 font-sans"
           />
           <IconButton accessibilityLabel={t('send')} onPress={() => send(draft)} size={44}>
             <BrandGradient className="h-11 w-11 items-center justify-center rounded-full">
