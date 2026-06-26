@@ -72,7 +72,7 @@ export function SettingsView() {
 
   return (
     <View className="flex-1 bg-background">
-      <Header showBack onBack={() => router.back()} />
+      <Header />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
         <View className="px-5 pt-4">
@@ -110,7 +110,7 @@ export function SettingsView() {
           </View>
         ) : (
           <>
-            <AccountCard onEdit={comingSoon} onViewProfile={() => router.push('/profile')} />
+            <AccountCard onEdit={comingSoon} onViewProfile={() => router.navigate('/profile')} />
 
             <View className="h-4" />
             <GroupCard>

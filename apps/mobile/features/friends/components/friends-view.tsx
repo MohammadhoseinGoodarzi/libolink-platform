@@ -1,6 +1,5 @@
 import { useDictionary } from '@repo/i18n';
 import type { NetworkReader } from '@repo/types';
-import { useRouter } from 'expo-router';
 import { Search } from 'lucide-react-native';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
@@ -24,7 +23,6 @@ export function FriendsView() {
   const t = useDictionary('Friends');
   const tCommon = useDictionary('Common');
   const colors = useThemeColors();
-  const router = useRouter();
   const toast = useToast();
   const { data, isLoading, isError, refetch } = useNetwork();
   const [reader, setReader] = useState<NetworkReader | null>(null);
@@ -41,7 +39,7 @@ export function FriendsView() {
   if (isLoading) {
     return (
       <View className="flex-1 bg-background">
-        <Header showBack onBack={() => router.back()} right={headerRight} />
+        <Header right={headerRight} />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator color={colors.primary} />
         </View>
@@ -52,7 +50,7 @@ export function FriendsView() {
   if (isError || !data) {
     return (
       <View className="flex-1 bg-background">
-        <Header showBack onBack={() => router.back()} right={headerRight} />
+        <Header right={headerRight} />
         <View className="flex-1 items-center justify-center gap-3 px-8">
           <Text className="text-center font-sans text-[14px] text-muted-foreground">
             {tCommon('genericError')}
@@ -67,7 +65,7 @@ export function FriendsView() {
 
   return (
     <View className="flex-1 bg-background">
-      <Header showBack onBack={() => router.back()} right={headerRight} />
+      <Header right={headerRight} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
         <View className="px-5 pt-4">

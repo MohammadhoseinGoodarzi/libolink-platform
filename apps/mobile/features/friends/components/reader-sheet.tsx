@@ -19,11 +19,11 @@ function ReaderSheet({ reader, open, onClose }: ReaderSheetProps) {
 
   const goMessages = () => {
     onClose();
-    router.push('/messages');
+    router.navigate('/messages');
   };
   const goProfile = () => {
     onClose();
-    router.push('/profile');
+    router.navigate('/profile');
   };
 
   const bookTitle = reader?.sharedBook ?? reader?.book?.title ?? '';

@@ -7,7 +7,7 @@ import { SAVED_COLLECTION } from './saved-data';
 // httpClient when it exists; the api factory, hook, and screen stay the same.
 const NETWORK_DELAY = 350;
 
-const SAVED_ITEM = /^\/saved\/([^/]+)$/;
+const SAVED_ITEM = /^\/saved\/([^/]+)\/([^/]+)$/;
 
 function delay<T>(value: T): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), NETWORK_DELAY));
@@ -29,11 +29,12 @@ export function createMockSavedClient(): HttpClient {
   }
 
   // Removal is owned by the screen's local state; the mock just acknowledges with
-  // the removed id (the real backend would drop the row).
+  // the removed kind + id (the real backend would drop the row). Matches the
+  // /saved/{kind}/{id} route createSavedApi.remove() now calls.
   async function del<T>(path: string): Promise<T> {
     const match = SAVED_ITEM.exec(path);
-    if (match?.[1]) {
-      return delay({ id: decodeURIComponent(match[1]) }) as Promise<T>;
+    if (match?.[1] && match[2]) {
+      return delay({ kind: match[1], id: decodeURIComponent(match[2]) }) as Promise<T>;
     }
     return unsupported();
   }

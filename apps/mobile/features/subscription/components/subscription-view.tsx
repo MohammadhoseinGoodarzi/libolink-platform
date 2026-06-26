@@ -1,7 +1,6 @@
 import { useDictionary } from '@repo/i18n';
 import { sessionAtom, userAtom } from '@repo/stores';
 import type { PlanKey } from '@repo/types';
-import { useRouter } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { Check, Crown, Lock, Zap } from 'lucide-react-native';
 import { useState } from 'react';
@@ -26,7 +25,6 @@ export function SubscriptionView() {
   const t = useDictionary('Subscription');
   const tCommon = useDictionary('Common');
   const colors = useThemeColors();
-  const router = useRouter();
   const toast = useToast();
   const user = useAtomValue(userAtom);
   const setSession = useSetAtom(sessionAtom);
@@ -38,7 +36,7 @@ export function SubscriptionView() {
   if (isLoading) {
     return (
       <View className="flex-1 bg-background">
-        <Header showBack onBack={() => router.back()} />
+        <Header />
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator color={colors.primary} />
         </View>
@@ -50,7 +48,7 @@ export function SubscriptionView() {
   if (isError || !data || !plan) {
     return (
       <View className="flex-1 bg-background">
-        <Header showBack onBack={() => router.back()} />
+        <Header />
         <View className="flex-1 items-center justify-center gap-3 px-8">
           <Text className="text-center font-sans text-[14px] text-muted-foreground">
             {tCommon('genericError')}
@@ -75,7 +73,7 @@ export function SubscriptionView() {
 
   return (
     <View className="flex-1 bg-background">
-      <Header showBack onBack={() => router.back()} />
+      <Header />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
         <PremiumHero price={annualPlan.price} compareAt={monthlyPrice} />

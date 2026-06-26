@@ -79,7 +79,7 @@ export function SavedView() {
   if (isError || !data) {
     return (
       <View className="flex-1 bg-background">
-        <Header title={t('title')} showBack onBack={() => router.back()} />
+        <Header title={t('title')} />
         <View className="flex-1 items-center justify-center gap-3 px-8">
           <Text className="text-center font-sans text-[14px] text-muted-foreground">
             {tCommon('genericError')}
@@ -124,8 +124,6 @@ export function SavedView() {
     <View className="flex-1 bg-background">
       <Header
         title={t('title')}
-        showBack
-        onBack={() => router.back()}
         right={
           <IconButton
             accessibilityLabel={tCommon('search')}
@@ -169,7 +167,7 @@ export function SavedView() {
             <Text className="mt-2 max-w-[240px] text-center font-sans text-[13.5px] text-muted-foreground">
               {t('emptyBody')}
             </Text>
-            <Button className="mt-5" onPress={() => router.push('/home')}>
+            <Button className="mt-5" onPress={() => router.navigate('/home')}>
               <View className="flex-row items-center gap-2">
                 <BookOpen size={18} color={colors.primaryForeground} />
                 <Text className="font-sans-semibold text-[15px] text-primary-foreground">
