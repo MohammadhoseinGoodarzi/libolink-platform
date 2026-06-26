@@ -12,6 +12,7 @@ export * from './icon-button';
 export * from './input';
 export * from './input-base';
 export * from './message-bubble';
+export * from './modal-shell';
 export * from './password-input';
 export * from './search-input';
 export * from './sponsored-card';

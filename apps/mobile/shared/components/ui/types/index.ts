@@ -134,6 +134,42 @@ export type ActionSheetProps = {
   actions: ActionSheetAction[];
 };
 
+// Where a ModalShell panel sits and how it animates in: `bottom` slides up
+// (sheets), `left` slides in from the left edge (the drawer), `full` fades a
+// full-screen panel (story viewer, search overlay).
+export type ModalShellPlacement = 'bottom' | 'left' | 'full';
+
+// The one Modal + scrim + slide/fade + mount/unmount lifecycle primitive. Every
+// overlay (BottomSheet, ActionSheet, the drawer, and the full-screen screens)
+// builds on this instead of re-writing the Modal/Animated plumbing. Built on RN
+// Modal + Animated only (no gesture-handler) — drag-to-dismiss is intentionally
+// absent (see docs/ENGINEERING_LOG.md 2026-06-22).
+export type ModalShellProps = {
+  open: boolean;
+  onClose: () => void;
+  children: ReactNode;
+  /** Panel placement + entry animation. Defaults to `bottom`. */
+  placement?: ModalShellPlacement;
+  /** Render the dimming scrim with tap-to-dismiss. Defaults true except `full`. */
+  scrim?: boolean;
+  /** Accessible label for the scrim's close control. */
+  closeLabel?: string;
+  /** Fade the panel opacity with the transition. Defaults true except `left`. */
+  fadePanel?: boolean;
+  /** Distance (px) a `left` panel slides in by — also its width. Ignored otherwise. */
+  slideDistance?: number;
+  /** Panel surface className. */
+  panelClassName?: string;
+  /** Panel style for props NativeWind can't read (radius, maxHeight, dynamic padding). */
+  panelStyle?: StyleProp<ViewStyle>;
+  /** Accessible label on the panel (dialog). */
+  label?: string | undefined;
+  /** Enter/exit durations (ms) + easing curve. Defaults to the soft sheet curve. */
+  enterDuration?: number;
+  exitDuration?: number;
+  easing?: (value: number) => number;
+};
+
 export type BottomSheetProps = {
   open: boolean;
   onClose: () => void;
