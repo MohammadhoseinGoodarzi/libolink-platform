@@ -7,6 +7,7 @@ export * from './bottom-sheet';
 export * from './brand-gradient';
 export * from './button';
 export * from './card';
+export * from './card-variants';
 export * from './chip';
 export * from './chip-variants';
 export * from './filter-chip';

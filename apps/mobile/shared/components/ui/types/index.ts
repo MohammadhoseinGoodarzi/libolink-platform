@@ -92,7 +92,11 @@ export type ButtonProps = Omit<PressableProps, 'children'> &
   };
 
 export type CardProps = ViewProps & {
-  /** Soft shadow depth (handoff §7). `false` for flat surfaces (e.g. list rows). */
+  /** `elevated` = soft shadow (default); `flat` = bordered + shadowless. */
+  variant?: 'elevated' | 'flat';
+  /** Add the common 16px inset (p-4) instead of hand-rolling it. */
+  padded?: boolean;
+  /** Soft shadow depth (elevated only, handoff §7). `false` for flat surfaces (e.g. list rows). */
   shadow?: 'card' | 'lifted' | false;
 };
 

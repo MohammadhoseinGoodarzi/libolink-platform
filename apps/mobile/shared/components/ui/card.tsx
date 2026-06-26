@@ -1,16 +1,26 @@
 import { cn } from '@repo/utils';
 import { View } from 'react-native';
 import { useShadow } from '@/shared/theme';
+import { cardVariants } from './card-variants';
 import type { CardProps } from './types';
 
-// White surface, 20px radius, soft green-tinted shadow (handoff §6). Internal
-// padding is left to the caller (16px min, 24px typical).
-function Card({ className, shadow = 'card', style, ...props }: CardProps) {
+// White surface (handoff §6). `elevated` (default) carries the soft green-tinted
+// shadow; `flat` is bordered + shadowless for inline content cards. Internal
+// padding is the caller's unless `padded` (16px). 20px radius family.
+function Card({
+  className,
+  variant = 'elevated',
+  padded = false,
+  shadow = 'card',
+  style,
+  ...props
+}: CardProps) {
   const shadowStyle = useShadow(shadow === false ? 'card' : shadow);
+  const elevated = variant === 'elevated' && shadow !== false;
   return (
     <View
-      className={cn('rounded-lg bg-card', className)}
-      style={[shadow === false ? null : shadowStyle, style]}
+      className={cn(cardVariants({ variant, padded }), className)}
+      style={[elevated ? shadowStyle : null, style]}
       {...props}
     />
   );

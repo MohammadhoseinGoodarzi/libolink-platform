@@ -9,6 +9,7 @@ import {
   Avatar,
   BookCover,
   Button,
+  Card,
   Chip,
   IconButton,
   Text,
@@ -201,14 +202,14 @@ export function ClubDetailView({ id }: ClubDetailViewProps) {
         </View>
 
         {/* about */}
-        <View className="mx-5 mt-5 rounded-2xl border border-border bg-card p-4">
+        <Card variant="flat" padded className="mx-5 mt-5">
           <Text className="font-sans-semibold text-[11.5px] uppercase tracking-wide text-muted-foreground">
             {t('about')}
           </Text>
           <Text className="mt-1.5 font-sans text-[14.5px] leading-[21px] text-foreground">
             {club.about}
           </Text>
-        </View>
+        </Card>
 
         {/* currently reading */}
         {club.currentBook ? (
@@ -216,7 +217,7 @@ export function ClubDetailView({ id }: ClubDetailViewProps) {
             <Text className="px-5 pb-2 font-sans-bold text-[12.5px] uppercase tracking-wide text-muted-foreground">
               {t('currentlyReading')}
             </Text>
-            <View className="mx-5 flex-row items-center gap-3.5 rounded-2xl border border-border bg-card p-4">
+            <Card variant="flat" padded className="mx-5 flex-row items-center gap-3.5">
               <BookCover
                 title={club.currentBook.title}
                 author={club.currentBook.author}
@@ -231,7 +232,7 @@ export function ClubDetailView({ id }: ClubDetailViewProps) {
                   {club.currentBook.author}
                 </Text>
               </View>
-            </View>
+            </Card>
           </View>
         ) : null}
 
