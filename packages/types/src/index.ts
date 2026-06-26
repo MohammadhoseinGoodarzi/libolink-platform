@@ -6,6 +6,7 @@ export type * from './comment';
 export type * from './common';
 export type * from './contact';
 export type * from './conversation';
+export type * from './network';
 export type * from './notification';
 export type * from './post';
 export type * from './profile';
