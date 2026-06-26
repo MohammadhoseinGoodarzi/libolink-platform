@@ -2,8 +2,8 @@ import { useDictionary } from '@repo/i18n';
 import { cn } from '@repo/utils';
 import { Check, X as Close, Search } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, ScrollView, TextInput, useWindowDimensions, View } from 'react-native';
-import { BottomSheet, IconButton, Text } from '@/shared/components/ui';
+import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { BottomSheet, IconButton, InputBase, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import type { PickerSheetProps } from '../types';
 
@@ -44,16 +44,14 @@ export function PickerSheet({
 
         {search ? (
           <View className="px-4 pb-2">
-            <View className="h-11 flex-row items-center gap-2.5 rounded-2xl border border-border bg-secondary px-3.5">
-              <Search size={17} color={colors.mutedForeground} />
-              <TextInput
-                value={query}
-                onChangeText={setQuery}
-                placeholder={`${t('searchPrefix')} ${title.toLowerCase()}`}
-                placeholderTextColor={colors.mutedForeground}
-                className="h-full flex-1 font-sans text-base text-foreground"
-              />
-            </View>
+            <InputBase
+              left={<Search size={17} color={colors.mutedForeground} />}
+              containerClassName="h-11 gap-2.5 rounded-2xl border border-border bg-secondary px-3.5"
+              value={query}
+              onChangeText={setQuery}
+              placeholder={`${t('searchPrefix')} ${title.toLowerCase()}`}
+              className="h-full font-sans"
+            />
           </View>
         ) : null}
 
