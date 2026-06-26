@@ -42,7 +42,7 @@ function Segment<K extends string>({ options, value, onChange }: SegmentProps<K>
 function TileSegment<K extends string>({ options, value, onChange }: TileSegmentProps<K>) {
   const colors = useThemeColors();
   return (
-    <View className="flex-row gap-1.5 rounded-2xl bg-secondary p-1.5">
+    <View className="flex-row gap-2 rounded-2xl bg-secondary p-2">
       {options.map((option) => {
         const on = option.key === value;
         const Icon = option.icon;
@@ -53,7 +53,7 @@ function TileSegment<K extends string>({ options, value, onChange }: TileSegment
             accessibilityState={{ selected: on }}
             onPress={() => onChange(option.key)}
             className={cn(
-              'h-[66px] flex-1 items-center justify-center gap-1.5 rounded-xl',
+              'h-[76px] flex-1 items-center justify-center gap-2 rounded-xl',
               on ? 'bg-primary' : 'bg-transparent',
             )}
           >
