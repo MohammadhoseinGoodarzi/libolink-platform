@@ -202,17 +202,26 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
   `<Text>` so no screen leaks the system font), `Button`, `InputBase` (the ONE `<TextInput>` —
   Vazirmatn + placeholder colour + centring recipe; bare vs boxed mode) with
   `Input`/`PasswordInput`/`SearchInput` built on it (filled, recessed — new input variants extend
-  `InputBase`, never a raw `<TextInput>`), `Card`, `Avatar`, `BookCover`, `FilterChip`,
-  `MessageBubble`, badges
+  `InputBase`, never a raw `<TextInput>`), `Card` (`variant` elevated/flat + `padded` — flat is
+  the bordered shadowless content card; never hand-roll `rounded-2xl border bg-card p-4`), `Avatar`,
+  `BookCover`, `Chip` (the ONE pill base — `chip-variants.ts` cva: `tone`
+  neutral/muted/primary/accent + `size` sm/default + `selectable`; static topic/tag/Joined/screen
+  pills pass a `tone`, never a hand-rolled `rounded-full bg-secondary` View) with `FilterChip` (the
+  thin selectable wrapper) built on it, `MessageBubble`, badges
   (`CountBadge`/`VerifiedBadge`/`ProChip`), `IconButton`, `BrandGradient` (svg green→navy),
-  `BottomSheet`, `ActionSheet`, `Toast`. `BrandLogo` is `@/shared/components/brand-logo`.
+  `ModalShell` (the ONE overlay base — Modal + scrim + single-`progress` slide/fade + mount
+  lifecycle; `placement` bottom/left/full) with `BottomSheet`, `ActionSheet` and the full-screen
+  screens (story-viewer, search-overlay) + the shell drawer built on it — never open a raw
+  `<Modal>`, `Toast`. `BrandLogo` is `@/shared/components/brand-logo`.
 - Shell `@/shared/components/shell`: `Header`, `LeftDrawer`, `BottomTabBar` (raised AI centre
   opens Lio), `LioAssistant`. Drawer/Lio toggle via `drawerOpenAtom`/`lioOpenAtom`
   (`@/shared/store/ui`). `ToastProvider` lives at the app root (`app/_layout.tsx`) — fire with
   `useToast().show()`.
-- Sheets/drawer use built-in `Modal` + `Animated` + `PanResponder` (NO gesture-handler /
-  reanimated / @gorhom). Gradients use the installed `react-native-svg` (NO expo-linear-gradient).
-  Ask before adding native deps — the owner keeps the dependency surface minimal.
+- All overlays (sheets, drawer, full-screen story/search) go through `ModalShell` — built-in
+  `Modal` + `Animated` only (NO gesture-handler / reanimated / @gorhom; no PanResponder — drag-to-
+  dismiss is intentionally absent, see ENGINEERING_LOG 2026-06-22). Gradients use the installed
+  `react-native-svg` (NO expo-linear-gradient). Ask before adding native deps — the owner keeps the
+  dependency surface minimal.
 - Theme: `useThemeColors()` + `useShadow()` from `@/shared/theme` for any RN prop that can't read a
   CSS var (lucide `color`, `placeholderTextColor`, `shadowColor`, svg fills). `oklchToHex` /
   `avatarColors` / `hueFromString` for avatars. Persisted via AsyncStorage — `useAppTheme`
