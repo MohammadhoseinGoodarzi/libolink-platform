@@ -1,8 +1,9 @@
+import { useDictionary } from '@repo/i18n';
 import { cn } from '@repo/utils';
 import { Check, Eye, EyeOff } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, TextInput, View } from 'react-native';
-import { Text } from '@/shared/components/ui';
+import { Pressable, View } from 'react-native';
+import { InputBase, Text } from '@/shared/components/ui';
 import { oklchToHex, useThemeColors } from '@/shared/theme';
 import type { AuthFieldProps } from '../types';
 
@@ -26,6 +27,7 @@ export function AuthField({
   ...inputProps
 }: AuthFieldProps) {
   const colors = useThemeColors();
+  const tCommon = useDictionary('Common');
   const [focused, setFocused] = useState(false);
   const [reveal, setReveal] = useState(false);
 
@@ -40,41 +42,45 @@ export function AuthField({
         </Text>
       ) : null}
 
-      <View
-        className="h-[52px] flex-row items-center gap-2.5 rounded-2xl bg-secondary px-3.5"
-        style={{ borderWidth: focused || error ? 1.5 : 1, borderColor }}
-      >
-        {Icon ? <Icon size={19} color={iconColor} /> : null}
-        {prefix ? (
-          <Text className="font-sans-medium text-base text-muted-foreground">{prefix}</Text>
-        ) : null}
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor={colors.mutedForeground}
-          secureTextEntry={secure && !reveal}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          className="h-full flex-1 font-sans-medium text-base text-foreground"
-          {...inputProps}
-        />
-        {ok && !secure ? <Check size={18} color={SUCCESS} /> : null}
-        {secure ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={reveal ? 'Hide password' : 'Show password'}
-            onPress={() => setReveal((prev) => !prev)}
-            hitSlop={8}
-          >
-            {reveal ? (
-              <EyeOff size={18} color={colors.mutedForeground} />
-            ) : (
-              <Eye size={18} color={colors.mutedForeground} />
-            )}
-          </Pressable>
-        ) : null}
-      </View>
+      <InputBase
+        containerClassName="h-[52px] gap-2.5 rounded-2xl bg-secondary px-3.5"
+        containerStyle={{ borderWidth: focused || error ? 1.5 : 1, borderColor }}
+        left={
+          <>
+            {Icon ? <Icon size={19} color={iconColor} /> : null}
+            {prefix ? (
+              <Text className="font-sans-medium text-base text-muted-foreground">{prefix}</Text>
+            ) : null}
+          </>
+        }
+        right={
+          <>
+            {ok && !secure ? <Check size={18} color={SUCCESS} /> : null}
+            {secure ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={reveal ? tCommon('hidePassword') : tCommon('showPassword')}
+                onPress={() => setReveal((prev) => !prev)}
+                hitSlop={8}
+              >
+                {reveal ? (
+                  <EyeOff size={18} color={colors.mutedForeground} />
+                ) : (
+                  <Eye size={18} color={colors.mutedForeground} />
+                )}
+              </Pressable>
+            ) : null}
+          </>
+        }
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        secureTextEntry={secure && !reveal}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="h-full font-sans-medium"
+        {...inputProps}
+      />
 
       {error || hint ? (
         <Text

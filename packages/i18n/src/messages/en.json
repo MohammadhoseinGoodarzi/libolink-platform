@@ -204,7 +204,11 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "helpComingSoon": "Help & Support coming soon",
-    "signedOut": "Signed out"
+    "signedOut": "Signed out",
+    "switchToNormal": "Switch to Normal User",
+    "switchToPremium": "Switch to Premium User",
+    "premiumModeOn": "Premium mode on",
+    "normalModeOn": "Normal mode on"
   },
   "Lio": {
     "name": "Lio",

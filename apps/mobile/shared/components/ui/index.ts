@@ -10,6 +10,7 @@ export * from './card';
 export * from './filter-chip';
 export * from './icon-button';
 export * from './input';
+export * from './input-base';
 export * from './message-bubble';
 export * from './password-input';
 export * from './search-input';

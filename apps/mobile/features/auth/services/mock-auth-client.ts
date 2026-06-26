@@ -31,6 +31,8 @@ function mockSession(email: string, username?: string): AuthSession {
       avatarUrl: null,
       bio: null,
       verified: false,
+      // Mock sign-ins land in premium mode so the two-mode header is visible.
+      isPremium: true,
       createdAt: now,
       updatedAt: now,
     },
