@@ -15,10 +15,10 @@ import {
   UserCog,
 } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { BrandLogo } from '@/shared/components/brand-logo';
 import { Header } from '@/shared/components/shell';
-import { ActionSheet, SearchInput, Text, useToast } from '@/shared/components/ui';
+import { ActionSheet, ScreenScrollView, SearchInput, Text, useToast } from '@/shared/components/ui';
 import { ROUTES } from '@/shared/constants';
 import { useAppTheme, useThemeColors } from '@/shared/theme';
 import { APP_VERSION, SETTINGS_SEARCH } from '../constants';
@@ -74,7 +74,7 @@ export function SettingsView() {
     <View className="flex-1 bg-background">
       <Header />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
+      <ScreenScrollView showsVerticalScrollIndicator={false}>
         <View className="px-5 pt-4">
           <Text
             className="font-sans-bold text-[30px] text-foreground"
@@ -179,7 +179,7 @@ export function SettingsView() {
             </View>
           </>
         )}
-      </ScrollView>
+      </ScreenScrollView>
 
       <ActionSheet
         open={themeOpen}

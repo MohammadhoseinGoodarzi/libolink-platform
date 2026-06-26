@@ -12,7 +12,7 @@ export default function MyProfileScreen() {
   return (
     <View className="flex-1 bg-background">
       <Header showBack onBack={() => router.back()} />
-      <ProfileView />
+      <ProfileView standalone />
     </View>
   );
 }

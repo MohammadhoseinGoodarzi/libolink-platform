@@ -12,9 +12,16 @@ import {
   UserRound,
 } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { Header } from '@/shared/components/shell';
-import { ActionSheet, Button, IconButton, Text, useToast } from '@/shared/components/ui';
+import {
+  ActionSheet,
+  Button,
+  IconButton,
+  ScreenScrollView,
+  Text,
+  useToast,
+} from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useSaved } from '../hooks/use-saved';
 import type { SavedMenuTarget, SavedSortKey, SavedTabKey } from '../types';
@@ -151,10 +158,10 @@ export function SavedView() {
         </Pressable>
       </View>
 
-      <ScrollView
+      <ScreenScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="px-4 pt-1 pb-6"
+        contentContainerClassName="px-4 pt-1"
       >
         {total === 0 ? (
           <View className="items-center px-8 pt-16">
@@ -225,7 +232,7 @@ export function SavedView() {
             ) : null}
           </>
         )}
-      </ScrollView>
+      </ScreenScrollView>
 
       <ActionSheet
         open={sortOpen}

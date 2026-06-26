@@ -212,7 +212,14 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
   `ModalShell` (the ONE overlay base — Modal + scrim + single-`progress` slide/fade + mount
   lifecycle; `placement` bottom/left/full) with `BottomSheet`, `ActionSheet` and the full-screen
   screens (story-viewer, search-overlay) + the shell drawer built on it — never open a raw
-  `<Modal>`, `Toast`. `BrandLogo` is `@/shared/components/brand-logo`.
+  `<Modal>`, `Toast`, `ScreenScrollView` (the ONE scrollable-page primitive — a `ScrollView`
+  that always reserves the device's bottom safe-area inset at the end of its content;
+  `bottomSpacing` is the extra room on top, default 24). Every full-screen scrollable page
+  WITHOUT the bottom tab bar (the drawer-reached pages, pushed detail screens) uses it — never
+  a raw `<ScrollView>` + hand-rolled `pb-*` for a page, or the last rows hide behind the home
+  indicator / gesture bar. (Tab screens sit above `BottomTabBar`, which reserves the inset
+  itself; a pushed owner `ProfileView` passes `standalone` to opt in.) `BrandLogo` is
+  `@/shared/components/brand-logo`.
 - Shell `@/shared/components/shell`: `Header`, `LeftDrawer`, `BottomTabBar` (raised AI centre
   opens Lio), `LioAssistant`. Drawer/Lio toggle via `drawerOpenAtom`/`lioOpenAtom`
   (`@/shared/store/ui`). `ToastProvider` lives at the app root (`app/_layout.tsx`) — fire with

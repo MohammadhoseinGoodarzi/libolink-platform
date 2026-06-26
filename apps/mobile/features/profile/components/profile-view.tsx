@@ -24,7 +24,7 @@ import { WriterSection } from './writer-section';
 // shared @repo/api factory and stacks the read-surface sections. Owns the
 // owner⇄visitor preview mode and the follow state; deeper actions (edit, share,
 // invite, see-all, per-card nav) are profile phase-2 and acknowledge taps.
-export function ProfileView({ readerId }: ProfileViewProps = {}) {
+export function ProfileView({ readerId, standalone = false }: ProfileViewProps = {}) {
   const t = useDictionary('Profile');
   const tCommon = useDictionary('Common');
   const colors = useThemeColors();
@@ -78,9 +78,9 @@ export function ProfileView({ readerId }: ProfileViewProps = {}) {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        // Visitor mode is pushed full-screen (no tab bar), so it must clear the
-        // bottom system inset itself; the owner tab sits above the tab bar.
-        contentContainerStyle={{ paddingBottom: (isReader ? insets.bottom : 0) + 24 }}
+        // Pushed full-screen (visitor, or owner via /me) has no tab bar, so it must
+        // clear the bottom system inset itself; the owner tab sits above the tab bar.
+        contentContainerStyle={{ paddingBottom: (isReader || standalone ? insets.bottom : 0) + 24 }}
       >
         <ProfileHero
           identity={profile.identity}

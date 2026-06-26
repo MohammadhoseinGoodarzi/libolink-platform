@@ -4,10 +4,10 @@ import type { PlanKey } from '@repo/types';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { Check, Crown, Lock, Zap } from 'lucide-react-native';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { BrandLogo } from '@/shared/components/brand-logo';
 import { Header } from '@/shared/components/shell';
-import { Button, Text, useToast } from '@/shared/components/ui';
+import { Button, ScreenScrollView, Text, useToast } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { usePremiumOffer } from '../hooks/use-premium-offer';
 import { BenefitCard } from './benefit-card';
@@ -75,7 +75,7 @@ export function SubscriptionView() {
     <View className="flex-1 bg-background">
       <Header />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
+      <ScreenScrollView showsVerticalScrollIndicator={false} bottomSpacing={32}>
         <PremiumHero price={annualPlan.price} compareAt={monthlyPrice} />
 
         <SectionHead overline={t('planOverline')} title={t('planTitle')} />
@@ -139,7 +139,7 @@ export function SubscriptionView() {
             {t('footerTagline')}
           </Text>
         </View>
-      </ScrollView>
+      </ScreenScrollView>
 
       <CheckoutSheet
         open={checkout}

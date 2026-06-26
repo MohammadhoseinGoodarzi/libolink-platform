@@ -2,10 +2,10 @@ import { useDictionary } from '@repo/i18n';
 import type { NetworkReader } from '@repo/types';
 import { Search } from 'lucide-react-native';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { BrandLogo } from '@/shared/components/brand-logo';
 import { Header } from '@/shared/components/shell';
-import { Button, IconButton, Text, useToast } from '@/shared/components/ui';
+import { Button, IconButton, ScreenScrollView, Text, useToast } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useNetwork } from '../hooks/use-network';
 import { CompatibilitySection } from './compatibility-section';
@@ -67,7 +67,7 @@ export function FriendsView() {
     <View className="flex-1 bg-background">
       <Header right={headerRight} />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
+      <ScreenScrollView showsVerticalScrollIndicator={false} bottomSpacing={32}>
         <View className="px-5 pt-4">
           <Text
             className="font-sans-bold text-[26px] text-foreground"
@@ -102,7 +102,7 @@ export function FriendsView() {
             {t('footer')}
           </Text>
         </View>
-      </ScrollView>
+      </ScreenScrollView>
 
       <ReaderSheet reader={reader} open={reader !== null} onClose={() => setReader(null)} />
     </View>
