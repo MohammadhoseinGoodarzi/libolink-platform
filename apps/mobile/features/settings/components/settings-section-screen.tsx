@@ -4,11 +4,14 @@ import { Text } from '@/shared/components/ui';
 import { SETTINGS_SECTION_TITLES } from '../constants';
 import type { SettingsSectionScreenProps } from '../types';
 import { AboutScreen } from './about-screen';
+import { AccountScreen } from './account-screen';
 import { AppearanceScreen } from './appearance-screen';
 import { ContentScreen } from './content-screen';
 import { NotificationsScreen } from './notifications-screen';
 import { PrivacyScreen } from './privacy-screen';
 import { SettingsScreenShell } from './settings-screen-shell';
+import { StorageScreen } from './storage-screen';
+import { SupportScreen } from './support-screen';
 
 // Push-detail section router (handoff Settings). Maps the /settings/[section]
 // param to its screen; sections not built yet render the coming-soon shell so the
@@ -30,6 +33,15 @@ export function SettingsSectionScreen({ section }: SettingsSectionScreenProps) {
   }
   if (section === 'about') {
     return <AboutScreen />;
+  }
+  if (section === 'account') {
+    return <AccountScreen />;
+  }
+  if (section === 'storage') {
+    return <StorageScreen />;
+  }
+  if (section === 'support') {
+    return <SupportScreen />;
   }
 
   const titleKey = (section && SETTINGS_SECTION_TITLES[section]) || 'title';
