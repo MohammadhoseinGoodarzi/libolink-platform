@@ -14,18 +14,18 @@ function AddButton({ name, size = 'sm', icon = true }: AddButtonProps) {
   const colors = useThemeColors();
   const toast = useToast();
   const [sent, setSent] = useState(false);
-  const press = () =>
-    setSent((v) => {
-      toast.show(v ? t('requestCancelled') : t('requestSent'));
-      return !v;
-    });
+  // Keep the updater pure (StrictMode double-invokes it) — fire the toast here.
+  const press = () => {
+    toast.show(sent ? t('requestCancelled') : t('requestSent'));
+    setSent((v) => !v);
+  };
   const Icon = sent ? Clock : UserPlus;
   const glyph = size === 'md' ? 16 : 14;
 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${t('add')} ${name}`}
+      accessibilityLabel={`${sent ? t('requested') : t('add')} ${name}`}
       onPress={press}
       className={cn(
         'flex-row items-center justify-center gap-1.5 rounded-full',

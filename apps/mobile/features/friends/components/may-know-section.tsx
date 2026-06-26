@@ -28,14 +28,16 @@ function MayKnowSection({ readers, onOpen }: MayKnowSectionProps) {
         contentContainerClassName="gap-3 px-5 pb-1"
       >
         {readers.map((reader) => (
-          <Pressable
-            key={reader.id}
-            accessibilityRole="button"
-            onPress={() => onOpen(reader)}
-            className="w-[230px]"
-          >
+          // No outer Pressable — the card's own buttons (Profile / Add) are the
+          // interactive targets; nesting them in an onPress wrapper would make a
+          // single tap fire two controls.
+          <View key={reader.id} className="w-[230px]">
             <Card padded>
-              <View className="flex-row items-start gap-3">
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => onOpen(reader)}
+                className="flex-row items-start gap-3"
+              >
                 <Avatar
                   initials={reader.initials}
                   hue={reader.hue}
@@ -53,7 +55,7 @@ function MayKnowSection({ readers, onOpen }: MayKnowSectionProps) {
                     {reader.role}
                   </Text>
                 </View>
-              </View>
+              </Pressable>
 
               {reader.score != null && reader.kind ? (
                 <View className="mt-3">
@@ -106,7 +108,7 @@ function MayKnowSection({ readers, onOpen }: MayKnowSectionProps) {
                 <AddButton name={reader.name} />
               </View>
             </Card>
-          </Pressable>
+          </View>
         ))}
       </ScrollView>
     </FriendsSection>

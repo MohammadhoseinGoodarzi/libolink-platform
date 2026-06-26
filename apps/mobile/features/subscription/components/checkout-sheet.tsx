@@ -11,10 +11,11 @@ function CheckoutSheet({ open, onClose, plan, onConfirm }: CheckoutSheetProps) {
   const t = useDictionary('Subscription');
   const colors = useThemeColors();
   const annual = plan.key === 'annual';
-  const total = annual
-    ? `$${plan.billedYearly} ${t('perYear')}`
-    : `$${plan.price} ${t('perMonth')}`;
-  const cta = annual ? `$${plan.billedYearly}${t('perYear')}` : `$${plan.price}${t('perMonth')}`;
+  // billedYearly is nullable in the contract — fall back to the monthly rate × 12
+  // so the summary never renders "$null".
+  const yearly = plan.billedYearly ?? plan.price * 12;
+  const total = annual ? `$${yearly} ${t('perYear')}` : `$${plan.price} ${t('perMonth')}`;
+  const cta = annual ? `$${yearly}${t('perYear')}` : `$${plan.price}${t('perMonth')}`;
 
   return (
     <BottomSheet open={open} onClose={onClose} label={t('checkoutTitle')}>

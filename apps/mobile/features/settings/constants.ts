@@ -7,6 +7,7 @@ import {
   Info,
   KeyRound,
   Languages,
+  LifeBuoy,
   type LucideIcon,
   Palette,
   ShieldCheck,
@@ -34,8 +35,9 @@ export const SETTINGS_SEARCH: SettingsSearchItem[] = [
   { key: 'privacy', label: 'privacy', icon: ShieldCheck },
   { key: 'twoFactor', label: 'twoFactor', icon: ShieldCheck },
   { key: 'blockedUsers', label: 'blockedUsers', icon: Ban },
-  { key: 'language', label: 'language', icon: Languages },
+  { key: 'content', label: 'content', icon: Languages },
   { key: 'storage', label: 'storage', icon: Database },
   { key: 'downloads', label: 'downloads', icon: Download },
+  { key: 'support', label: 'support', icon: LifeBuoy },
   { key: 'about', label: 'about', icon: Info },
 ];

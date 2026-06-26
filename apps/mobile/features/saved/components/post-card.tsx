@@ -24,9 +24,15 @@ function PostCard({ post, onOpen, onMenu }: SavedPostCardProps) {
     });
 
   return (
-    <Pressable accessibilityRole="button" onPress={onOpen} className="mb-3">
-      <Card padded>
-        <View className="flex-row items-center gap-2.5">
+    // The ⋯ menu and the like/comment/share row are siblings of the open target,
+    // not nested inside it — a tap on the post body never fires an action button.
+    <Card padded className="mb-3">
+      <View className="flex-row items-center gap-2.5">
+        <Pressable
+          accessibilityRole="button"
+          onPress={onOpen}
+          className="min-w-0 flex-1 flex-row items-center gap-2.5"
+        >
           <Avatar initials={post.initials} hue={post.hue} size={40} online={post.online} />
           <View className="min-w-0 flex-1">
             <Text numberOfLines={1} className="font-sans-bold text-[14px] text-foreground">
@@ -39,11 +45,13 @@ function PostCard({ post, onOpen, onMenu }: SavedPostCardProps) {
               {post.role}
             </Text>
           </View>
-          <IconButton accessibilityLabel={t('itemMenu')} onPress={onMenu}>
-            <MoreHorizontal size={20} color={colors.mutedForeground} />
-          </IconButton>
-        </View>
+        </Pressable>
+        <IconButton accessibilityLabel={t('itemMenu')} onPress={onMenu}>
+          <MoreHorizontal size={20} color={colors.mutedForeground} />
+        </IconButton>
+      </View>
 
+      <Pressable accessibilityRole="button" onPress={onOpen}>
         <Text className="mt-3 font-sans text-[13.5px] leading-[20px] text-foreground">
           {post.body}
         </Text>
@@ -77,51 +85,51 @@ function PostCard({ post, onOpen, onMenu }: SavedPostCardProps) {
             {t('savedPrefix')} {formatShortRelativeTime(post.savedAt)}
           </Text>
         </View>
+      </Pressable>
 
-        <View className="mt-3 flex-row items-center gap-6 border-border border-t pt-3">
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('like')}
-            onPress={like}
-            className="flex-row items-center gap-1.5"
+      <View className="mt-3 flex-row items-center gap-6 border-border border-t pt-3">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('like')}
+          onPress={like}
+          className="flex-row items-center gap-1.5"
+        >
+          <Heart
+            size={20}
+            color={liked ? colors.destructive : colors.mutedForeground}
+            fill={liked ? colors.destructive : 'transparent'}
+          />
+          <Text
+            className="font-sans-semibold text-[13px]"
+            style={{ color: liked ? colors.destructive : colors.mutedForeground }}
           >
-            <Heart
-              size={20}
-              color={liked ? colors.destructive : colors.mutedForeground}
-              fill={liked ? colors.destructive : 'transparent'}
-            />
-            <Text
-              className="font-sans-semibold text-[13px]"
-              style={{ color: liked ? colors.destructive : colors.mutedForeground }}
-            >
-              {formatCompactNumber(likes)}
-            </Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('comment')}
-            onPress={() => toast.show(tCommon('comingSoon'))}
-            className="flex-row items-center gap-1.5"
-          >
-            <MessageCircle size={20} color={colors.mutedForeground} />
-            <Text className="font-sans-semibold text-[13px] text-muted-foreground">
-              {formatCompactNumber(post.comments)}
-            </Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('share')}
-            onPress={() => toast.show(tCommon('comingSoon'))}
-            className="flex-row items-center gap-1.5"
-          >
-            <Share2 size={20} color={colors.mutedForeground} />
-            <Text className="font-sans-semibold text-[13px] text-muted-foreground">
-              {formatCompactNumber(post.shares)}
-            </Text>
-          </Pressable>
-        </View>
-      </Card>
-    </Pressable>
+            {formatCompactNumber(likes)}
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('comment')}
+          onPress={() => toast.show(tCommon('comingSoon'))}
+          className="flex-row items-center gap-1.5"
+        >
+          <MessageCircle size={20} color={colors.mutedForeground} />
+          <Text className="font-sans-semibold text-[13px] text-muted-foreground">
+            {formatCompactNumber(post.comments)}
+          </Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('share')}
+          onPress={() => toast.show(tCommon('comingSoon'))}
+          className="flex-row items-center gap-1.5"
+        >
+          <Share2 size={20} color={colors.mutedForeground} />
+          <Text className="font-sans-semibold text-[13px] text-muted-foreground">
+            {formatCompactNumber(post.shares)}
+          </Text>
+        </Pressable>
+      </View>
+    </Card>
   );
 }
 

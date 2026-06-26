@@ -51,12 +51,20 @@ export function SavedView() {
   const [menuFor, setMenuFor] = useState<SavedMenuTarget | null>(null);
   const [removed, setRemoved] = useState<Record<string, boolean>>({});
 
+  // Key removals by kind+id — a book and a post could share a raw id, and keying
+  // on id alone would let one hide the other.
   const books = useMemo(
-    () => (data?.books ?? []).filter((b) => !removed[b.id]).sort((a, b) => compare(a, b, sort)),
+    () =>
+      (data?.books ?? [])
+        .filter((b) => !removed[`book:${b.id}`])
+        .sort((a, b) => compare(a, b, sort)),
     [data, removed, sort],
   );
   const posts = useMemo(
-    () => (data?.posts ?? []).filter((p) => !removed[p.id]).sort((a, b) => compare(a, b, sort)),
+    () =>
+      (data?.posts ?? [])
+        .filter((p) => !removed[`post:${p.id}`])
+        .sort((a, b) => compare(a, b, sort)),
     [data, removed, sort],
   );
 
@@ -91,8 +99,8 @@ export function SavedView() {
     sort === 'recent' ? 'sortRecent' : sort === 'oldest' ? 'sortOldest' : 'sortVisited',
   );
 
-  const remove = (id: string) => {
-    setRemoved((m) => ({ ...m, [id]: true }));
+  const remove = (target: SavedMenuTarget) => {
+    setRemoved((m) => ({ ...m, [`${target.kind}:${target.item.id}`]: true }));
     setMenuFor(null);
     toast.show(t('removed'));
   };
@@ -108,7 +116,7 @@ export function SavedView() {
         onPress: () => toast.show(tCommon('comingSoon')),
       },
       { label: t('report'), icon: Flag, onPress: () => toast.show(t('reported')) },
-      { label: t('remove'), icon: Trash2, danger: true, onPress: () => remove(menuFor.item.id) },
+      { label: t('remove'), icon: Trash2, danger: true, onPress: () => remove(menuFor) },
     ];
   };
 

@@ -10,6 +10,9 @@ import type { PlanSelectorProps } from '../types';
 function PlanSelector({ plans, selected, onSelect }: PlanSelectorProps) {
   const t = useDictionary('Subscription');
   const colors = useThemeColors();
+  // The best plan's strike-through is the standard monthly rate, sourced from the
+  // plans payload rather than hardcoded.
+  const compareAt = plans.find((plan) => plan.key === 'monthly')?.price ?? null;
   return (
     <View className="gap-3 px-4 pt-3.5">
       {plans.map((plan) => {
@@ -53,9 +56,9 @@ function PlanSelector({ plans, selected, onSelect }: PlanSelectorProps) {
             </View>
             <View className="items-end">
               <View className="flex-row items-baseline gap-1">
-                {plan.best ? (
+                {plan.best && compareAt != null ? (
                   <Text className="font-sans-semibold text-[14px] text-muted-foreground line-through">
-                    $10
+                    ${compareAt}
                   </Text>
                 ) : null}
                 <Text className="font-sans-bold text-[23px] text-foreground">${plan.price}</Text>

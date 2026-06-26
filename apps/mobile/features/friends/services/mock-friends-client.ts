@@ -38,7 +38,9 @@ export function createMockFriendsClient(): HttpClient {
     }
     const respond = RESPOND.exec(path);
     if (respond?.[1]) {
-      const accept = !!(body as { accept?: boolean } | undefined)?.accept;
+      // Boundary read of the untyped request body (`as`): the route owns its
+      // shape. Narrow to a real boolean so a stray truthy value can't slip through.
+      const accept = (body as { accept?: boolean } | undefined)?.accept === true;
       return delay({ id: decodeURIComponent(respond[1]), accepted: accept }) as Promise<T>;
     }
     return unsupported();

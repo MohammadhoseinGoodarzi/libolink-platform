@@ -31,6 +31,7 @@ function RequestsSection({ requests }: RequestsSectionProps) {
       <Card variant="flat" className="overflow-hidden">
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ expanded: open }}
           onPress={() => setOpen((o) => !o)}
           className="flex-row items-center gap-3 p-3.5"
         >

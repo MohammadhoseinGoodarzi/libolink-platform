@@ -7,6 +7,13 @@ export type SectionHeadProps = {
   title: string;
 };
 
+export type PremiumHeroProps = {
+  // The headline (annual) per-month price and the standard monthly rate it
+  // compares against — both from the shared offer so the hero stays in sync.
+  price: number;
+  compareAt: number | null;
+};
+
 export type PlanSelectorProps = {
   plans: SubscriptionPlan[];
   selected: PlanKey;

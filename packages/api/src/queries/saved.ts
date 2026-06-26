@@ -9,16 +9,23 @@ export const savedKeys = {
   collection: () => [...savedKeys.all, 'collection'] as const,
 };
 
+// The collection is split into books and posts, so a raw id is ambiguous —
+// removal is addressed by kind + id.
+export type SavedItemKind = 'book' | 'post';
+
 export interface SavedApi {
   collection(): Promise<SavedCollection>;
-  /** Remove an item from the collection; resolves to the removed id. */
-  remove(id: string): Promise<{ id: string }>;
+  /** Remove an item from the collection; resolves to the removed kind + id. */
+  remove(kind: SavedItemKind, id: string): Promise<{ kind: SavedItemKind; id: string }>;
 }
 
 export function createSavedApi(client: HttpClient): SavedApi {
   return {
     collection: () => client.get<SavedCollection>('/saved'),
-    remove: (id) => client.delete<{ id: string }>(`/saved/${encodeURIComponent(id)}`),
+    remove: (kind, id) =>
+      client.delete<{ kind: SavedItemKind; id: string }>(
+        `/saved/${kind}/${encodeURIComponent(id)}`,
+      ),
   };
 }
 

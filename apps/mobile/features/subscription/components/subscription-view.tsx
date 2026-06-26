@@ -64,6 +64,8 @@ export function SubscriptionView() {
   }
 
   const priceLabel = `$${plan.price}${t('perMonth')}`;
+  const annualPlan = data.plans.find((p) => p.key === 'annual') ?? plan;
+  const monthlyPrice = data.plans.find((p) => p.key === 'monthly')?.price ?? null;
 
   const confirm = () => {
     setCheckout(false);
@@ -76,7 +78,7 @@ export function SubscriptionView() {
       <Header showBack onBack={() => router.back()} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-8">
-        <PremiumHero />
+        <PremiumHero price={annualPlan.price} compareAt={monthlyPrice} />
 
         <SectionHead overline={t('planOverline')} title={t('planTitle')} />
         <PlanSelector plans={data.plans} selected={planKey} onSelect={setPlanKey} />

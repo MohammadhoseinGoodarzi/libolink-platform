@@ -12,8 +12,14 @@ function BookCard({ book, onOpen, onMenu }: SavedBookCardProps) {
   const t = useDictionary('Saved');
   const colors = useThemeColors();
   return (
-    <Pressable accessibilityRole="button" onPress={onOpen} className="mb-3">
-      <Card padded className="flex-row items-center gap-3.5">
+    // The ⋯ menu is a sibling of the open target, not nested inside it, so a tap
+    // on the card never doubles as a tap on the menu button.
+    <Card padded className="mb-3 flex-row items-center gap-3.5">
+      <Pressable
+        accessibilityRole="button"
+        onPress={onOpen}
+        className="min-w-0 flex-1 flex-row items-center gap-3.5"
+      >
         <BookCover
           title={book.title}
           author={book.author}
@@ -38,11 +44,11 @@ function BookCard({ book, onOpen, onMenu }: SavedBookCardProps) {
             </Text>
           </View>
         </View>
-        <IconButton accessibilityLabel={t('itemMenu')} onPress={onMenu}>
-          <MoreHorizontal size={20} color={colors.mutedForeground} />
-        </IconButton>
-      </Card>
-    </Pressable>
+      </Pressable>
+      <IconButton accessibilityLabel={t('itemMenu')} onPress={onMenu}>
+        <MoreHorizontal size={20} color={colors.mutedForeground} />
+      </IconButton>
+    </Card>
   );
 }
 
