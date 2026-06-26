@@ -6,6 +6,7 @@ export * from './queries/message';
 export * from './queries/network';
 export * from './queries/notification';
 export * from './queries/post';
+export * from './queries/premium';
 export * from './queries/profile';
 export * from './queries/saved';
 export * from './queries/search';
