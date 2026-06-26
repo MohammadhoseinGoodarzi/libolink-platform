@@ -49,7 +49,10 @@ function Chip({
 
   const classes = cn(chipVariants({ tone: scheme, size }), className);
 
-  if (selectable || onPress) {
+  // Interactivity requires an onPress — a selectable-but-handler-less chip keeps
+  // its selected styling (via `scheme`) but renders as a plain View, never an
+  // inert button. accessibilityState is only meaningful on the interactive path.
+  if (onPress) {
     return (
       <Pressable
         accessibilityRole="button"

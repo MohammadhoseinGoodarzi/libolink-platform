@@ -110,7 +110,12 @@ function ModalShell({
               backgroundColor: colors.scrim,
             }}
           >
-            <Pressable accessibilityLabel={closeLabel} className="flex-1" onPress={onClose} />
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={closeLabel}
+              className="flex-1"
+              onPress={onClose}
+            />
           </Animated.View>
         ) : null}
 

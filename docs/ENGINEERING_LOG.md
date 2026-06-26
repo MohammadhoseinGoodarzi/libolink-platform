@@ -12,7 +12,7 @@ that nobody debugs the same thing twice.
 ## 2026-06-26 — Component-base consolidation #2–#4: ModalShell, Chip, Card (branch `chore/mobile-component-bases`)
 
 *Decision.* Continued the "one base + thin variants" rule (Button is the model; InputBase was
-#1/PR #28). Three more families folded to a single base each:
+the first base, PR #28). Three more families folded to a single base each:
 - **`ModalShell`** (`shared/components/ui/modal-shell.tsx`) — the lone `Modal` + scrim + mount-
   while-animating lifecycle. A single `0→1` `progress` `Animated.Value` (native driver) drives
   scrim opacity + panel slide + panel fade; `placement` = `bottom` (sheets, slide up) / `left`

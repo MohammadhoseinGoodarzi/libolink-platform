@@ -115,7 +115,11 @@ export function StoryViewer({ startId, onClose }: StoryViewerProps) {
   };
 
   return (
-    <ModalShell open onClose={onClose} placement="full" enterDuration={220} exitDuration={180}>
+    // `open` is constant true: the parent (home.tsx) mounts/unmounts StoryViewer
+    // by storyId, so there's no open→closed transition to animate (matches the
+    // pre-ModalShell native-fade behaviour) — only the enter fade plays, hence
+    // no exitDuration.
+    <ModalShell open onClose={onClose} placement="full" enterDuration={220}>
       <View className="flex-1">
         {/* author-hued backdrop */}
         <View pointerEvents="none" style={StyleSheet.absoluteFill}>
