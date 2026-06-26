@@ -1,5 +1,5 @@
 import type { MessageKey } from '@repo/i18n';
-import type { AccessibilitySettings, NotificationSettings } from '@repo/types';
+import type { AccessibilitySettings, LanguageCode, NotificationSettings } from '@repo/types';
 import {
   Activity,
   AtSign,
@@ -70,6 +70,26 @@ export const SETTINGS_SECTION_TITLES: Record<string, MessageKey<'Settings'>> = {
   support: 'support',
   about: 'about',
 };
+
+// App / translate languages (handoff) — labels are endonyms (native names), not
+// translated strings, so they live here as data.
+export const LANGUAGES: { key: LanguageCode; label: string }[] = [
+  { key: 'en', label: 'English' },
+  { key: 'fa', label: 'فارسی' },
+  { key: 'es', label: 'Español' },
+  { key: 'fr', label: 'Français' },
+  { key: 'ar', label: 'العربية' },
+  { key: 'de', label: 'Deutsch' },
+  { key: 'tr', label: 'Türkçe' },
+  { key: 'zh', label: '中文' },
+];
+
+// `as`: Object.fromEntries widens keys to string; LANGUAGES covers every
+// LanguageCode, so the map is total.
+export const LANGUAGE_LABEL = Object.fromEntries(LANGUAGES.map((l) => [l.key, l.label])) as Record<
+  LanguageCode,
+  string
+>;
 
 // Accessibility toggles (handoff Appearance) — each maps to an AppSettings
 // accessibility flag, an icon, and its title/description strings.

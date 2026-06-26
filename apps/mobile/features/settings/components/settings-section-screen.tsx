@@ -3,8 +3,11 @@ import { View } from 'react-native';
 import { Text } from '@/shared/components/ui';
 import { SETTINGS_SECTION_TITLES } from '../constants';
 import type { SettingsSectionScreenProps } from '../types';
+import { AboutScreen } from './about-screen';
 import { AppearanceScreen } from './appearance-screen';
+import { ContentScreen } from './content-screen';
 import { NotificationsScreen } from './notifications-screen';
+import { PrivacyScreen } from './privacy-screen';
 import { SettingsScreenShell } from './settings-screen-shell';
 
 // Push-detail section router (handoff Settings). Maps the /settings/[section]
@@ -18,6 +21,15 @@ export function SettingsSectionScreen({ section }: SettingsSectionScreenProps) {
   }
   if (section === 'notifications') {
     return <NotificationsScreen />;
+  }
+  if (section === 'privacy') {
+    return <PrivacyScreen />;
+  }
+  if (section === 'content') {
+    return <ContentScreen />;
+  }
+  if (section === 'about') {
+    return <AboutScreen />;
   }
 
   const titleKey = (section && SETTINGS_SECTION_TITLES[section]) || 'title';
