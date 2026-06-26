@@ -113,8 +113,8 @@ All packages are `@repo/<name>`, ship TypeScript source directly (no build step)
 - **@repo/api** — fetch-based `createHttpClient(config)` factory (NOT Axios), interceptor chain
   (auth inject, error normalize, 401), `makeQueryClient()`, query/mutation factories by domain.
   Zero platform-specific imports.
-- **@repo/stores** — global Jotai atoms both apps need (userAtom, sessionAtom, themeAtom).
-  Feature-scoped atoms stay in each app.
+- **@repo/stores** — global Jotai atoms both apps need (userAtom, sessionAtom, themeAtom,
+  settingsAtom + DEFAULT_SETTINGS). Feature-scoped atoms stay in each app.
 - **@repo/hooks** — hooks that would be byte-for-byte identical in both apps. Touches `window`/
   `localStorage` → web app only. Touches `useColorScheme`/`Dimensions`/`Platform` → mobile only.
 - **@repo/utils** — pure functions only. `cn()` (clsx + tailwind-merge) lives here.
@@ -208,7 +208,9 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
   neutral/muted/primary/accent + `size` sm/default + `selectable`; static topic/tag/Joined/screen
   pills pass a `tone`, never a hand-rolled `rounded-full bg-secondary` View) with `FilterChip` (the
   thin selectable wrapper) built on it, `MessageBubble`, badges
-  (`CountBadge`/`VerifiedBadge`/`ProChip`), `IconButton`, `BrandGradient` (svg green→navy),
+  (`CountBadge`/`VerifiedBadge`/`ProChip`), `IconButton`, `Switch` (the ONE iOS-style toggle —
+  Settings rows and any boolean control toggle through this, never a hand-rolled track),
+  `BrandGradient` (svg green→navy),
   `ModalShell` (the ONE overlay base — Modal + scrim + single-`progress` slide/fade + mount
   lifecycle; `placement` bottom/left/full) with `BottomSheet`, `ActionSheet` and the full-screen
   screens (story-viewer, search-overlay) + the shell drawer built on it — never open a raw
