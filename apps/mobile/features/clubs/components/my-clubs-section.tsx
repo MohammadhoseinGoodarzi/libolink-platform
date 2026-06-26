@@ -2,7 +2,7 @@ import { useDictionary } from '@repo/i18n';
 import { formatCompactNumber } from '@repo/utils';
 import { Check, ChevronRight } from 'lucide-react-native';
 import { Pressable, ScrollView, View } from 'react-native';
-import { Card, Text } from '@/shared/components/ui';
+import { Card, Chip, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import type { MyClubsSectionProps } from '../types';
 import { ClubLogo } from './club-logo';
@@ -49,10 +49,7 @@ function MyClubsSection({ clubs, onSeeAll, onOpen }: MyClubsSectionProps) {
               <Text className="mt-1 font-sans text-[12px] text-muted-foreground">
                 {formatCompactNumber(c.members)} {t('members')}
               </Text>
-              <View className="mt-3 h-[26px] flex-row items-center gap-1 self-start rounded-full bg-secondary px-2.5">
-                <Check size={14} color={colors.primary} />
-                <Text className="font-sans-semibold text-[12px] text-primary">{t('joined')}</Text>
-              </View>
+              <Chip label={t('joined')} icon={Check} tone="primary" className="mt-3 self-start" />
             </Card>
           </Pressable>
         ))}

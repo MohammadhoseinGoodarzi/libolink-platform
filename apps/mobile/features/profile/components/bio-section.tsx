@@ -1,10 +1,9 @@
 import { useDictionary } from '@repo/i18n';
 import { Quote, User } from 'lucide-react-native';
 import { View } from 'react-native';
-import { Card, Text } from '@/shared/components/ui';
+import { Card, Chip, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import type { BioSectionProps } from '../types';
-import { Chip } from './chip';
 import { Section } from './section';
 
 // About (handoff §6.4): bio, a reading-philosophy quote box, and interest chips.

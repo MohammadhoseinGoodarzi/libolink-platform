@@ -99,8 +99,30 @@ export type CardProps = ViewProps & {
 export type FilterChipProps = {
   label: string;
   active?: boolean;
-  count?: number;
-  onPress?: () => void;
+  count?: number | undefined;
+  onPress?: (() => void) | undefined;
+};
+
+// Static colour schemes for a non-selectable Chip (interactive chips derive their
+// scheme from the active state instead).
+export type ChipTone = 'neutral' | 'muted' | 'primary' | 'accent';
+export type ChipSize = 'sm' | 'default';
+
+export type ChipProps = {
+  label: string;
+  icon?: ComponentType<{ size?: number; color?: string }>;
+  iconSize?: number;
+  /** Static colour scheme; ignored while a selectable chip is active. */
+  tone?: ChipTone;
+  size?: ChipSize;
+  /** Interactive, toggleable filter chip (Pressable + selected a11y state). */
+  selectable?: boolean;
+  active?: boolean;
+  /** Trailing crimson count badge (e.g. Unread · 2). */
+  count?: number | undefined;
+  onPress?: (() => void) | undefined;
+  className?: string;
+  textClassName?: string;
 };
 
 export type IconButtonProps = {

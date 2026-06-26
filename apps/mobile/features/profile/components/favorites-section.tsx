@@ -2,10 +2,9 @@ import { useDictionary } from '@repo/i18n';
 import { Heart } from 'lucide-react-native';
 import { View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { Avatar, BookCover, BrandGradient, Card, Stars, Text } from '@/shared/components/ui';
+import { Avatar, BookCover, BrandGradient, Card, Chip, Stars, Text } from '@/shared/components/ui';
 import { useShadow } from '@/shared/theme';
 import type { FavoritesSectionProps } from '../types';
-import { Chip } from './chip';
 import { Section } from './section';
 
 // Favourites (handoff §6.4): favourite book, author, a gradient quote card, and
