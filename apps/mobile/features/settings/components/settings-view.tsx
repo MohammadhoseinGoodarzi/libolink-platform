@@ -110,7 +110,7 @@ export function SettingsView() {
           </View>
         ) : (
           <>
-            <AccountCard onEdit={comingSoon} onViewProfile={() => router.push('/profile')} />
+            <AccountCard onEdit={comingSoon} onViewProfile={() => router.push(ROUTES.myProfile)} />
 
             <View className="h-4" />
             <GroupCard>

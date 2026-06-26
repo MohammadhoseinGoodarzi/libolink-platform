@@ -17,13 +17,25 @@ function ReaderSheet({ reader, open, onClose }: ReaderSheetProps) {
   const toast = useToast();
   const { height } = useWindowDimensions();
 
+  // Push the stacked reader profile / chat (not the Profile/Messages tab roots) so
+  // hardware back returns here. The reader's own profile in visitor mode; the chat
+  // is opened by id with a title seed (no inbox conversation exists yet).
   const goMessages = () => {
+    if (!reader) {
+      return;
+    }
     onClose();
-    router.push('/messages');
+    router.push({
+      pathname: '/chat/[id]',
+      params: { id: reader.id, title: reader.name, kind: 'dm' },
+    });
   };
   const goProfile = () => {
+    if (!reader) {
+      return;
+    }
     onClose();
-    router.push('/profile');
+    router.push({ pathname: '/reader/[id]', params: { id: reader.id } });
   };
 
   const bookTitle = reader?.sharedBook ?? reader?.book?.title ?? '';

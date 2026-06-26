@@ -39,19 +39,18 @@ the hamburger `Header` (open-drawer) instead of a back button, like the tab scre
   gesture-handler/reanimated ban is lifted — or (b) keep one `Stack` but give the drawer
   reset/replace semantics for non-tab pages so there's always exactly one in history.
 
-### 2. "Settings → View Profile" back goes to Home, not Settings — NEEDS A STACKED SCREEN
-- **What:** Profile and Messages are **tabs** (top-level roots). Tapping "View Profile"
-  in Settings targets the Profile *tab*, and because `(tabs)` is a singleton, the stack
-  rewinds to the tab navigator — hardware back then goes to Home, not Settings. This is
-  standard tab-app behavior (a tab is a root), but it surprises users who expect a
-  drill-in.
-- **Real fix (deferred):** to get back→Settings, route these to **dedicated stacked
-  screens** instead of the tabs — e.g. a pushed "my profile" route, reader "View Profile"
-  → `user/[id]`, reader/profile "Message" → `chat/[id]`. Those push/pop normally with no
-  singleton-tab rewind. Needs the self-profile screen built and the contact/chat data
-  wired by id; out of scope for the drawer-screens pass.
-- **Interim:** left as-is (View Profile switches to the Profile tab). Acceptable as
-  tab-root behavior; revisit if product wants a true drill-in.
+### 2. Drill-in buttons must use stacked routes, not the tab roots — DONE for the known spots
+- **Why:** Profile and Messages are **tabs** (singleton roots). A button that targets the
+  Profile/Messages *tab* rewinds `(tabs)` and resets to Home, so hardware back lands on
+  Home instead of the page you came from.
+- **Fixed:** Settings → View Profile pushes a stacked `/me` (owner `ProfileView` + back
+  header); the reader sheet pushes `/reader/[id]` (visitor profile) and `/chat/[id]`
+  (seeded chat) instead of the tabs; visitor-mode `ProfileView` "Message" pushes
+  `/chat/[id]`. All push/pop normally → back returns to the previous page.
+- **Residual (acceptable):** a few *section-jump* spots still target tab roots on purpose —
+  the drawer's Messages item / profile card, and Saved's empty-state "Explore" → Home.
+  These are "go to that section" actions, so resetting to the tab root is fine. Revisit
+  only if a specific one feels wrong in use.
 
 ### 3. `as never` casts in the drawer `go()` — EASY WIN
 - **What:** `router.navigate(route as never)` in `left-drawer.tsx` casts away Expo
