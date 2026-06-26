@@ -18,9 +18,11 @@ export function ScreenScrollView({
   return (
     <ScrollView
       {...rest}
+      // Injected padding goes LAST so it always wins — the bottom inset is owned
+      // here and must not be silently dropped by a consumer's contentContainerStyle.
       contentContainerStyle={[
-        { paddingBottom: insets.bottom + bottomSpacing },
         contentContainerStyle,
+        { paddingBottom: insets.bottom + bottomSpacing },
       ]}
     />
   );
