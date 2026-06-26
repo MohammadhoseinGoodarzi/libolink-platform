@@ -1,23 +1,32 @@
 import type { MessageKey } from '@repo/i18n';
-import type { AccessibilitySettings } from '@repo/types';
+import type { AccessibilitySettings, NotificationSettings } from '@repo/types';
 import {
   Activity,
+  AtSign,
   Ban,
   Bell,
   Bold,
+  Clock,
   Contrast,
   Database,
   Download,
+  Heart,
   Info,
   KeyRound,
   Languages,
   Layers,
   LifeBuoy,
   type LucideIcon,
+  Mail,
+  MessageCircle,
   Palette,
   ShieldCheck,
+  Smartphone,
+  Star,
   Type,
   UserCog,
+  UserPlus,
+  Users,
 } from 'lucide-react-native';
 
 // Shown in the index footer + the About row.
@@ -70,6 +79,34 @@ export type A11yItem = {
   title: MessageKey<'Settings'>;
   desc: MessageKey<'Settings'>;
 };
+
+// Notification delivery channels (handoff Notifications) — each maps to a
+// NotificationSettings boolean.
+export type NotifToggleItem = {
+  key: keyof NotificationSettings;
+  icon: LucideIcon;
+  title: MessageKey<'Settings'>;
+  desc?: MessageKey<'Settings'>;
+};
+
+export const NOTIF_CHANNELS: NotifToggleItem[] = [
+  { key: 'push', icon: Smartphone, title: 'notifPush' },
+  { key: 'email', icon: Mail, title: 'notifEmail' },
+  { key: 'inapp', icon: Bell, title: 'notifInApp' },
+];
+
+// What you're notified about (handoff Notifications) — the granular category matrix.
+export const NOTIF_CATEGORIES: NotifToggleItem[] = [
+  { key: 'messages', icon: MessageCircle, title: 'notifMessages' },
+  { key: 'friends', icon: UserPlus, title: 'notifFriends' },
+  { key: 'comments', icon: MessageCircle, title: 'notifComments' },
+  { key: 'likes', icon: Heart, title: 'notifLikes' },
+  { key: 'mentions', icon: AtSign, title: 'notifMentions' },
+  { key: 'clubs', icon: Users, title: 'notifClubs' },
+  { key: 'reminders', icon: Clock, title: 'notifReminders' },
+  { key: 'followers', icon: UserPlus, title: 'notifFollowers' },
+  { key: 'recs', icon: Star, title: 'notifRecs' },
+];
 
 export const A11Y_ITEMS: A11yItem[] = [
   { key: 'boldText', icon: Bold, title: 'a11yBoldText', desc: 'a11yBoldTextDesc' },

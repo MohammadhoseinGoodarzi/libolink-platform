@@ -4,6 +4,7 @@ import { Text } from '@/shared/components/ui';
 import { SETTINGS_SECTION_TITLES } from '../constants';
 import type { SettingsSectionScreenProps } from '../types';
 import { AppearanceScreen } from './appearance-screen';
+import { NotificationsScreen } from './notifications-screen';
 import { SettingsScreenShell } from './settings-screen-shell';
 
 // Push-detail section router (handoff Settings). Maps the /settings/[section]
@@ -14,6 +15,9 @@ export function SettingsSectionScreen({ section }: SettingsSectionScreenProps) {
 
   if (section === 'appearance') {
     return <AppearanceScreen />;
+  }
+  if (section === 'notifications') {
+    return <NotificationsScreen />;
   }
 
   const titleKey = (section && SETTINGS_SECTION_TITLES[section]) || 'title';
