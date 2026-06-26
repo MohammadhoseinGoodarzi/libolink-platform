@@ -17,6 +17,7 @@ export * from './input-base';
 export * from './message-bubble';
 export * from './modal-shell';
 export * from './password-input';
+export * from './screen-scroll-view';
 export * from './search-input';
 export * from './sponsored-card';
 export * from './stars';

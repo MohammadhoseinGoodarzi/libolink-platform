@@ -26,6 +26,10 @@ export type ProfileViewProps = {
   /** Load another reader's profile (visitor mode, pushed screen with a back
       button). Omit for the signed-in user's own profile on the Profile tab. */
   readerId?: string;
+  /** Owner profile rendered as a pushed screen (e.g. /me from Settings) rather
+      than on the tab — applies the bottom safe-area inset since there's no tab
+      bar to reserve it. Ignored in visitor mode (already inset). */
+  standalone?: boolean;
 };
 
 export type SectionProps = {

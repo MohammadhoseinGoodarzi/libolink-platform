@@ -14,6 +14,7 @@ export const ROUTES = {
   messages: '/messages',
   clubs: '/clubs',
   profile: '/profile',
+  myProfile: '/me',
   friends: '/friends',
   saved: '/saved',
   settings: '/settings',

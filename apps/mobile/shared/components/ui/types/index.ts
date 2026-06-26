@@ -4,8 +4,24 @@
 // types inline (CLAUDE.md: no type declarations in component files).
 
 import type { ComponentType, ReactNode } from 'react';
-import type { PressableProps, StyleProp, TextInputProps, ViewProps, ViewStyle } from 'react-native';
+import type {
+  PressableProps,
+  ScrollViewProps,
+  StyleProp,
+  TextInputProps,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
 import type { ButtonVariantProps } from '../button-variants';
+
+// A full-screen page ScrollView that always reserves the device's bottom
+// safe-area inset at the end of its content (home indicator / gesture bar).
+// Use this for every stacked/full-screen scrollable page instead of a raw
+// <ScrollView> + hand-rolled `pb-*` — that's how a page can forget the inset.
+export type ScreenScrollViewProps = ScrollViewProps & {
+  /** Breathing room ON TOP of the safe-area inset (default 24). */
+  bottomSpacing?: number;
+};
 
 // The single shared TextInput primitive. Renders bare (just the styled TextInput)
 // unless a box affordance is supplied (`left`/`right`/`containerClassName`/
