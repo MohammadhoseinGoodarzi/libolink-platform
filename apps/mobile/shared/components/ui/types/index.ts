@@ -23,6 +23,15 @@ export type ScreenScrollViewProps = ScrollViewProps & {
   bottomSpacing?: number;
 };
 
+// iOS-style toggle (handoff Settings kit) — the ONE switch. Settings rows and any
+// boolean control toggle through this, never a hand-rolled track + knob.
+export type SwitchProps = {
+  on: boolean;
+  onToggle: () => void;
+  disabled?: boolean;
+  accessibilityLabel?: string;
+};
+
 // The single shared TextInput primitive. Renders bare (just the styled TextInput)
 // unless a box affordance is supplied (`left`/`right`/`containerClassName`/
 // `containerStyle`), in which case it lays out as

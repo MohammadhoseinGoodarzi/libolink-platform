@@ -21,6 +21,7 @@ export * from './screen-scroll-view';
 export * from './search-input';
 export * from './sponsored-card';
 export * from './stars';
+export * from './switch';
 export * from './text';
 export * from './toast';
 export type * from './types';

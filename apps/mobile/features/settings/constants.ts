@@ -1,16 +1,22 @@
 import type { MessageKey } from '@repo/i18n';
+import type { AccessibilitySettings } from '@repo/types';
 import {
+  Activity,
   Ban,
   Bell,
+  Bold,
+  Contrast,
   Database,
   Download,
   Info,
   KeyRound,
   Languages,
+  Layers,
   LifeBuoy,
   type LucideIcon,
   Palette,
   ShieldCheck,
+  Type,
   UserCog,
 } from 'lucide-react-native';
 
@@ -40,4 +46,45 @@ export const SETTINGS_SEARCH: SettingsSearchItem[] = [
   { key: 'downloads', label: 'downloads', icon: Download },
   { key: 'support', label: 'support', icon: LifeBuoy },
   { key: 'about', label: 'about', icon: Info },
+];
+
+// Push-detail section keys → their title string (the [section] route titles + the
+// index rows push to these). Built screens live in the section registry; the rest
+// render the coming-soon shell.
+export const SETTINGS_SECTION_TITLES: Record<string, MessageKey<'Settings'>> = {
+  account: 'account',
+  notifications: 'notifications',
+  appearance: 'appearance',
+  privacy: 'privacy',
+  content: 'content',
+  storage: 'storage',
+  support: 'support',
+  about: 'about',
+};
+
+// Accessibility toggles (handoff Appearance) — each maps to an AppSettings
+// accessibility flag, an icon, and its title/description strings.
+export type A11yItem = {
+  key: keyof AccessibilitySettings;
+  icon: LucideIcon;
+  title: MessageKey<'Settings'>;
+  desc: MessageKey<'Settings'>;
+};
+
+export const A11Y_ITEMS: A11yItem[] = [
+  { key: 'boldText', icon: Bold, title: 'a11yBoldText', desc: 'a11yBoldTextDesc' },
+  { key: 'largerText', icon: Type, title: 'a11yLargerText', desc: 'a11yLargerTextDesc' },
+  { key: 'reduceMotion', icon: Activity, title: 'a11yReduceMotion', desc: 'a11yReduceMotionDesc' },
+  {
+    key: 'increaseContrast',
+    icon: Contrast,
+    title: 'a11yIncreaseContrast',
+    desc: 'a11yIncreaseContrastDesc',
+  },
+  {
+    key: 'reduceTransparency',
+    icon: Layers,
+    title: 'a11yReduceTransparency',
+    desc: 'a11yReduceTransparencyDesc',
+  },
 ];

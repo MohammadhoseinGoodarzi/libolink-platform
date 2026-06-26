@@ -1,6 +1,5 @@
 import { useDictionary } from '@repo/i18n';
 import { sessionAtom } from '@repo/stores';
-import type { Theme } from '@repo/types';
 import { useRouter } from 'expo-router';
 import { useSetAtom } from 'jotai';
 import {
@@ -27,9 +26,9 @@ import { GroupCard } from './group-card';
 import { SettingsRow } from './settings-row';
 
 // Settings index orchestrator (handoff Settings): the account summary + grouped
-// category rows. Working controls: the Appearance theme picker and Log Out reuse
-// existing infra (useAppTheme, the session). The category detail screens and the
-// notifications/privacy/etc. forms are phase-2 (rows acknowledge via toast).
+// category rows. Each category pushes its /settings/[section] detail screen
+// (Appearance is built; the rest render a coming-soon shell for now). Log Out
+// reuses the session.
 export function SettingsView() {
   const t = useDictionary('Settings');
   const tCommon = useDictionary('Common');
@@ -38,13 +37,14 @@ export function SettingsView() {
   const toast = useToast();
   const setSession = useSetAtom(sessionAtom);
   const colors = useThemeColors();
-  const { preference, setTheme } = useAppTheme();
+  const { preference } = useAppTheme();
 
   const [query, setQuery] = useState('');
-  const [themeOpen, setThemeOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
 
   const comingSoon = () => toast.show(tCommon('comingSoon'));
+  const openSection = (section: string) =>
+    router.push({ pathname: '/settings/[section]', params: { section } });
   const themeLabel =
     preference === 'dark'
       ? t('themeDark')
@@ -63,12 +63,6 @@ export function SettingsView() {
   const results = term
     ? SETTINGS_SEARCH.filter((item) => t(item.label).toLowerCase().includes(term))
     : null;
-
-  const themeOptions: { key: Theme; label: string }[] = [
-    { key: 'light', label: t('themeLight') },
-    { key: 'dark', label: t('themeDark') },
-    { key: 'system', label: t('themeSystem') },
-  ];
 
   return (
     <View className="flex-1 bg-background">
@@ -110,7 +104,7 @@ export function SettingsView() {
           </View>
         ) : (
           <>
-            <AccountCard onEdit={comingSoon} onViewProfile={() => router.push(ROUTES.myProfile)} />
+            <AccountCard onEdit={comingSoon} onViewProfile={() => router.push('/me')} />
 
             <View className="h-4" />
             <GroupCard>
@@ -119,14 +113,18 @@ export function SettingsView() {
                 icon={UserCog}
                 title={t('account')}
                 subtitle={t('accountSub')}
-                onPress={comingSoon}
+                onPress={() => openSection('account')}
               />
-              <SettingsRow icon={Bell} title={t('notifications')} onPress={comingSoon} />
+              <SettingsRow
+                icon={Bell}
+                title={t('notifications')}
+                onPress={() => openSection('notifications')}
+              />
               <SettingsRow
                 icon={Palette}
                 title={t('appearance')}
                 value={themeLabel}
-                onPress={() => setThemeOpen(true)}
+                onPress={() => openSection('appearance')}
               />
             </GroupCard>
 
@@ -137,10 +135,18 @@ export function SettingsView() {
                 icon={ShieldCheck}
                 title={t('privacy')}
                 subtitle={t('privacySub')}
-                onPress={comingSoon}
+                onPress={() => openSection('privacy')}
               />
-              <SettingsRow icon={Languages} title={t('content')} onPress={comingSoon} />
-              <SettingsRow icon={Database} title={t('storage')} onPress={comingSoon} />
+              <SettingsRow
+                icon={Languages}
+                title={t('content')}
+                onPress={() => openSection('content')}
+              />
+              <SettingsRow
+                icon={Database}
+                title={t('storage')}
+                onPress={() => openSection('storage')}
+              />
             </GroupCard>
 
             <View className="h-4" />
@@ -150,13 +156,13 @@ export function SettingsView() {
                 icon={LifeBuoy}
                 title={t('support')}
                 subtitle={t('supportSub')}
-                onPress={comingSoon}
+                onPress={() => openSection('support')}
               />
               <SettingsRow
                 icon={Info}
                 title={t('about')}
                 value={APP_VERSION}
-                onPress={comingSoon}
+                onPress={() => openSection('about')}
               />
             </GroupCard>
 
@@ -180,17 +186,6 @@ export function SettingsView() {
           </>
         )}
       </ScreenScrollView>
-
-      <ActionSheet
-        open={themeOpen}
-        onClose={() => setThemeOpen(false)}
-        title={t('themeTitle')}
-        actions={themeOptions.map((option) => ({
-          label: option.label,
-          ...(option.key === preference ? { bold: true } : {}),
-          onPress: () => setTheme(option.key),
-        }))}
-      />
 
       <ActionSheet
         open={logoutOpen}

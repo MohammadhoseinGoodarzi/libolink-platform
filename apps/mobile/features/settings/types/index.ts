@@ -1,10 +1,11 @@
-// View-only types for the Settings index (handoff Settings). The detail screens
-// (account, notifications, privacy, …) are phase-2.
+// View-only types for the Settings index + push-detail screens (handoff Settings).
 import type { LucideIcon } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 
+export type SettingsRowTrailing = 'chevron' | 'switch' | 'check' | 'none';
+
 export type SettingsRowProps = {
-  icon: LucideIcon;
+  icon?: LucideIcon;
   title: string;
   subtitle?: string;
   /** Trailing value text (e.g. the current theme, the app version). */
@@ -13,7 +14,15 @@ export type SettingsRowProps = {
   first?: boolean;
   /** Crimson tint for destructive rows. */
   danger?: boolean;
-  onPress: () => void;
+  /** Trailing affordance — chevron (default), a Switch, a check, or nothing. */
+  trailing?: SettingsRowTrailing;
+  /** Switch/check state. */
+  on?: boolean;
+  /** Switch toggle handler (rows with `trailing="switch"`). */
+  onToggle?: () => void;
+  /** Disable the switch (e.g. when the master notifications switch is off). */
+  toggleDisabled?: boolean;
+  onPress?: () => void;
 };
 
 export type GroupCardProps = {
@@ -23,4 +32,45 @@ export type GroupCardProps = {
 export type AccountCardProps = {
   onEdit: () => void;
   onViewProfile: () => void;
+};
+
+export type SettingsGroupLabelProps = {
+  children: ReactNode;
+  icon?: LucideIcon;
+};
+
+export type SettingsNoteProps = {
+  children: ReactNode;
+};
+
+export type SettingsScreenShellProps = {
+  title: string;
+  children: ReactNode;
+};
+
+export type SegmentOption<K extends string> = {
+  key: K;
+  label: string;
+};
+
+export type SegmentProps<K extends string> = {
+  options: SegmentOption<K>[];
+  value: K;
+  onChange: (key: K) => void;
+};
+
+export type TileSegmentOption<K extends string> = {
+  key: K;
+  label: string;
+  icon: LucideIcon;
+};
+
+export type TileSegmentProps<K extends string> = {
+  options: TileSegmentOption<K>[];
+  value: K;
+  onChange: (key: K) => void;
+};
+
+export type SettingsSectionScreenProps = {
+  section: string | undefined;
 };
