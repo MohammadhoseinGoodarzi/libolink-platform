@@ -10,7 +10,13 @@ import type { BrandGradientProps } from './types';
 const GRADIENT_FROM = '#023618';
 const GRADIENT_TO = '#1D3557';
 
-function BrandGradient({ children, className, style, ...props }: BrandGradientProps) {
+function BrandGradient({
+  children,
+  className,
+  style,
+  onLayout: externalOnLayout,
+  ...props
+}: BrandGradientProps) {
   const id = `bg${useId().replace(/:/g, '')}`;
   // Draw the gradient at the measured pixel size, overscanned by 1px (clipped by
   // overflow-hidden). A bare `100%` collapses on content-sized parents (e.g. the
@@ -23,6 +29,7 @@ function BrandGradient({ children, className, style, ...props }: BrandGradientPr
     setSize((prev) =>
       prev && prev.width === width && prev.height === height ? prev : { width, height },
     );
+    externalOnLayout?.(e);
   };
   const w = size ? Math.ceil(size.width) + 1 : '100%';
   const h = size ? Math.ceil(size.height) + 1 : '100%';

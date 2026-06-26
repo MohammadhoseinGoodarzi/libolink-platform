@@ -238,16 +238,20 @@ export function LeftDrawer() {
           </View>
 
           <View className="border-border border-t px-3 pt-2">
-            <Pressable
-              accessibilityRole="button"
-              onPress={toggleMode}
-              className="h-[46px] flex-row items-center gap-3 rounded-[14px] px-3 active:opacity-60"
-            >
-              <Crown size={20} color={colors.primary} />
-              <Text className="flex-1 font-sans-semibold text-[14.5px] text-foreground">
-                {isPremium ? t('switchToNormal') : t('switchToPremium')}
-              </Text>
-            </Pressable>
+            {/* Dev-only mode switch (see docs/PRE_RELEASE_CHECKLIST.md) — never
+                ships, so a premium flip can't be triggered in production. */}
+            {__DEV__ ? (
+              <Pressable
+                accessibilityRole="button"
+                onPress={toggleMode}
+                className="h-[46px] flex-row items-center gap-3 rounded-[14px] px-3 active:opacity-60"
+              >
+                <Crown size={20} color={colors.primary} />
+                <Text className="flex-1 font-sans-semibold text-[14.5px] text-foreground">
+                  {isPremium ? t('switchToNormal') : t('switchToPremium')}
+                </Text>
+              </Pressable>
+            ) : null}
 
             <Pressable
               accessibilityRole="button"

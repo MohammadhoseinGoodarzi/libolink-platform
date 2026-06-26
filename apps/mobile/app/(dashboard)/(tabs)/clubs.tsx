@@ -1,5 +1,7 @@
 import { useDictionary } from '@repo/i18n';
+import { userAtom } from '@repo/stores';
 import { useRouter } from 'expo-router';
+import { useAtomValue } from 'jotai';
 import { Sparkles } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';
 import { ClubsView } from '@/features/clubs';
@@ -25,9 +27,12 @@ function PremiumPill() {
 }
 
 export default function ClubsScreen() {
+  // Premium users already get the PRO badge in the header — only normal users
+  // see the upgrade CTA, so the two modes never show at once.
+  const isPremium = useAtomValue(userAtom)?.isPremium ?? false;
   return (
     <View className="flex-1 bg-background">
-      <Header right={<PremiumPill />} />
+      <Header right={isPremium ? undefined : <PremiumPill />} />
       <ClubsView />
     </View>
   );

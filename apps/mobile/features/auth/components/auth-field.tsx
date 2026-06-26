@@ -1,3 +1,4 @@
+import { useDictionary } from '@repo/i18n';
 import { cn } from '@repo/utils';
 import { Check, Eye, EyeOff } from 'lucide-react-native';
 import { useState } from 'react';
@@ -26,6 +27,7 @@ export function AuthField({
   ...inputProps
 }: AuthFieldProps) {
   const colors = useThemeColors();
+  const tCommon = useDictionary('Common');
   const [focused, setFocused] = useState(false);
   const [reveal, setReveal] = useState(false);
 
@@ -57,7 +59,7 @@ export function AuthField({
             {secure ? (
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={reveal ? 'Hide password' : 'Show password'}
+                accessibilityLabel={reveal ? tCommon('hidePassword') : tCommon('showPassword')}
                 onPress={() => setReveal((prev) => !prev)}
                 hitSlop={8}
               >
