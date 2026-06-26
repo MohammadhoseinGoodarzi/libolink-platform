@@ -9,6 +9,22 @@ that nobody debugs the same thing twice.
 
 ---
 
+## 2026-06-26 — `BrandGradient` didn't fill content-sized surfaces / clipped circles (PR #28)
+
+*Symptom.* The profile favourite-quote card (content height, no fixed height) showed the
+gradient over only part of its box; separately, after a first fix, the raised AI-tab circle
+had a thin transparent sliver on its right/bottom edge ("not a complete circle"). *Root cause.*
+`BrandGradient` drew its SVG with `width/height="100%"`. A percentage size only resolves when the
+parent has an explicit height, so on a content-sized parent it collapsed and the gradient never
+covered the box. Switching to the measured pixel size then rounded *short* on hi-dpi (e.g. a
+47.6px box measured/drawn as 47), leaving a sub-pixel gap on the right/bottom of fixed-size
+circles. *Fix.* Measure the laid-out size via `onLayout` and draw the `<Svg>`/`<Rect>` at
+`Math.ceil(size) + 1` (1px overscan, clipped by the wrapper's `overflow-hidden`), with `'100%'`
+as the first-frame fallback so fixed-size callers never flash; also compose any caller-provided
+`onLayout`. *Prevention.* For an SVG that must fill an RN box, never rely on `100%` on a
+content-sized parent — measure it and overscan by a pixel; the wrapper's `overflow-hidden` hides
+the spill. Same pattern applies to any future full-bleed SVG surface (sponsored cards, etc.).
+
 ## 2026-06-22 — Comments-sheet drag-to-dismiss removed; global-testing (ngrok/EAS) dead-ends
 
 Context: polishing the Social Home comments sheet (`feat/mobile-home-comments`) on a real

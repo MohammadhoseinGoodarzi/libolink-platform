@@ -199,8 +199,11 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 
 ### Implemented shared layer — reuse, never recreate
 - UI atoms barrel `@/shared/components/ui`: `Text` (Vazirmatn-enforcing — use INSTEAD of RN
-  `<Text>` so no screen leaks the system font), `Button`, `Input`/`PasswordInput`/`SearchInput`
-  (filled, recessed), `Card`, `Avatar`, `BookCover`, `FilterChip`, `MessageBubble`, badges
+  `<Text>` so no screen leaks the system font), `Button`, `InputBase` (the ONE `<TextInput>` —
+  Vazirmatn + placeholder colour + centring recipe; bare vs boxed mode) with
+  `Input`/`PasswordInput`/`SearchInput` built on it (filled, recessed — new input variants extend
+  `InputBase`, never a raw `<TextInput>`), `Card`, `Avatar`, `BookCover`, `FilterChip`,
+  `MessageBubble`, badges
   (`CountBadge`/`VerifiedBadge`/`ProChip`), `IconButton`, `BrandGradient` (svg green→navy),
   `BottomSheet`, `ActionSheet`, `Toast`. `BrandLogo` is `@/shared/components/brand-logo`.
 - Shell `@/shared/components/shell`: `Header`, `LeftDrawer`, `BottomTabBar` (raised AI centre
