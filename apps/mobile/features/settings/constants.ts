@@ -91,6 +91,29 @@ export const LANGUAGE_LABEL = Object.fromEntries(LANGUAGES.map((l) => [l.key, l.
   string
 >;
 
+// Storage usage breakdown (handoff Storage & Data) — offline sample. `tone` maps
+// to a theme colour in the screen (the locked palette).
+export type StorageTone = 'green' | 'navy' | 'crimson' | 'gray';
+
+export const STORAGE_USAGE: {
+  usedGB: number;
+  totalGB: number;
+  cache: string;
+  downloads: string;
+  segments: { label: MessageKey<'Settings'>; value: number; tone: StorageTone }[];
+} = {
+  usedGB: 1.9,
+  totalGB: 8,
+  cache: '342 MB',
+  downloads: '1.2 GB',
+  segments: [
+    { label: 'storageSegBooks', value: 0.9, tone: 'green' },
+    { label: 'storageSegAudiobooks', value: 0.62, tone: 'navy' },
+    { label: 'storageSegImages', value: 0.18, tone: 'crimson' },
+    { label: 'storageSegCache', value: 0.2, tone: 'gray' },
+  ],
+};
+
 // Accessibility toggles (handoff Appearance) — each maps to an AppSettings
 // accessibility flag, an icon, and its title/description strings.
 export type A11yItem = {
