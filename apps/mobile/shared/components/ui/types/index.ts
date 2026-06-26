@@ -92,15 +92,41 @@ export type ButtonProps = Omit<PressableProps, 'children'> &
   };
 
 export type CardProps = ViewProps & {
-  /** Soft shadow depth (handoff §7). `false` for flat surfaces (e.g. list rows). */
+  /** `elevated` = soft shadow (default); `flat` = bordered + shadowless. */
+  variant?: 'elevated' | 'flat';
+  /** Add the common 16px inset (p-4) instead of hand-rolling it. */
+  padded?: boolean;
+  /** Soft shadow depth (elevated only, handoff §7). `false` for flat surfaces (e.g. list rows). */
   shadow?: 'card' | 'lifted' | false;
 };
 
 export type FilterChipProps = {
   label: string;
   active?: boolean;
-  count?: number;
-  onPress?: () => void;
+  count?: number | undefined;
+  onPress?: (() => void) | undefined;
+};
+
+// Static colour schemes for a non-selectable Chip (interactive chips derive their
+// scheme from the active state instead).
+export type ChipTone = 'neutral' | 'muted' | 'primary' | 'accent';
+export type ChipSize = 'sm' | 'default';
+
+export type ChipProps = {
+  label: string;
+  icon?: ComponentType<{ size?: number; color?: string }>;
+  iconSize?: number;
+  /** Static colour scheme; ignored while a selectable chip is active. */
+  tone?: ChipTone;
+  size?: ChipSize;
+  /** Interactive, toggleable filter chip (Pressable + selected a11y state). */
+  selectable?: boolean;
+  active?: boolean;
+  /** Trailing crimson count badge (e.g. Unread · 2). */
+  count?: number | undefined;
+  onPress?: (() => void) | undefined;
+  className?: string;
+  textClassName?: string;
 };
 
 export type IconButtonProps = {
@@ -132,6 +158,42 @@ export type ActionSheetProps = {
   onClose: () => void;
   title?: string;
   actions: ActionSheetAction[];
+};
+
+// Where a ModalShell panel sits and how it animates in: `bottom` slides up
+// (sheets), `left` slides in from the left edge (the drawer), `full` fades a
+// full-screen panel (story viewer, search overlay).
+export type ModalShellPlacement = 'bottom' | 'left' | 'full';
+
+// The one Modal + scrim + slide/fade + mount/unmount lifecycle primitive. Every
+// overlay (BottomSheet, ActionSheet, the drawer, and the full-screen screens)
+// builds on this instead of re-writing the Modal/Animated plumbing. Built on RN
+// Modal + Animated only (no gesture-handler) — drag-to-dismiss is intentionally
+// absent (see docs/ENGINEERING_LOG.md 2026-06-22).
+export type ModalShellProps = {
+  open: boolean;
+  onClose: () => void;
+  children: ReactNode;
+  /** Panel placement + entry animation. Defaults to `bottom`. */
+  placement?: ModalShellPlacement;
+  /** Render the dimming scrim with tap-to-dismiss. Defaults true except `full`. */
+  scrim?: boolean;
+  /** Accessible label for the scrim's close control. */
+  closeLabel?: string;
+  /** Fade the panel opacity with the transition. Defaults true except `left`. */
+  fadePanel?: boolean;
+  /** Distance (px) a `left` panel slides in by — also its width. Ignored otherwise. */
+  slideDistance?: number;
+  /** Panel surface className. */
+  panelClassName?: string;
+  /** Panel style for props NativeWind can't read (radius, maxHeight, dynamic padding). */
+  panelStyle?: StyleProp<ViewStyle>;
+  /** Accessible label on the panel (dialog). */
+  label?: string | undefined;
+  /** Enter/exit durations (ms) + easing curve. Defaults to the soft sheet curve. */
+  enterDuration?: number;
+  exitDuration?: number;
+  easing?: (value: number) => number;
 };
 
 export type BottomSheetProps = {

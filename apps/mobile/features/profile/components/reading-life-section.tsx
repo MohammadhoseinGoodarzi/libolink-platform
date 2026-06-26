@@ -13,10 +13,9 @@ import {
 } from 'lucide-react-native';
 import { View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { Card, Text } from '@/shared/components/ui';
+import { Card, Chip, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import type { ProgressRingProps, ReadingLifeSectionProps } from '../types';
-import { Chip } from './chip';
 import { Section } from './section';
 
 const FORMAT_ICONS: Record<ReadingFormatKey, LucideIcon> = {

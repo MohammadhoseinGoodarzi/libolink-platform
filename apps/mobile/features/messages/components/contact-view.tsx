@@ -19,6 +19,7 @@ import {
   Avatar,
   BookCover,
   BrandGradient,
+  Card,
   IconButton,
   Text,
   useToast,
@@ -208,7 +209,7 @@ export function ContactView({ id }: { id: string }) {
         </View>
 
         {/* bio + username */}
-        <View className="mx-4 rounded-2xl border border-border bg-card p-4">
+        <Card variant="flat" padded className="mx-4">
           <Text className="font-sans-semibold text-[11.5px] uppercase tracking-wide text-muted-foreground">
             {t('bioLabel')}
           </Text>
@@ -229,7 +230,7 @@ export function ContactView({ id }: { id: string }) {
               <Copy size={14} color={colors.link} />
             </View>
           </Pressable>
-        </View>
+        </Card>
 
         {/* mutual clubs */}
         {contact.mutualClubs.length > 0 ? (

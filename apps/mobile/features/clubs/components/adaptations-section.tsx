@@ -2,7 +2,7 @@ import { useDictionary } from '@repo/i18n';
 import { formatCompactNumber } from '@repo/utils';
 import { ChevronRight, Film } from 'lucide-react-native';
 import { Pressable, ScrollView, View } from 'react-native';
-import { BookCover, Card, Text } from '@/shared/components/ui';
+import { BookCover, Card, Chip, Text } from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import type { AdaptationsSectionProps } from '../types';
 import { ClubsSection } from './section';
@@ -46,10 +46,14 @@ function AdaptationsSection({ adaptations, onSeeAll, onOpen }: AdaptationsSectio
                 >
                   {c.name}
                 </Text>
-                <View className="mt-2 h-[22px] flex-row items-center gap-1 self-start rounded-full bg-secondary px-2.5">
-                  <Film size={13} color={colors.link} />
-                  <Text className="font-sans-semibold text-[11px] text-link">{c.screen}</Text>
-                </View>
+                <Chip
+                  label={c.screen}
+                  icon={Film}
+                  iconSize={13}
+                  tone="accent"
+                  size="sm"
+                  className="mt-2 self-start"
+                />
                 <View className="mt-auto flex-row items-center justify-between pt-3">
                   <Text className="font-sans text-[12px] text-muted-foreground">
                     {formatCompactNumber(c.members)} {t('members')}

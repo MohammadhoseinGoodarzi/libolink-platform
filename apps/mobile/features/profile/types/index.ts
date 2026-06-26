@@ -40,11 +40,6 @@ export type SectionProps = {
   children: ReactNode;
 };
 
-export type ChipProps = {
-  label: string;
-  icon?: LucideIcon;
-};
-
 export type CoverCardProps = {
   title: string;
   author: string;

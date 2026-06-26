@@ -9,6 +9,52 @@ that nobody debugs the same thing twice.
 
 ---
 
+## 2026-06-26 — Component-base consolidation #2–#4: ModalShell, Chip, Card (branch `chore/mobile-component-bases`)
+
+*Decision.* Continued the "one base + thin variants" rule (Button is the model; InputBase was
+the first base, PR #28). Three more families folded to a single base each:
+- **`ModalShell`** (`shared/components/ui/modal-shell.tsx`) — the lone `Modal` + scrim + mount-
+  while-animating lifecycle. A single `0→1` `progress` `Animated.Value` (native driver) drives
+  scrim opacity + panel slide + panel fade; `placement` = `bottom` (sheets, slide up) / `left`
+  (drawer, slides in by `slideDistance` = its width) / `full` (fade, no scrim). Rebuilt
+  `BottomSheet`, `ActionSheet`, `left-drawer`, `story-viewer`, `search-overlay` on it — was
+  ~5× duplicated Modal/scrim/Animated plumbing (−178 lines). BottomSheet's grabber, `header`
+  slot, 90%-box and keyboard-overlap padding were left byte-identical so the comments sheet's
+  layout/keyboard handling didn't regress.
+- **`Chip`** (`chip.tsx` + `chip-variants.ts` cva) — `tone` neutral/muted/primary/accent +
+  `size` sm/default + `selectable`. `FilterChip` is now a thin selectable wrapper; static
+  topic/tag/Joined/screen pills pass a `tone` instead of a hand-rolled `rounded-full
+  bg-secondary` View. Static pill heights normalised to the sm(22)/default(32) scale.
+- **`Card`** (`card-variants.ts` cva) — `variant` elevated (default soft shadow) / flat (bordered,
+  shadowless) + `padded`. Migrated the 3 hand-rolled `rounded-2xl border bg-card p-4` cards.
+
+*Gotcha (teammates will hit this).* Under `exactOptionalPropertyTypes`, you **cannot** forward an
+optional `string | undefined` straight into a non-optional RN/Animated prop. Two cases here:
+(a) `<Animated.View className={panelClassName}>` where `panelClassName?: string` — NativeWind's
+`className` on `Animated.View` is typed non-`undefined`, so pass it conditionally:
+`{...(panelClassName ? { className: panelClassName } : {})}`. (b) A passthrough optional like
+`label`/`count`/`onPress` that a wrapper hands down must be typed `T | undefined` (not just `T?`)
+on the base's props, or the call site (`label={label}`) fails. *Prevention.* On a base component
+that re-forwards optionals, declare those props as `?: T | undefined`; for `className`/other
+props the underlying RN type marks non-optional, spread them in conditionally rather than passing
+`undefined`.
+
+## 2026-06-26 — `BrandGradient` didn't fill content-sized surfaces / clipped circles (PR #28)
+
+*Symptom.* The profile favourite-quote card (content height, no fixed height) showed the
+gradient over only part of its box; separately, after a first fix, the raised AI-tab circle
+had a thin transparent sliver on its right/bottom edge ("not a complete circle"). *Root cause.*
+`BrandGradient` drew its SVG with `width/height="100%"`. A percentage size only resolves when the
+parent has an explicit height, so on a content-sized parent it collapsed and the gradient never
+covered the box. Switching to the measured pixel size then rounded *short* on hi-dpi (e.g. a
+47.6px box measured/drawn as 47), leaving a sub-pixel gap on the right/bottom of fixed-size
+circles. *Fix.* Measure the laid-out size via `onLayout` and draw the `<Svg>`/`<Rect>` at
+`Math.ceil(size) + 1` (1px overscan, clipped by the wrapper's `overflow-hidden`), with `'100%'`
+as the first-frame fallback so fixed-size callers never flash; also compose any caller-provided
+`onLayout`. *Prevention.* For an SVG that must fill an RN box, never rely on `100%` on a
+content-sized parent — measure it and overscan by a pixel; the wrapper's `overflow-hidden` hides
+the spill. Same pattern applies to any future full-bleed SVG surface (sponsored cards, etc.).
+
 ## 2026-06-22 — Comments-sheet drag-to-dismiss removed; global-testing (ngrok/EAS) dead-ends
 
 Context: polishing the Social Home comments sheet (`feat/mobile-home-comments`) on a real

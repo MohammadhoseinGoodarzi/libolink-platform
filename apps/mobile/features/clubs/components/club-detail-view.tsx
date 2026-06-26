@@ -5,7 +5,16 @@ import { useRouter } from 'expo-router';
 import { ArrowLeft, Check, MessagesSquare, Plus } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Avatar, BookCover, Button, IconButton, Text, useToast } from '@/shared/components/ui';
+import {
+  Avatar,
+  BookCover,
+  Button,
+  Card,
+  Chip,
+  IconButton,
+  Text,
+  useToast,
+} from '@/shared/components/ui';
 import { useThemeColors } from '@/shared/theme';
 import { useClubDetail } from '../hooks/use-club-detail';
 import type { ClubDetailViewProps } from '../types';
@@ -146,9 +155,7 @@ export function ClubDetailView({ id }: ClubDetailViewProps) {
         {club.tags.length > 0 ? (
           <View className="flex-row flex-wrap gap-2 px-5 pt-3">
             {club.tags.map((tag) => (
-              <View key={tag} className="rounded-full bg-secondary px-3 py-1">
-                <Text className="font-sans-medium text-[12px] text-muted-foreground">{tag}</Text>
-              </View>
+              <Chip key={tag} label={tag} tone="muted" />
             ))}
           </View>
         ) : null}
@@ -195,14 +202,14 @@ export function ClubDetailView({ id }: ClubDetailViewProps) {
         </View>
 
         {/* about */}
-        <View className="mx-5 mt-5 rounded-2xl border border-border bg-card p-4">
+        <Card variant="flat" padded className="mx-5 mt-5">
           <Text className="font-sans-semibold text-[11.5px] uppercase tracking-wide text-muted-foreground">
             {t('about')}
           </Text>
           <Text className="mt-1.5 font-sans text-[14.5px] leading-[21px] text-foreground">
             {club.about}
           </Text>
-        </View>
+        </Card>
 
         {/* currently reading */}
         {club.currentBook ? (
@@ -210,7 +217,7 @@ export function ClubDetailView({ id }: ClubDetailViewProps) {
             <Text className="px-5 pb-2 font-sans-bold text-[12.5px] uppercase tracking-wide text-muted-foreground">
               {t('currentlyReading')}
             </Text>
-            <View className="mx-5 flex-row items-center gap-3.5 rounded-2xl border border-border bg-card p-4">
+            <Card variant="flat" padded className="mx-5 flex-row items-center gap-3.5">
               <BookCover
                 title={club.currentBook.title}
                 author={club.currentBook.author}
@@ -225,7 +232,7 @@ export function ClubDetailView({ id }: ClubDetailViewProps) {
                   {club.currentBook.author}
                 </Text>
               </View>
-            </View>
+            </Card>
           </View>
         ) : null}
 
