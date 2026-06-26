@@ -9,6 +9,7 @@ export type * from './conversation';
 export type * from './notification';
 export type * from './post';
 export type * from './profile';
+export type * from './saved';
 export type * from './search';
 export type * from './story';
 export type * from './user';

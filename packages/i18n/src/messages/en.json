@@ -519,5 +519,32 @@
     "clubs": "Clubs to join",
     "emptyTitle": "No results",
     "emptyBody": "Try a different name or tag."
+  },
+  "Saved": {
+    "title": "Saved",
+    "tabAll": "All",
+    "tabBooks": "Books",
+    "tabPosts": "Posts",
+    "books": "Books",
+    "posts": "Posts",
+    "savedCount": "saved",
+    "savedPrefix": "Saved",
+    "relatedBook": "Related book",
+    "sortLabel": "Sort by",
+    "sortRecent": "Recently Saved",
+    "sortOldest": "Oldest",
+    "sortVisited": "Most Visited",
+    "itemMenu": "Saved item",
+    "like": "Like",
+    "comment": "Comment",
+    "share": "Share",
+    "viewProfile": "View Profile",
+    "report": "Report",
+    "remove": "Remove From Saved",
+    "removed": "Removed from Saved",
+    "reported": "Reported — thanks for letting us know",
+    "emptyTitle": "Nothing saved yet",
+    "emptyBody": "Your personal reading collection starts here.",
+    "explore": "Explore Books"
   }
 }
