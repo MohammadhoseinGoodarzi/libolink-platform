@@ -1,7 +1,9 @@
 import { useDictionary } from '@repo/i18n';
-import { Heart, Quote } from 'lucide-react-native';
+import { Heart } from 'lucide-react-native';
 import { View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import { Avatar, BookCover, BrandGradient, Card, Stars, Text } from '@/shared/components/ui';
+import { useShadow } from '@/shared/theme';
 import type { FavoritesSectionProps } from '../types';
 import { Chip } from './chip';
 import { Section } from './section';
@@ -10,6 +12,7 @@ import { Section } from './section';
 // genre chips — "the books, voices and lines that made me".
 function FavoritesSection({ favorites, genres }: FavoritesSectionProps) {
   const t = useDictionary('Profile');
+  const quoteShadow = useShadow('card');
   const { book, author, quote } = favorites;
   const bookTone = book.tone == null ? {} : { tone: book.tone };
 
@@ -76,24 +79,35 @@ function FavoritesSection({ favorites, genres }: FavoritesSectionProps) {
           </View>
         </Card>
 
-        {/* favourite quote — sanctioned brand gradient surface */}
-        <BrandGradient className="rounded-lg p-5">
-          <View className="absolute right-3.5 top-2">
-            <Quote size={64} color="rgba(255,255,255,0.18)" />
-          </View>
-          <Text
-            className="font-sans-bold text-[11px] uppercase tracking-wide"
-            style={{ color: 'rgba(255,255,255,0.7)' }}
-          >
-            {t('favouriteQuote')}
-          </Text>
-          <Text className="mt-2.5 font-sans-semibold text-[18px] leading-[26px] text-white">
-            “{quote.text}”
-          </Text>
-          <Text className="mt-3 font-sans text-[13px]" style={{ color: 'rgba(255,255,255,0.78)' }}>
-            — {quote.speaker}, <Text className="italic">{quote.source}</Text>
-          </Text>
-        </BrandGradient>
+        {/* favourite quote — sanctioned brand gradient surface. Shadow sits on an
+            outer view because BrandGradient is overflow-hidden (to clip its SVG to
+            the rounded corners), which would otherwise clip the shadow on iOS. */}
+        <View className="rounded-lg" style={quoteShadow}>
+          <BrandGradient className="rounded-lg p-5">
+            {/* Soft filled quote watermark — the prototype uses a solid glyph (a
+                stroked lucide icon reads as thin scratchy lines at 18% opacity). */}
+            <View className="absolute right-3.5 top-2">
+              <Svg width={64} height={64} viewBox="0 0 24 24" fill="rgba(255,255,255,0.18)">
+                <Path d="M10 7H5.5A2.5 2.5 0 0 0 3 9.5V13a3 3 0 0 0 3 3h1v-2.5H6A.5.5 0 0 1 5.5 13v-1H8a2 2 0 0 0 2-2V7Zm11 0h-4.5A2.5 2.5 0 0 0 14 9.5V13a3 3 0 0 0 3 3h1v-2.5h-1a.5.5 0 0 1-.5-.5v-1H19a2 2 0 0 0 2-2V7Z" />
+              </Svg>
+            </View>
+            <Text
+              className="font-sans-bold text-[11px] uppercase tracking-wide"
+              style={{ color: 'rgba(255,255,255,0.7)' }}
+            >
+              {t('favouriteQuote')}
+            </Text>
+            <Text className="mt-2.5 font-sans-semibold text-[18px] leading-[26px] text-white">
+              “{quote.text}”
+            </Text>
+            <Text
+              className="mt-3 font-sans text-[13px]"
+              style={{ color: 'rgba(255,255,255,0.78)' }}
+            >
+              — {quote.speaker}, <Text className="italic">{quote.source}</Text>
+            </Text>
+          </BrandGradient>
+        </View>
 
         {/* favourite genres */}
         <View className="pt-0.5">

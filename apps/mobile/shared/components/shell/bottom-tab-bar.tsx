@@ -56,14 +56,25 @@ export function BottomTabBar() {
         className="w-16 items-center gap-0.5 py-1 active:opacity-60"
       >
         {tab.avatar ? (
+          // Instagram-style active ring: a constant 2px border (transparent when
+          // inactive) + a 2px gap, so the avatar never shifts and the active ring
+          // floats cleanly around it.
           <View
-            className={cn('rounded-full', active && 'border-2 border-primary p-0.5')}
-            style={!active ? { padding: 2 } : undefined}
+            className={cn(
+              'rounded-full border-2',
+              active ? 'border-primary' : 'border-transparent',
+            )}
+            style={{ padding: 2 }}
           >
             <Avatar initials={initialsOf(user?.displayName)} name={user?.displayName} size={24} />
           </View>
         ) : tab.icon ? (
-          <tab.icon size={24} color={color} fill={active ? color : 'transparent'} />
+          <tab.icon
+            size={24}
+            color={color}
+            fill={active ? color : 'transparent'}
+            strokeWidth={active ? 2.4 : 2}
+          />
         ) : null}
         <Text
           style={{ color }}
