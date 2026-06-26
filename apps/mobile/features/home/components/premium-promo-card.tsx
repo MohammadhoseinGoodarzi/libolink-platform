@@ -17,7 +17,7 @@ export function PremiumPromoCard() {
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={t('goPremium')}
-      onPress={() => router.navigate(ROUTES.subscription)}
+      onPress={() => router.push(ROUTES.subscription)}
       className="mx-3.5 mt-2.5 mb-1 overflow-hidden rounded-[20px] active:opacity-90"
       style={shadow}
     >

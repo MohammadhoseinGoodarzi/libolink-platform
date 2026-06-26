@@ -16,10 +16,13 @@ Last updated: 2026-06-26.
 Context: the app uses Expo Router file-based routing — a `Stack` in
 `app/(dashboard)/_layout.tsx` wrapping a nested `Tabs` group, with the drawer-reached
 pages (Settings / Saved / Friends / Subscription) as `Stack` siblings of `(tabs)`.
-Navigation follows the documented split: **`router.navigate` for top-level destinations**
-(tabs + drawer pages — switch/return without duplicating), **`router.push` for drill-in
-detail screens** (`chat/[id]`, `club/[id]`, `reader/[id]`, `user/[id]`, …). Drawer pages
-show the hamburger `Header` (open-drawer) instead of a back button, like the tab screens.
+Navigation uses **`router.push`** (history stack — back returns to the previous page);
+the bottom tab bar uses `router.navigate` (tab switch, correct there). Drawer pages show
+the hamburger `Header` (open-drawer) instead of a back button, like the tab screens.
+
+> We tried `router.navigate` for "top-level" jumps and reverted it: the `(tabs)` group is
+> a **singleton**, so navigating toward a tab rewinds the stack to the tab navigator and
+> resets it to Home — making *every* back land on Home. `push` keeps a real history stack.
 
 ### 1. Custom overlay drawer instead of Expo Router's `Drawer` layout — DEFERRED (deps)
 - **What:** the drawer is a hand-built `ModalShell` overlay (`shared/components/shell/
@@ -36,13 +39,27 @@ show the hamburger `Header` (open-drawer) instead of a back button, like the tab
   gesture-handler/reanimated ban is lifted — or (b) keep one `Stack` but give the drawer
   reset/replace semantics for non-tab pages so there's always exactly one in history.
 
-### 2. `as never` casts in the drawer `go()` — EASY WIN
+### 2. "Settings → View Profile" back goes to Home, not Settings — NEEDS A STACKED SCREEN
+- **What:** Profile and Messages are **tabs** (top-level roots). Tapping "View Profile"
+  in Settings targets the Profile *tab*, and because `(tabs)` is a singleton, the stack
+  rewinds to the tab navigator — hardware back then goes to Home, not Settings. This is
+  standard tab-app behavior (a tab is a root), but it surprises users who expect a
+  drill-in.
+- **Real fix (deferred):** to get back→Settings, route these to **dedicated stacked
+  screens** instead of the tabs — e.g. a pushed "my profile" route, reader "View Profile"
+  → `user/[id]`, reader/profile "Message" → `chat/[id]`. Those push/pop normally with no
+  singleton-tab rewind. Needs the self-profile screen built and the contact/chat data
+  wired by id; out of scope for the drawer-screens pass.
+- **Interim:** left as-is (View Profile switches to the Profile tab). Acceptable as
+  tab-root behavior; revisit if product wants a true drill-in.
+
+### 3. `as never` casts in the drawer `go()` — EASY WIN
 - **What:** `router.navigate(route as never)` in `left-drawer.tsx` casts away Expo
   Router's href type-safety.
 - **Better:** type the drawer items' `route` as `Href` (from `expo-router`) and drop the
   cast, so a typo'd route is a compile error instead of a runtime dead link.
 
-### 3. Typed routes experiment not enabled — OPTIONAL
+### 4. Typed routes experiment not enabled — OPTIONAL
 - **What:** route hrefs are hand-rolled via the central `ROUTES` constant
   (`shared/constants`). Fine and common, but Expo Router can verify hrefs at compile time.
 - **Better:** enable `experiments.typedRoutes` in `app.json` for free compile-time href

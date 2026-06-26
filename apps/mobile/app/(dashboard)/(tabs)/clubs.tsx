@@ -17,7 +17,7 @@ function PremiumPill() {
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={t('premium')}
-      onPress={() => router.navigate(ROUTES.subscription)}
+      onPress={() => router.push(ROUTES.subscription)}
       className="h-[30px] flex-row items-center gap-1.5 rounded-full bg-primary px-3 active:opacity-90"
     >
       <Sparkles size={14} color="#FFFFFF" />

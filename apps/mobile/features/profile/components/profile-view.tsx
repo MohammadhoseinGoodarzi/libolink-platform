@@ -93,7 +93,7 @@ export function ProfileView({ readerId }: ProfileViewProps = {}) {
             toast.show(t('previewVisitor'));
           }}
           onFollow={() => setFollowing((f) => !f)}
-          onMessage={() => router.navigate(ROUTES.messages)}
+          onMessage={() => router.push(ROUTES.messages)}
           onInvite={comingSoon}
         />
         <FollowCounts stats={profile.stats} socialProof={profile.socialProof} />

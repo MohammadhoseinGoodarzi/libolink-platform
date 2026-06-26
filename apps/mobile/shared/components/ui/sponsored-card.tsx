@@ -29,7 +29,7 @@ function SponsoredCard({ letter, title, body, cta, brand }: SponsoredCardProps) 
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t('removeAds')}
-          onPress={() => router.navigate(ROUTES.subscription)}
+          onPress={() => router.push(ROUTES.subscription)}
           className="flex-row items-center gap-0.5 active:opacity-60"
         >
           <Text className="font-sans-bold text-[11.5px] text-link">{t('removeAds')}</Text>

@@ -78,10 +78,7 @@ export function LeftDrawer() {
   const go = (route?: string) => {
     setOpen(false);
     if (route) {
-      // navigate (not push): drawer destinations are top-level pages, so switch to
-      // them and unwind the stack rather than piling duplicates (a pushed tab route
-      // would otherwise mount a second tab navigator).
-      router.navigate(route as never);
+      router.push(route as never);
     } else {
       toast.show(t('helpComingSoon'));
     }

@@ -22,7 +22,12 @@ export function createMockSavedClient(): HttpClient {
     // Boundary cast (`as Promise<T>`): the mock returns the route's concrete type;
     // the generic T is owned by the @repo/api saved query factory.
     if (path === '/saved') {
-      const collection: SavedCollection = SAVED_COLLECTION;
+      // Return a fresh copy each read (a real backend would) so a consumer that
+      // sorts/mutates the arrays in place can't leak into the next fetch.
+      const collection: SavedCollection = {
+        books: SAVED_COLLECTION.books.map((book) => ({ ...book })),
+        posts: SAVED_COLLECTION.posts.map((post) => ({ ...post })),
+      };
       return delay(collection) as Promise<T>;
     }
     return unsupported();
