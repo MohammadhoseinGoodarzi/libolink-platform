@@ -20,6 +20,7 @@ function commenter(displayName: string, username: string): User {
     avatarUrl: null,
     bio: null,
     verified: false,
+    isPremium: false,
     createdAt: iso,
     updatedAt: iso,
   };

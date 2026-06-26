@@ -12,8 +12,6 @@ export type HeaderProps = {
   right?: ReactNode;
   /** Centered title instead of the brand lockup (e.g. "Saved"). */
   title?: string;
-  /** Small PRO chip after the logo (handoff §5 social header). */
-  showProChip?: boolean;
   /** Back chevron instead of the hamburger. */
   showBack?: boolean;
   onBack?: (() => void) | undefined;

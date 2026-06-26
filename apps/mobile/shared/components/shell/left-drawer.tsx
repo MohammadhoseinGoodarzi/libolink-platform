@@ -1,13 +1,14 @@
 import { useDictionary } from '@repo/i18n';
-import { userAtom } from '@repo/stores';
+import { sessionAtom, userAtom } from '@repo/stores';
 import { cn } from '@repo/utils';
 import { useRouter } from 'expo-router';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   Bookmark,
   ChevronRight,
   CircleHelp,
   X as Close,
+  Crown,
   LogOut,
   MessageCircle,
   Settings,
@@ -17,6 +18,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Modal, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ROUTES } from '@/shared/constants';
 import { drawerOpenAtom } from '@/shared/store/ui';
 import { useThemeColors } from '@/shared/theme';
 import { BrandLogo } from '../brand-logo';
@@ -64,7 +66,9 @@ export function LeftDrawer() {
   const router = useRouter();
   const toast = useToast();
   const user = useAtomValue(userAtom);
+  const setSession = useSetAtom(sessionAtom);
   const t = useDictionary('Shell');
+  const isPremium = user?.isPremium ?? false;
 
   const translateX = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
   const scrim = useRef(new Animated.Value(0)).current;
@@ -113,6 +117,22 @@ export function LeftDrawer() {
     } else {
       toast.show(t('helpComingSoon'));
     }
+  };
+
+  // Flip the signed-in user between the two app modes (normal ⇄ premium). Premium
+  // status lives on the session user, so toggle it there (userAtom is read-only).
+  const toggleMode = () => {
+    setSession((prev) =>
+      prev ? { ...prev, user: { ...prev.user, isPremium: !prev.user.isPremium } } : prev,
+    );
+    toast.show(isPremium ? t('normalModeOn') : t('premiumModeOn'));
+  };
+
+  const logOut = () => {
+    setOpen(false);
+    setSession(null);
+    toast.show(t('signedOut'));
+    router.replace(ROUTES.welcome);
   };
 
   return (
@@ -220,10 +240,18 @@ export function LeftDrawer() {
           <View className="border-border border-t px-3 pt-2">
             <Pressable
               accessibilityRole="button"
-              onPress={() => {
-                setOpen(false);
-                toast.show(t('signedOut'));
-              }}
+              onPress={toggleMode}
+              className="h-[46px] flex-row items-center gap-3 rounded-[14px] px-3 active:opacity-60"
+            >
+              <Crown size={20} color={colors.primary} />
+              <Text className="flex-1 font-sans-semibold text-[14.5px] text-foreground">
+                {isPremium ? t('switchToNormal') : t('switchToPremium')}
+              </Text>
+            </Pressable>
+
+            <Pressable
+              accessibilityRole="button"
+              onPress={logOut}
               className="h-[46px] flex-row items-center gap-3 rounded-[14px] px-3 active:opacity-60"
             >
               <LogOut size={20} color={colors.destructive} />

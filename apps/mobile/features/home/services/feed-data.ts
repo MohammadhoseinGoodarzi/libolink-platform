@@ -16,7 +16,7 @@ let userSeq = 0;
 function mkUser(
   displayName: string,
   username: string,
-  options: { verified?: boolean; bio?: string } = {},
+  options: { verified?: boolean; bio?: string; isPremium?: boolean } = {},
 ): User {
   userSeq += 1;
   const now = new Date(NOW).toISOString();
@@ -28,6 +28,7 @@ function mkUser(
     avatarUrl: null,
     bio: options.bio ?? null,
     verified: options.verified ?? false,
+    isPremium: options.isPremium ?? false,
     createdAt: now,
     updatedAt: now,
   };
@@ -41,8 +42,9 @@ const theo = mkUser('Theo Almeida', 'theoreads');
 const noor = mkUser('Noor Haddad', 'noor.h', { verified: true });
 const lina = mkUser('Lina Soltani', 'lina.reads');
 
-// The signed-in reader — author of posts created from the composer.
-export const ME: User = mkUser('Mehrab Kargardoost', 'mehrab');
+// The signed-in reader — author of posts created from the composer. Premium so
+// the two-mode header shows the PRO badge.
+export const ME: User = mkUser('Mehrab Kargardoost', 'mehrab', { isPremium: true });
 
 // Stories row — "You" is prepended in the component (handoff §6.2). Each story
 // carries the full-screen segments shown in the viewer.

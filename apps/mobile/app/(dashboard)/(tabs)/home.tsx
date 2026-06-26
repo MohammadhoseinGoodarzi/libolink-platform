@@ -17,7 +17,7 @@ export default function HomeScreen() {
   const [storyId, setStoryId] = useState<string | null>(null);
   return (
     <View className="flex-1 bg-background">
-      <Header showProChip right={<HomeHeaderActions />} />
+      <Header right={<HomeHeaderActions />} />
       <HomeFeed onOpenStory={setStoryId} />
       <ComposeDock />
       {storyId ? (
