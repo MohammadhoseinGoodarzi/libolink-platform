@@ -8,6 +8,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "platforms": ["ios", "android"],
+    "android": {
+      "package": "ink.libolink.app"
+    },
     "plugins": ["expo-router", "expo-font", "expo-splash-screen"],
     "experiments": {
       "typedRoutes": false
