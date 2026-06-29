@@ -9,6 +9,41 @@ that nobody debugs the same thing twice.
 
 ---
 
+## 2026-06-30 — First EAS Android build: upload geo-block, the GitHub-build workaround, ngrok + `expo install --fix` gotchas (branch `chore/android-build-setup`, PR #32)
+
+*Goal.* Produce a sideloadable test APK and a remote tunnel so a coworker in another city
+could test. Three tooling gotchas, one hard blocker.
+
+**1. EAS upload 403 (the blocker).** *Symptom:* `eas build -p android --profile preview`
+(and later `eas workflow:run`) ran all the way through — project linked, keystore generated in
+the cloud, project compressed to 2.4 MB — then died at *"Uploading project archive to EAS …
+Request failed: 403 (Forbidden)."* *Root cause:* the EAS Build **upload/storage endpoint is
+geo-blocked** from the owner's network (`api.expo.dev` itself is fine — config/keystore went
+through; only the tarball upload is blocked). This is the long-standing "EAS dead-ended" note.
+*Fix:* **don't upload from the local machine — build from GitHub.** Expo dashboard → *Build from
+GitHub* (connect the Expo GitHub App to the repo, set **base directory `apps/mobile`**, branch,
+Android, profile `preview`); Expo clones the code server-side, so nothing uploads from the blocked
+network. The APK built this way. *Prevention:* every local CLI build path uploads a tarball and
+will 403 here — always use the GitHub-sourced dashboard build (or a `git push`-triggered
+workflow). A VPN also clears it but the GitHub route is the durable answer. Logged in CLAUDE.md
+"Running it".
+
+**2. `--tunnel` needs `@expo/ngrok` as a LOCAL dep (pnpm monorepo).** *Symptom:* `expo start
+--tunnel` aborted: *"@expo/ngrok is required … non-interactive mode."* Installing it globally
+(`pnpm add -g` failed on a corrupted global store; `npm i -g` succeeded) still didn't help —
+Expo resolves it from the **pnpm project**, not npm's global. *Fix:* add `@expo/ngrok` to
+`apps/mobile` devDependencies. After that the tunnel connected (slow internet needed a retry
+loop; the URL was pulled from ngrok's local API at `127.0.0.1:4040/api/tunnels`). Note the same
+geo-block also makes ngrok's own connect flaky, so the tunnel is unreliable here regardless.
+
+**3. `expo install --fix` overreaches on TypeScript.** *Symptom:* the mandated pre-native-build
+`expo install --fix` bumped `typescript` from the pinned catalog `5.9.3` to `~6.0.3` (TS isn't a
+native module). *Fix:* revert that one line back to `"typescript": "catalog:"` and reinstall; keep
+the expo-* patch bumps it made (expo 56.0.11→56.0.12, expo-font →56.0.7, expo-router →56.2.11),
+which are the legitimate SDK-56 alignment. *Aside:* swapping the TS version left a stale
+`apps/mobile/node_modules/.bin/tsc` symlink (type-check failed to find `tsc`); `rm -rf
+apps/mobile/node_modules && pnpm install` restored it.
+
 ## 2026-06-26 — Component-base consolidation #2–#4: ModalShell, Chip, Card (branch `chore/mobile-component-bases`)
 
 *Decision.* Continued the "one base + thin variants" rule (Button is the model; InputBase was

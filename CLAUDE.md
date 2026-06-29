@@ -19,14 +19,15 @@ both apps, stop — it belongs in a package.
 |---|---|---|---|---|
 | next | 16.2.9 | — | — | ≥16.2.6 required (May 2026 security release, 13 CVEs) |
 | react / react-dom | 19.2.3 | 19.2.3 | peer | Expo SDK 56 / RN 0.85.3 matrix — the native renderer requires an EXACT match, so the whole repo is pinned to 19.2.3 via root `pnpm.overrides`. ⚠️ Web wanted 19.2.7 (May-2026 Next/react-dom SSR security fix; N/A to React Native) — **decide when the web app is built** (see ENGINEERING_LOG 2026-06-20) |
-| expo | — | 56.0.11 | — | SDK 56 |
+| expo | — | 56.0.12 | — | SDK 56 (`expo install --fix` patch bump, 2026-06-30 before the first EAS build) |
 | react-native | — | 0.85.3 | — | Expo SDK 56 matrix — do NOT use npm latest (0.86.x) |
-| expo-router | — | 56.2.10 | — | SDK-aligned versioning; no longer depends on react-navigation |
+| expo-router | — | 56.2.11 | — | SDK-aligned versioning (`expo install --fix` patch); no longer depends on react-navigation |
 | nativewind | — | 4.2.5 | — | Tailwind v3 ONLY. v5 (Tailwind v4) still preview — revisit when stable |
 | react-native-reusables | — | CLI 0.7.1 | — | Copy-in components via `@react-native-reusables/cli`; not a runtime dep |
 | @react-native-async-storage/async-storage | — | 2.2.0 | — | `expo install`-pinned (SDK 56); theme + settings persistence, future session token |
 | expo-image-picker | — | ~56.0.18 | — | `expo install`-pinned (SDK 56); Complete-Profile photo (camera/gallery) |
 | expo-clipboard | — | ~56.0.4 | — | `expo install`-pinned (SDK 56); copy username on the chat contact page |
+| @expo/ngrok | — | ^4.1.3 (devDep) | — | Mobile **devDependency** so `expo start --tunnel` resolves it locally (pnpm monorepo — the global install isn't found; see ENGINEERING_LOG 2026-06-30). Tunnel/dev-only, not in the app bundle |
 | Vazirmatn (font) | woff2 (web) | ttf 400/500/600/700 (mobile) | — | Bundled asset, NOT a dependency. Mobile `.ttf` in `assets/fonts/` from the Google Fonts release |
 | @tanstack/react-query | 5.101.0 | 5.101.0 | 5.101.0 | catalog |
 | jotai | 2.20.1 | 2.20.1 | 2.20.1 | catalog |
@@ -43,7 +44,7 @@ both apps, stop — it belongs in a package.
 | clsx / tailwind-merge | 2.1.1 / 3.6.0 | 2.1.1 / 3.6.0 | catalog | |
 | @biomejs/biome | — | — | 2.5.0 | Root devDep only |
 | turbo | — | — | 2.9.18 | Root devDep only |
-| typescript | 5.9.3 | 5.9.3 | 5.9.3 | Pinned 5.x per project decision (6.0.3 exists, not adopted) |
+| typescript | 5.9.3 | 5.9.3 | 5.9.3 | Pinned 5.x per project decision (6.0.3 exists, not adopted). ⚠️ `expo install --fix` tries to bump this to `~6.0.3` — revert it (see ENGINEERING_LOG 2026-06-30) |
 | @types/node | ^25.9.3 | — | catalog | No v26 types published yet |
 | pnpm | — | — | 10.11.0 | `packageManager` pin; catalogs need ≥9.5 |
 | Node | — | — | 26.3.0 | `.nvmrc` |
@@ -252,6 +253,15 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
   `global.css` web block, and the `web` platform) was removed 2026-06-20 — don't reintroduce it
   without asking. `expo export -p web` no longer applies; verify with `pnpm type-check` +
   `pnpm lint` + a run on the device.
+- **Test APK / tunnel (EAS, geo-block workaround).** Build config lives in `apps/mobile`:
+  `eas.json` (`preview` profile = internal **APK**; `production` = `.aab`), `android.package`
+  `ink.libolink.app`, EAS project `@mhg1998/libolink`, `.eas/workflows/` (must sit beside
+  `eas.json`, NOT the repo root). **Every CLI build path (`eas build`, `eas workflow:run`)
+  uploads the project tarball and 403s from the owner's network** (geo-block) — so build the APK
+  from the **Expo dashboard → Build from GitHub** instead (Expo clones from GitHub server-side, no
+  local upload): base directory `apps/mobile`, Android, profile `preview`. Same geo-block hits
+  `--tunnel`'s ngrok upload, so a remote tunnel is unreliable here. Full write-up: ENGINEERING_LOG
+  2026-06-30.
 
 ---
 
