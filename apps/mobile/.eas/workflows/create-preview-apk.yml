@@ -1,0 +1,13 @@
+name: Create Android preview APK
+
+# Server-side EAS build triggered via `eas workflow:run` (or the Expo dashboard's
+# Run workflow). Builds the Android `preview` profile from eas.json — an internal
+# APK for sideload testing. Android only (no iOS), test profile (not production).
+# Lives next to eas.json (the .eas dir must sit at the same level as eas.json).
+jobs:
+  build_android:
+    name: Build Android preview APK
+    type: build
+    params:
+      platform: android
+      profile: preview

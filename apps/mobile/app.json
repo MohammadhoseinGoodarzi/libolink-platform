@@ -7,10 +7,27 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "platforms": ["ios", "android"],
-    "plugins": ["expo-router", "expo-font", "expo-splash-screen"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "android": {
+      "package": "ink.libolink.app"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-splash-screen"
+    ],
     "experiments": {
       "typedRoutes": false
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c06b9946-c453-4e43-95d7-5d3955dd5997"
+      }
+    },
+    "owner": "mhg1998"
   }
 }
