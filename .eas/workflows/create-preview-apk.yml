@@ -1,0 +1,13 @@
+name: Create Android preview APK
+
+# Server-side EAS build triggered from GitHub (Run workflow on the Expo
+# dashboard). Builds the Android `preview` profile from eas.json — an internal
+# APK for sideload testing. Runs on Expo's servers, so it sidesteps the local
+# upload geo-block. Android only (no iOS), test profile (not production).
+jobs:
+  build_android:
+    name: Build Android preview APK
+    type: build
+    params:
+      platform: android
+      profile: preview
