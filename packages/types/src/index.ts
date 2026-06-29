@@ -13,5 +13,6 @@ export type * from './premium';
 export type * from './profile';
 export type * from './saved';
 export type * from './search';
+export type * from './settings';
 export type * from './story';
 export type * from './user';

@@ -1,0 +1,65 @@
+import { useDictionary } from '@repo/i18n';
+import { userAtom } from '@repo/stores';
+import { useAtomValue } from 'jotai';
+import { AtSign, KeyRound, Mail, PenLine, ShieldCheck, UserCog } from 'lucide-react-native';
+import { View } from 'react-native';
+import { useToast } from '@/shared/components/ui';
+import { GroupCard } from './group-card';
+import { SettingsGroupLabel } from './settings-group-label';
+import { SettingsNote } from './settings-note';
+import { SettingsRow } from './settings-row';
+import { SettingsScreenShell } from './settings-screen-shell';
+
+// Account (handoff): the personal + security entry points. Each opens a deeper
+// form/management screen (edit info, username, email, password, verification,
+// connected accounts) — those are phase-2, so the rows acknowledge for now.
+// Identity is read from the shared session user.
+export function AccountScreen() {
+  const t = useDictionary('Settings');
+  const tCommon = useDictionary('Common');
+  const toast = useToast();
+  const user = useAtomValue(userAtom);
+  const soon = () => toast.show(tCommon('comingSoon'));
+
+  return (
+    <SettingsScreenShell title={t('account')}>
+      <SettingsGroupLabel icon={UserCog}>{t('accountPersonal')}</SettingsGroupLabel>
+      <GroupCard>
+        <SettingsRow
+          first
+          icon={PenLine}
+          title={t('editPersonalInfo')}
+          subtitle={user?.displayName ?? ''}
+          onPress={soon}
+        />
+        <SettingsRow
+          icon={AtSign}
+          title={t('changeUsername')}
+          value={user?.username ? `@${user.username}` : ''}
+          onPress={soon}
+        />
+        <SettingsRow
+          icon={Mail}
+          title={t('changeEmail')}
+          value={user?.email ?? ''}
+          onPress={soon}
+        />
+        <SettingsRow icon={KeyRound} title={t('changePassword')} onPress={soon} />
+      </GroupCard>
+
+      <View className="h-5" />
+      <SettingsGroupLabel icon={ShieldCheck}>{t('securityLinks')}</SettingsGroupLabel>
+      <GroupCard>
+        <SettingsRow
+          first
+          icon={ShieldCheck}
+          title={t('accountVerification')}
+          value={user?.verified ? t('verifiedBadge') : t('unverifiedBadge')}
+          onPress={soon}
+        />
+        <SettingsRow icon={AtSign} title={t('connectedAccounts')} onPress={soon} />
+      </GroupCard>
+      <SettingsNote>{t('accountNote')}</SettingsNote>
+    </SettingsScreenShell>
+  );
+}
