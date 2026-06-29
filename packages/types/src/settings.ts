@@ -47,6 +47,12 @@ export interface NotificationSettings {
   quietTo: string;
 }
 
+// The boolean-valued notification keys (excludes the quietFrom/quietTo times) —
+// the only fields a notification toggle row may flip.
+export type NotificationBooleanKey = {
+  [K in keyof NotificationSettings]: NotificationSettings[K] extends boolean ? K : never;
+}[keyof NotificationSettings];
+
 export interface PrivacySettings {
   profileVis: ProfileVisibility;
   activityVis: ActivityVisibility;

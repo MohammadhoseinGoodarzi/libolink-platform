@@ -114,7 +114,8 @@ All packages are `@repo/<name>`, ship TypeScript source directly (no build step)
   (auth inject, error normalize, 401), `makeQueryClient()`, query/mutation factories by domain.
   Zero platform-specific imports.
 - **@repo/stores** — global Jotai atoms both apps need (userAtom, sessionAtom, themeAtom,
-  settingsAtom + DEFAULT_SETTINGS). Feature-scoped atoms stay in each app.
+  settingsAtom). `DEFAULT_SETTINGS` is a plain `AppSettings` seed exported from `settings.ts`
+  alongside `settingsAtom`. Feature-scoped atoms stay in each app.
 - **@repo/hooks** — hooks that would be byte-for-byte identical in both apps. Touches `window`/
   `localStorage` → web app only. Touches `useColorScheme`/`Dimensions`/`Platform` → mobile only.
 - **@repo/utils** — pure functions only. `cn()` (clsx + tailwind-merge) lives here.

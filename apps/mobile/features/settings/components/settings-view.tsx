@@ -21,6 +21,7 @@ import { ActionSheet, ScreenScrollView, SearchInput, Text, useToast } from '@/sh
 import { ROUTES } from '@/shared/constants';
 import { useAppTheme, useThemeColors } from '@/shared/theme';
 import { APP_VERSION, SETTINGS_SEARCH } from '../constants';
+import type { SettingsSection } from '../types';
 import { AccountCard } from './account-card';
 import { GroupCard } from './group-card';
 import { SettingsRow } from './settings-row';
@@ -43,7 +44,7 @@ export function SettingsView() {
   const [logoutOpen, setLogoutOpen] = useState(false);
 
   const comingSoon = () => toast.show(tCommon('comingSoon'));
-  const openSection = (section: string) =>
+  const openSection = (section: SettingsSection) =>
     router.push({ pathname: '/settings/[section]', params: { section } });
   const themeLabel =
     preference === 'dark'
@@ -92,7 +93,7 @@ export function SettingsView() {
                     first={index === 0}
                     icon={item.icon}
                     title={t(item.label)}
-                    onPress={comingSoon}
+                    onPress={() => openSection(item.section)}
                   />
                 ))}
               </GroupCard>

@@ -106,7 +106,7 @@ export function StorageScreen() {
           icon={Database}
           title={t('cachedData')}
           value={STORAGE_USAGE.cache}
-          onPress={() => toast.show(t('cacheCleared'))}
+          onPress={() => toast.show(tCommon('comingSoon'))}
         />
       </GroupCard>
 

@@ -2,6 +2,20 @@
 import type { LucideIcon } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 
+// The push-detail section keys. Authoring call sites (openSection, the search
+// catalog) use this so a typo'd section is a compile error; the [section] route
+// param stays a plain string (a deep link can carry anything) and is validated by
+// the section screen's coming-soon fallback.
+export type SettingsSection =
+  | 'account'
+  | 'notifications'
+  | 'appearance'
+  | 'privacy'
+  | 'content'
+  | 'storage'
+  | 'support'
+  | 'about';
+
 export type SettingsRowTrailing = 'chevron' | 'switch' | 'check' | 'none';
 
 export type SettingsRowProps = {

@@ -1,5 +1,5 @@
 import type { MessageKey } from '@repo/i18n';
-import type { AccessibilitySettings, LanguageCode, NotificationSettings } from '@repo/types';
+import type { AccessibilitySettings, LanguageCode, NotificationBooleanKey } from '@repo/types';
 import {
   Activity,
   AtSign,
@@ -28,6 +28,7 @@ import {
   UserPlus,
   Users,
 } from 'lucide-react-native';
+import type { SettingsSection } from './types';
 
 // Shown in the index footer + the About row.
 export const APP_VERSION = '3.2.0';
@@ -39,22 +40,24 @@ export type SettingsSearchItem = {
   key: string;
   label: MessageKey<'Settings'>;
   icon: LucideIcon;
+  /** Detail screen this hit opens — sub-items point at their parent section. */
+  section: SettingsSection;
 };
 
 export const SETTINGS_SEARCH: SettingsSearchItem[] = [
-  { key: 'account', label: 'account', icon: UserCog },
-  { key: 'editProfile', label: 'editProfile', icon: UserCog },
-  { key: 'changePassword', label: 'changePassword', icon: KeyRound },
-  { key: 'notifications', label: 'notifications', icon: Bell },
-  { key: 'appearance', label: 'appearance', icon: Palette },
-  { key: 'privacy', label: 'privacy', icon: ShieldCheck },
-  { key: 'twoFactor', label: 'twoFactor', icon: ShieldCheck },
-  { key: 'blockedUsers', label: 'blockedUsers', icon: Ban },
-  { key: 'content', label: 'content', icon: Languages },
-  { key: 'storage', label: 'storage', icon: Database },
-  { key: 'downloads', label: 'downloads', icon: Download },
-  { key: 'support', label: 'support', icon: LifeBuoy },
-  { key: 'about', label: 'about', icon: Info },
+  { key: 'account', label: 'account', icon: UserCog, section: 'account' },
+  { key: 'editProfile', label: 'editProfile', icon: UserCog, section: 'account' },
+  { key: 'changePassword', label: 'changePassword', icon: KeyRound, section: 'account' },
+  { key: 'notifications', label: 'notifications', icon: Bell, section: 'notifications' },
+  { key: 'appearance', label: 'appearance', icon: Palette, section: 'appearance' },
+  { key: 'privacy', label: 'privacy', icon: ShieldCheck, section: 'privacy' },
+  { key: 'twoFactor', label: 'twoFactor', icon: ShieldCheck, section: 'privacy' },
+  { key: 'blockedUsers', label: 'blockedUsers', icon: Ban, section: 'privacy' },
+  { key: 'content', label: 'content', icon: Languages, section: 'content' },
+  { key: 'storage', label: 'storage', icon: Database, section: 'storage' },
+  { key: 'downloads', label: 'downloads', icon: Download, section: 'storage' },
+  { key: 'support', label: 'support', icon: LifeBuoy, section: 'support' },
+  { key: 'about', label: 'about', icon: Info, section: 'about' },
 ];
 
 // Push-detail section keys → their title string (the [section] route titles + the
@@ -126,7 +129,7 @@ export type A11yItem = {
 // Notification delivery channels (handoff Notifications) — each maps to a
 // NotificationSettings boolean.
 export type NotifToggleItem = {
-  key: keyof NotificationSettings;
+  key: NotificationBooleanKey;
   icon: LucideIcon;
   title: MessageKey<'Settings'>;
   desc?: MessageKey<'Settings'>;

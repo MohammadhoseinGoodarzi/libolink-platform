@@ -1,5 +1,5 @@
 import { useDictionary } from '@repo/i18n';
-import type { NotificationSettings } from '@repo/types';
+import type { NotificationBooleanKey } from '@repo/types';
 import { Bell, Clock, Eye, Filter, Smartphone, Volume2 } from 'lucide-react-native';
 import { View } from 'react-native';
 import { useToast } from '@/shared/components/ui';
@@ -23,7 +23,7 @@ export function NotificationsScreen() {
   const n = settings.notif;
   const off = !n.allow;
 
-  const toggle = (key: keyof NotificationSettings) =>
+  const toggle = (key: NotificationBooleanKey) =>
     setSettings((prev) => ({ ...prev, notif: { ...prev.notif, [key]: !prev.notif[key] } }));
 
   return (

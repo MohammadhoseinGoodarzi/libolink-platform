@@ -11,7 +11,11 @@ function SettingsScreenShell({ title, children }: SettingsScreenShellProps) {
   const router = useRouter();
   return (
     <View className="flex-1 bg-background">
-      <Header title={title} showBack onBack={() => router.back()} />
+      <Header
+        title={title}
+        showBack
+        onBack={() => (router.canGoBack() ? router.back() : router.replace('/settings'))}
+      />
       <ScreenScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pt-4">
         {children}
       </ScreenScrollView>

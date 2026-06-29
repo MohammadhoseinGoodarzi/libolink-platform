@@ -31,6 +31,8 @@ export function Switch({ on, onToggle, disabled = false, accessibilityLabel }: S
       accessibilityState={{ checked: on, disabled }}
       {...(accessibilityLabel ? { accessibilityLabel } : {})}
       onPress={disabled ? undefined : onToggle}
+      // Expand the touch area beyond the 50×30 visual so the toggle is easy to tap.
+      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       style={{ opacity: disabled ? 0.6 : 1 }}
     >
       <Animated.View
