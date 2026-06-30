@@ -1,9 +1,11 @@
 import { useDictionary } from '@repo/i18n';
 import { userAtom } from '@repo/stores';
+import { useRouter } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import { AtSign, KeyRound, Mail, PenLine, ShieldCheck, UserCog } from 'lucide-react-native';
 import { View } from 'react-native';
 import { useToast } from '@/shared/components/ui';
+import type { SettingsDetailKey } from '../types';
 import { GroupCard } from './group-card';
 import { SettingsGroupLabel } from './settings-group-label';
 import { SettingsNote } from './settings-note';
@@ -18,8 +20,11 @@ export function AccountScreen() {
   const t = useDictionary('Settings');
   const tCommon = useDictionary('Common');
   const toast = useToast();
+  const router = useRouter();
   const user = useAtomValue(userAtom);
   const soon = () => toast.show(tCommon('comingSoon'));
+  const go = (screen: SettingsDetailKey) =>
+    router.push({ pathname: '/settings/screen/[screen]', params: { screen } });
 
   return (
     <SettingsScreenShell title={t('account')}>
@@ -30,21 +35,25 @@ export function AccountScreen() {
           icon={PenLine}
           title={t('editPersonalInfo')}
           subtitle={user?.displayName ?? ''}
-          onPress={soon}
+          onPress={() => go('acc_edit')}
         />
         <SettingsRow
           icon={AtSign}
           title={t('changeUsername')}
           value={user?.username ? `@${user.username}` : ''}
-          onPress={soon}
+          onPress={() => go('acc_username')}
         />
         <SettingsRow
           icon={Mail}
           title={t('changeEmail')}
           value={user?.email ?? ''}
-          onPress={soon}
+          onPress={() => go('acc_email')}
         />
-        <SettingsRow icon={KeyRound} title={t('changePassword')} onPress={soon} />
+        <SettingsRow
+          icon={KeyRound}
+          title={t('changePassword')}
+          onPress={() => go('acc_password')}
+        />
       </GroupCard>
 
       <View className="h-5" />
