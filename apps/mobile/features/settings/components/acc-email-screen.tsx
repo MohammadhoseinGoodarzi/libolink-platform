@@ -1,7 +1,7 @@
 import { useDictionary } from '@repo/i18n';
-import { sessionAtom, userAtom } from '@repo/stores';
+import { userAtom } from '@repo/stores';
 import { useRouter } from 'expo-router';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { Mail } from 'lucide-react-native';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -15,21 +15,20 @@ import { SettingsScreenShell } from './settings-screen-shell';
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 // Change Email (handoff Account): new address + current-password confirm. The
-// address only changes after the (mock) verification link, so we toast and write
-// the new email to the session user.
+// address only changes AFTER the verification link is confirmed, so we do NOT
+// mutate the session email here — we just send the (mock) link and go back. A
+// real backend persists a pending email and swaps it in once confirmed.
 export function AccEmailScreen() {
   const t = useDictionary('Settings');
   const toast = useToast();
   const router = useRouter();
   const user = useAtomValue(userAtom);
-  const setSession = useSetAtom(sessionAtom);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const valid = EMAIL_RE.test(email.trim()) && password.length >= 6;
 
   const save = () => {
-    setSession((prev) => (prev ? { ...prev, user: { ...prev.user, email: email.trim() } } : prev));
     toast.show(t('accEmailSent'));
     if (router.canGoBack()) {
       router.back();

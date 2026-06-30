@@ -42,7 +42,9 @@ export function AccPasswordScreen() {
   ];
   const strengthColor = palette[score] ?? colors.destructive;
   const matches = next.length > 0 && next === confirm;
-  const ok = current.length >= 6 && score >= 2 && matches;
+  // Enforce the advertised 8-char minimum (accNewPasswordPh / accPasswordNote) —
+  // score >= 2 alone could pass a shorter password.
+  const ok = current.length >= 6 && next.length >= 8 && score >= 2 && matches;
 
   const save = () => {
     toast.show(t('accPasswordUpdated'));
