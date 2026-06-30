@@ -28,6 +28,7 @@ both apps, stop — it belongs in a package.
 | expo-image-picker | — | ~56.0.18 | — | `expo install`-pinned (SDK 56); Complete-Profile photo (camera/gallery) |
 | expo-clipboard | — | ~56.0.4 | — | `expo install`-pinned (SDK 56); copy username on the chat contact page |
 | @expo/ngrok | — | ^4.1.3 (devDep) | — | Mobile **devDependency** so `expo start --tunnel` resolves it locally (pnpm monorepo — the global install isn't found; see ENGINEERING_LOG 2026-06-30). Tunnel/dev-only, not in the app bundle |
+| react-native-keyboard-controller | — | 1.21.6 | — | The ONE keyboard-avoidance primitive — `ScreenScrollView` (all page forms) + AuthScreen build on it; `KeyboardProvider` at the app root. **Native module → NOT in Expo Go: a dev build is required from here on.** Pulls in reanimated/worklets (Babel plugin now enabled) |
 | Vazirmatn (font) | woff2 (web) | ttf 400/500/600/700 (mobile) | — | Bundled asset, NOT a dependency. Mobile `.ttf` in `assets/fonts/` from the Google Fonts release |
 | @tanstack/react-query | 5.101.0 | 5.101.0 | 5.101.0 | catalog |
 | jotai | 2.20.1 | 2.20.1 | 2.20.1 | catalog |
@@ -56,8 +57,8 @@ Expo SDK 56 compatibility matrix.
 The root `.npmrc` sets `node-linker=hoisted` (Expo's official pnpm-monorepo recommendation): React
 Native autolinking + Metro need a flat-ish `node_modules` to resolve bare imports injected by
 tooling (e.g. NativeWind's `react-native-css-interop/jsx-runtime`). Do NOT revert to the strict
-pnpm layout for the mobile app. Testing is via Expo Go on a device running SDK 56 (or a dev build) —
-see "Running it" below.
+pnpm layout for the mobile app. Testing requires a custom dev build (Expo Go can't load the
+`react-native-keyboard-controller` native module, added 2026-06-30) — see "Running it" below.
 
 ---
 
@@ -229,10 +230,16 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
   (`@/shared/store/ui`). `ToastProvider` lives at the app root (`app/_layout.tsx`) — fire with
   `useToast().show()`.
 - All overlays (sheets, drawer, full-screen story/search) go through `ModalShell` — built-in
-  `Modal` + `Animated` only (NO gesture-handler / reanimated / @gorhom; no PanResponder — drag-to-
-  dismiss is intentionally absent, see ENGINEERING_LOG 2026-06-22). Gradients use the installed
+  `Modal` + `Animated` only (still NO gesture-handler / @gorhom; no PanResponder — drag-to-dismiss
+  is intentionally absent, see ENGINEERING_LOG 2026-06-22). reanimated/worklets is now present
+  app-wide, but ONLY as the engine behind `react-native-keyboard-controller` (keyboard avoidance);
+  overlays still animate with built-in `Animated`, not reanimated. Gradients use the installed
   `react-native-svg` (NO expo-linear-gradient). Ask before adding native deps — the owner keeps the
   dependency surface minimal.
+- Keyboard avoidance: never hand-roll a `KeyboardAvoidingView`. Page forms use the shared
+  `ScreenScrollView` (keyboard-aware via `react-native-keyboard-controller`); the auth shell uses
+  that library's `KeyboardAvoidingView`. RN's own `KeyboardAvoidingView` is a no-op on Android with
+  the new architecture (it left residual padding) — see ENGINEERING_LOG 2026-06-30.
 - Theme: `useThemeColors()` + `useShadow()` from `@/shared/theme` for any RN prop that can't read a
   CSS var (lucide `color`, `placeholderTextColor`, `shadowColor`, svg fills). `oklchToHex` /
   `avatarColors` / `hueFromString` for avatars. Persisted via AsyncStorage — `useAppTheme`
@@ -243,16 +250,20 @@ Mock data and service stubs stay in each app's `features/<name>/services/` — n
 - Mock data lives in `features/<name>/services` (auth runs on a mock `HttpClient` until the
   backend exists — swap `authClient` in `features/auth/services/auth-service.ts`, untouched hooks).
 
-### Running it (Expo Go on a device)
-- Test on **Expo Go** — the device must be on **SDK 56** (older Expo Go is version-locked and
-  can't run it), or use a dev build. Run the dev server from the **repo ROOT** (the shell cwd
-  drifts; a bare `expo` then computes the wrong project root): `pnpm --filter mobile exec expo
-  start` → open `exp://<LAN-IP>:8081` in Expo Go (phone on the same Wi-Fi). No login backend —
-  deep-link `/home` or use the mock auth form.
+### Running it (dev build on a device)
+- **Requires a custom dev build — NOT Expo Go (as of 2026-06-30).** `react-native-keyboard-controller`
+  is a native module not bundled in Expo Go, so the app can only run in a development build. Build the
+  dev client via the **Expo dashboard → Build from GitHub** with the **`development`** profile (base
+  directory `apps/mobile`, Android) — the CLI/`eas build` tarball upload geo-blocks (see below). Install
+  that dev-client APK once, then run the JS dev server from the **repo ROOT** (the shell cwd drifts; a
+  bare `expo` computes the wrong project root): `pnpm --filter mobile exec expo start --dev-client` →
+  open it from the dev client (phone on the same Wi-Fi). No login backend — deep-link `/home` or use
+  the mock auth form.
 - **Native-only.** Web-preview support (react-native-web / react-dom / @expo/metro-runtime, the
   `global.css` web block, and the `web` platform) was removed 2026-06-20 — don't reintroduce it
-  without asking. `expo export -p web` no longer applies; verify with `pnpm type-check` +
-  `pnpm lint` + a run on the device.
+  without asking. Since the app can't run in Expo Go anymore, verify a slice with `pnpm type-check` +
+  `pnpm lint` + `pnpm --filter mobile exec expo export -p android` (bundles the JS clean) + a run on
+  the dev build.
 - **Test APK / tunnel (EAS, geo-block workaround).** Build config lives in `apps/mobile`:
   `eas.json` (`preview` profile = internal **APK**; `production` = `.aab`), `android.package`
   `ink.libolink.app`, EAS project `@mhg1998/libolink`, `.eas/workflows/` (must sit beside

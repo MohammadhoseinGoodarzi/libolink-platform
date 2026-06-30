@@ -9,6 +9,30 @@ that nobody debugs the same thing twice.
 
 ---
 
+## 2026-06-30 — RN `KeyboardAvoidingView` is a no-op on Android (new arch) → adopt `react-native-keyboard-controller` (branch `feat/mobile-settings-account`)
+
+*Symptom:* on a Galaxy S23 FE, focusing a field low in a Settings form (e.g. Website) left it
+**hidden behind the keyboard**. Adding a `KeyboardAvoidingView` with `behavior={Platform.OS === 'ios'
+? 'padding' : undefined}` (the existing AuthScreen pattern) did nothing on Android; switching Android
+to `behavior="padding"` lifted the field but left **residual bottom padding that didn't clear** when
+the keyboard closed.
+
+*Root cause:* with the new architecture (and Android's edge-to-edge), the window no longer resizes for
+the IME, so RN's `KeyboardAvoidingView` with an undefined behavior is a no-op, and its `padding`
+behavior mismeasures (stale inset) on Android. RN's own KAV is effectively unreliable on Android here.
+
+*Fix:* adopt **`react-native-keyboard-controller`** (owner-approved). `KeyboardProvider` at the app
+root (`shared/providers`), the worklets Babel plugin enabled (`react-native-worklets/plugin`, last —
+reanimated 4 moved it there), and the shared **`ScreenScrollView` now renders `KeyboardAwareScrollView`**
+so any focused input on any page rises above the keyboard automatically; AuthScreen uses the library's
+`KeyboardAvoidingView`. The Settings shell dropped its hand-rolled KAV entirely.
+
+*Consequence / prevention:* keyboard-controller is a **native module — NOT in Expo Go**, so the app now
+needs a **dev build** (Expo dashboard → Build from GitHub, `development` profile; CLI upload geo-blocks).
+Never hand-roll a `KeyboardAvoidingView` again — route forms through `ScreenScrollView` (or the
+library's KAV). Logged in CLAUDE.md (version table + "Running it") and the responsiveness plan in
+`docs/IMPROVEMENTS.md`.
+
 ## 2026-06-30 — Settings deep sub-screen route silently fell to the coming-soon shell (branch `feat/mobile-settings-account`)
 
 *Symptom:* tapping any Account row (Edit Personal Info, Change Username, …) **navigated to a new

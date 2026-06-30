@@ -1,7 +1,8 @@
 import { useDictionary } from '@repo/i18n';
 import { useRouter } from 'expo-router';
 import { ChevronLeft } from 'lucide-react-native';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IconButton } from '@/shared/components/ui';
 import { ROUTES } from '@/shared/constants';
@@ -35,10 +36,7 @@ export function AuthScreen({
 
   return (
     <View className="flex-1 bg-background">
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
+      <KeyboardAvoidingView className="flex-1" behavior="padding">
         <ScrollView
           className="flex-1"
           keyboardShouldPersistTaps="handled"

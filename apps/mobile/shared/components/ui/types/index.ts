@@ -21,6 +21,8 @@ import type { ButtonVariantProps } from '../button-variants';
 export type ScreenScrollViewProps = ScrollViewProps & {
   /** Breathing room ON TOP of the safe-area inset (default 24). */
   bottomSpacing?: number;
+  /** Gap kept between a focused input and the keyboard top (default 24). */
+  bottomOffset?: number;
 };
 
 // iOS-style toggle (handoff Settings kit) — the ONE switch. Settings rows and any
