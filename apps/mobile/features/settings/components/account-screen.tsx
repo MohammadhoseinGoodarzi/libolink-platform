@@ -4,7 +4,6 @@ import { useRouter } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import { AtSign, KeyRound, Mail, PenLine, ShieldCheck, UserCog } from 'lucide-react-native';
 import { View } from 'react-native';
-import { useToast } from '@/shared/components/ui';
 import type { SettingsDetailKey } from '../types';
 import { GroupCard } from './group-card';
 import { SettingsGroupLabel } from './settings-group-label';
@@ -18,11 +17,8 @@ import { SettingsScreenShell } from './settings-screen-shell';
 // Identity is read from the shared session user.
 export function AccountScreen() {
   const t = useDictionary('Settings');
-  const tCommon = useDictionary('Common');
-  const toast = useToast();
   const router = useRouter();
   const user = useAtomValue(userAtom);
-  const soon = () => toast.show(tCommon('comingSoon'));
   const go = (screen: SettingsDetailKey) =>
     router.push({ pathname: '/settings/screen/[screen]', params: { screen } });
 
@@ -64,9 +60,13 @@ export function AccountScreen() {
           icon={ShieldCheck}
           title={t('accountVerification')}
           value={user?.verified ? t('verifiedBadge') : t('unverifiedBadge')}
-          onPress={soon}
+          onPress={() => go('acc_verify')}
         />
-        <SettingsRow icon={AtSign} title={t('connectedAccounts')} onPress={soon} />
+        <SettingsRow
+          icon={AtSign}
+          title={t('connectedAccounts')}
+          onPress={() => go('acc_connected')}
+        />
       </GroupCard>
       <SettingsNote>{t('accountNote')}</SettingsNote>
     </SettingsScreenShell>

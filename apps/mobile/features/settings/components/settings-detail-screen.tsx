@@ -2,10 +2,12 @@ import { useDictionary } from '@repo/i18n';
 import { View } from 'react-native';
 import { Text } from '@/shared/components/ui';
 import type { SettingsDetailScreenProps } from '../types';
+import { AccConnectedScreen } from './acc-connected-screen';
 import { AccEditScreen } from './acc-edit-screen';
 import { AccEmailScreen } from './acc-email-screen';
 import { AccPasswordScreen } from './acc-password-screen';
 import { AccUsernameScreen } from './acc-username-screen';
+import { AccVerifyScreen } from './acc-verify-screen';
 import { SettingsScreenShell } from './settings-screen-shell';
 
 // Push-detail sub-screen router (handoff Settings). Maps the
@@ -25,6 +27,12 @@ export function SettingsDetailScreen({ screen }: SettingsDetailScreenProps) {
   }
   if (screen === 'acc_password') {
     return <AccPasswordScreen />;
+  }
+  if (screen === 'acc_verify') {
+    return <AccVerifyScreen />;
+  }
+  if (screen === 'acc_connected') {
+    return <AccConnectedScreen />;
   }
 
   return (
