@@ -102,9 +102,6 @@ export function AccEditScreen() {
             value={website}
             onChangeText={setWebsite}
             placeholder={t('accWebsitePh')}
-            prefix="https://"
-            autoCapitalize="none"
-            keyboardType="url"
           />
         </Card>
       </View>

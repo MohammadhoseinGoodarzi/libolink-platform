@@ -85,7 +85,6 @@ export const PRONOUN_OPTIONS: { key: PronounKey; label: MessageKey<'Settings'> }
   { key: 'unspecified', label: 'pronounUnspecified' },
   { key: 'heHim', label: 'pronounHeHim' },
   { key: 'sheHer', label: 'pronounSheHer' },
-  { key: 'theyThem', label: 'pronounTheyThem' },
 ];
 
 // App / translate languages (handoff) — labels are endonyms (native names), not

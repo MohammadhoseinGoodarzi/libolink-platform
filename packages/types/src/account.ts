@@ -6,7 +6,7 @@
 
 // Pronoun choices offered on the Edit Personal Info screen. Stored as a key so
 // the visible label stays translatable (@repo/i18n), never a hardcoded string.
-export type PronounKey = 'unspecified' | 'heHim' | 'sheHer' | 'theyThem';
+export type PronounKey = 'unspecified' | 'heHim' | 'sheHer';
 
 export interface AccountProfile {
   /** Legal / full name — distinct from the public displayName on `User`. */
