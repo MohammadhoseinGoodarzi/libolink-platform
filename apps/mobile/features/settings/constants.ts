@@ -1,5 +1,10 @@
 import type { MessageKey } from '@repo/i18n';
-import type { AccessibilitySettings, LanguageCode, NotificationBooleanKey } from '@repo/types';
+import type {
+  AccessibilitySettings,
+  LanguageCode,
+  NotificationBooleanKey,
+  PronounKey,
+} from '@repo/types';
 import {
   Activity,
   AtSign,
@@ -73,6 +78,14 @@ export const SETTINGS_SECTION_TITLES: Record<string, MessageKey<'Settings'>> = {
   support: 'support',
   about: 'about',
 };
+
+// Pronoun choices on the Edit Personal Info screen (handoff Account). The stored
+// value is the PronounKey; the visible label is translated, never hardcoded.
+export const PRONOUN_OPTIONS: { key: PronounKey; label: MessageKey<'Settings'> }[] = [
+  { key: 'unspecified', label: 'pronounUnspecified' },
+  { key: 'heHim', label: 'pronounHeHim' },
+  { key: 'sheHer', label: 'pronounSheHer' },
+];
 
 // App / translate languages (handoff) — labels are endonyms (native names), not
 // translated strings, so they live here as data.

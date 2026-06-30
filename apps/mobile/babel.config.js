@@ -15,6 +15,10 @@ module.exports = (api) => {
           extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
         },
       ],
+      // Required by react-native-keyboard-controller (worklet-based handlers).
+      // reanimated 4 moved its Babel plugin into react-native-worklets. MUST be
+      // the LAST plugin in the list.
+      'react-native-worklets/plugin',
     ],
   };
 };

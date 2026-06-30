@@ -1,5 +1,5 @@
 import { type MessageKey, useDictionary } from '@repo/i18n';
-import { cn } from '@repo/utils';
+import { cn, passwordStrength } from '@repo/utils';
 import { Check } from 'lucide-react-native';
 import { View } from 'react-native';
 import { Text } from '@/shared/components/ui';
@@ -8,23 +8,10 @@ import type { Requirement } from '../types';
 
 const SUCCESS = oklchToHex(0.6, 0.15, 150);
 
-// 0–4 score: length, mixed case, number, symbol (handoff auth kit).
-export function pwStrength(password: string): number {
-  let score = 0;
-  if (password.length >= 8) {
-    score += 1;
-  }
-  if (/[A-Z]/.test(password) && /[a-z]/.test(password)) {
-    score += 1;
-  }
-  if (/[0-9]/.test(password)) {
-    score += 1;
-  }
-  if (/[^A-Za-z0-9]/.test(password)) {
-    score += 1;
-  }
-  return Math.min(score, 4);
-}
+// 0–4 score: length, mixed case, number, symbol. Shared scoring lives in
+// @repo/utils (the Settings Change-Password screen uses the same fn); re-exported
+// here so existing auth call sites keep importing `pwStrength`.
+export const pwStrength = passwordStrength;
 
 const LABEL_KEYS: MessageKey<'Auth'>[] = ['pwTooWeak', 'pwWeak', 'pwFair', 'pwGood', 'pwStrong'];
 const BARS = ['a', 'b', 'c', 'd'] as const;

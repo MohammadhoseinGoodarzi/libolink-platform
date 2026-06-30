@@ -9,6 +9,57 @@ that nobody debugs the same thing twice.
 
 ---
 
+## 2026-06-30 — RN `KeyboardAvoidingView` is a no-op on Android (new arch) → adopt `react-native-keyboard-controller` (branch `feat/mobile-settings-account`)
+
+*Symptom:* on a Galaxy S23 FE, focusing a field low in a Settings form (e.g. Website) left it
+**hidden behind the keyboard**. Adding a `KeyboardAvoidingView` with `behavior={Platform.OS === 'ios'
+? 'padding' : undefined}` (the existing AuthScreen pattern) did nothing on Android; switching Android
+to `behavior="padding"` lifted the field but left **residual bottom padding that didn't clear** when
+the keyboard closed.
+
+*Root cause:* with the new architecture (and Android's edge-to-edge), the window no longer resizes for
+the IME, so RN's `KeyboardAvoidingView` with an undefined behavior is a no-op, and its `padding`
+behavior mismeasures (stale inset) on Android. RN's own KAV is effectively unreliable on Android here.
+
+*Fix:* adopt **`react-native-keyboard-controller`** (owner-approved). `KeyboardProvider` at the app
+root (`shared/providers`), the worklets Babel plugin enabled (`react-native-worklets/plugin`, last —
+reanimated 4 moved it there), and the shared **`ScreenScrollView` now renders `KeyboardAwareScrollView`**
+so any focused input on any page rises above the keyboard automatically; AuthScreen uses the library's
+`KeyboardAvoidingView`. The Settings shell dropped its hand-rolled KAV entirely.
+
+*Consequence / prevention:* keyboard-controller is a **native module — NOT in Expo Go**, so the app now
+needs a **dev build** (Expo dashboard → Build from GitHub, `development` profile; CLI upload geo-blocks).
+Never hand-roll a `KeyboardAvoidingView` again — route forms through `ScreenScrollView` (or the
+library's KAV). Logged in CLAUDE.md (version table + "Running it") and the responsiveness plan in
+`docs/IMPROVEMENTS.md`.
+
+## 2026-06-30 — Settings deep sub-screen route silently fell to the coming-soon shell (branch `feat/mobile-settings-account`)
+
+*Symptom:* tapping any Account row (Edit Personal Info, Change Username, …) **navigated to a new
+screen** but that screen rendered the generic *"This area is coming soon"* shell instead of the
+real form — for all six rows. Full reloads and a `--clear` Metro restart didn't help.
+
+*Root cause:* the deep screens were on a **nested dynamic route `app/(dashboard)/settings/screen/[screen].tsx`**
+pushed via `router.push({ pathname: '/settings/screen/[screen]', params: { screen } })`. The route
+*mounted* (so it wasn't a not-found), but `useLocalSearchParams().screen` came back empty, so the
+registry hit its fallback. Two things compound here: (a) the literal folder segment `screen` shares
+its name with the `[screen]` param — a same-named literal+dynamic segment mangles param parsing; and
+(b) a **deeper nested dynamic route doesn't reliably receive its param** when it lives under a path
+that ALSO has a sibling file route (`settings.tsx`) + a single-segment dynamic sibling
+(`settings/[section].tsx`). Renaming the folder to `detail/[screen]` (fixing the name collision)
+still failed — so the nested-route param delivery itself was the real problem, not just the name.
+
+*Fix:* **stop using a separate nested route — reuse the single-segment `/settings/[section]` route
+that already works for every section.** Account rows now push
+`{ pathname: '/settings/[section]', params: { section: 'acc_edit' } }`; `SettingsSectionScreen`
+detects `acc_*` keys (`section?.startsWith('acc_')`) and delegates them to the detail registry
+(`SettingsDetailScreen`). Deleted the nested `screen/[screen].tsx` route entirely.
+
+*Prevention:* for Settings (and any place with a `foo.tsx` file route + `foo/[x].tsx` dynamic
+sibling), add new pushed screens as **more keys on the existing single-segment dynamic route +
+registry**, not a new deeper nested dynamic route. Never name a literal path segment the same as a
+sibling dynamic param.
+
 ## 2026-06-30 — First EAS Android build: upload geo-block, the GitHub-build workaround, ngrok + `expo install --fix` gotchas (branch `chore/android-build-setup`, PR #32)
 
 *Goal.* Produce a sideloadable test APK and a remote tunnel so a coworker in another city

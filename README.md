@@ -45,6 +45,7 @@ explicit approval. Shared versions live in the `catalog:` of `pnpm-workspace.yam
 | Validation | valibot | `1.4.1` | `1.4.1` |
 | Forms | react-hook-form | `7.78.0` | `7.78.0` |
 | Icons | lucide-react / -native | `1.18.0` | `1.18.0` |
+| Keyboard | react-native-keyboard-controller | — | `1.21.6` |
 | Tooling | turbo · biome · typescript | `2.9.18` · `2.5.0` · `5.9.3` |
 
 ---
@@ -68,13 +69,24 @@ pnpm install          # install all workspaces
 
 pnpm dev              # run every app via turbo
 pnpm dev:web          # web only  → http://localhost:3000
-pnpm dev:mobile       # mobile only → Expo dev server
+pnpm dev:mobile       # mobile only → Expo dev server (use --dev-client; see below)
 ```
 
-### Mobile — before the first native build
+### Mobile — runs on a dev build, NOT Expo Go
+
+The app depends on **`react-native-keyboard-controller`** (a native module), so it **cannot run in
+Expo Go**. Build a custom **development client** once, then point the JS dev server at it:
+
+```bash
+# 1) Build the dev client (Expo dashboard → Build from GitHub, `development` profile,
+#    base directory apps/mobile, Android). The CLI/eas build upload geo-blocks here;
+#    the GitHub-sourced dashboard build clones server-side and avoids it.
+# 2) Install the dev-client APK on the device, then from the repo ROOT:
+pnpm --filter mobile exec expo start --dev-client
+```
 
 Two peer-dependency warnings on `pnpm install` are **expected** (transitive native modules drift
-ahead of the Expo SDK 56 matrix). Align them the idiomatic Expo way:
+ahead of the Expo SDK 56 matrix). Align them the idiomatic Expo way before a native build:
 
 ```bash
 cd apps/mobile

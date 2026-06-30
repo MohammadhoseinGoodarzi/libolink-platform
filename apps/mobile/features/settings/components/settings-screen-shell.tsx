@@ -6,7 +6,9 @@ import type { SettingsScreenShellProps } from '../types';
 
 // The shell every Settings detail screen sits in (handoff Settings kit): a
 // back-titled Header over a bottom-safe scroll area. Detail screens are pushed,
-// so the back button returns to the index (or the previous detail).
+// so the back button returns to the index (or the previous detail). Keyboard
+// avoidance is owned by ScreenScrollView (keyboard-aware) — a focused field
+// rises above the keyboard, no per-screen KeyboardAvoidingView needed.
 function SettingsScreenShell({ title, children }: SettingsScreenShellProps) {
   const router = useRouter();
   return (
@@ -16,7 +18,11 @@ function SettingsScreenShell({ title, children }: SettingsScreenShellProps) {
         showBack
         onBack={() => (router.canGoBack() ? router.back() : router.replace('/settings'))}
       />
-      <ScreenScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pt-4">
+      <ScreenScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        contentContainerClassName="pt-4"
+      >
         {children}
       </ScreenScrollView>
     </View>

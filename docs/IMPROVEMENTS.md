@@ -7,7 +7,7 @@
 > textbook one, or spot a refinement that isn't worth doing right now. Note *why it's
 > deferred* so the next person doesn't re-litigate it.
 
-Last updated: 2026-06-26.
+Last updated: 2026-06-30.
 
 ---
 
@@ -64,6 +64,55 @@ the hamburger `Header` (open-drawer) instead of a back button, like the tab scre
 - **Better:** enable `experiments.typedRoutes` in `app.json` for free compile-time href
   checking. Pairs naturally with #2 (both about typing navigation). Low risk; verify it
   doesn't fight the `ROUTES` indirection first.
+
+---
+
+## Responsiveness & cross-device (mobile) — PLANNED (owner requested 2026-06-30)
+
+Goal (owner): the app should **look and behave the same on any phone** — small Android
+(~5"), mid (S23 FE ~6.4"), large/foldable, and iOS — regardless of screen size, density,
+or system font scale. Today most sizing is **hardcoded px** (`h-[52px]`, `text-[15px]`,
+64px avatars, fixed paddings), which crowds small screens and looks undersized on large
+ones. This is a dedicated pass to do after the current Settings work.
+
+### A. Keyboard handling (started — Settings shell only)
+- **Now:** `SettingsScreenShell` uses `KeyboardAvoidingView behavior="padding"` +
+  `keyboardVerticalOffset = topInset + 56` (header). `behavior={undefined}` on Android was
+  a **no-op** (new arch / edge-to-edge doesn't resize the window), so fields hid behind
+  the keyboard on a Galaxy S23 FE. AuthScreen still uses the old `iOS?'padding':undefined`
+  pattern and likely has the same Android gap.
+- **Robust fix (decide):** adopt **`react-native-keyboard-controller`** (`KeyboardAwareScrollView`)
+  as the ONE form-scroll primitive across both apps — bullet-proof on Android edge-to-edge
+  and auto-scrolls the focused field into view. ⚠️ **native dep — ask owner first** (the repo
+  keeps the native surface minimal). If approved, route AuthScreen + SettingsScreenShell +
+  any future form through it and delete the per-screen KAV plumbing.
+
+### B. Responsive sizing strategy (decide ONE, then roll out)
+- Options: (1) a small `scale()`/`useResponsive()` util keyed off `Dimensions`/`useWindowDimensions`
+  (react-native-size-matters style, no dep); (2) NativeWind breakpoints / `vw`-style units;
+  (3) design tokens with a base unit that scales by screen width. Pick one and make it the
+  rule (CLAUDE.md) so new screens can't hardcode raw px.
+- Audit + migrate the hardcoded hotspots: input/button heights, avatar/cover sizes, hero
+  blocks, section paddings, font sizes.
+
+### C. Safe-area + insets
+- `ScreenScrollView` already reserves the bottom inset; `BottomTabBar`/`Header` use insets.
+  Audit that **every** full-screen/pushed page goes through `ScreenScrollView` (some older
+  screens may still use a raw `ScrollView` — see the ScreenScrollView note in CLAUDE.md).
+
+### D. System font scaling / accessibility
+- `AppSettings.accessibility.largerText` exists but isn't wired. Decide whether to honor OS
+  Dynamic Type (`allowFontScaling`) and cap it, and wire `largerText`/`boldText` to real
+  text scaling so large-font users aren't broken.
+
+### E. Text overflow / i18n length
+- With 8 languages (incl. long German / RTL Farsi & Arabic), verify `numberOfLines` +
+  wrapping on chips, rows, headers so longer translations don't clip or shove layouts.
+
+### F. Test matrix
+- Define a few device profiles to verify each slice against: small Android (~5.0", e.g.
+  Pixel 4a), mid (S23 FE), large (Pixel 8 Pro / foldable), and an iPhone (SE small + a
+  Pro Max). "Done" for a responsive change = checked on the small + large extremes.
 
 ---
 

@@ -1,6 +1,7 @@
 // View-only types for the Settings index + push-detail screens (handoff Settings).
 import type { LucideIcon } from 'lucide-react-native';
 import type { ReactNode } from 'react';
+import type { KeyboardTypeOptions, TextInputProps } from 'react-native';
 
 // The push-detail section keys. Authoring call sites (openSection, the search
 // catalog) use this so a typo'd section is a compile error; the [section] route
@@ -87,4 +88,42 @@ export type TileSegmentProps<K extends string> = {
 
 export type SettingsSectionScreenProps = {
   section: string | undefined;
+};
+
+// The push-detail sub-screens reached under /settings/screen/[screen]. Authoring
+// call sites use this so a typo is a compile error; the route param stays a plain
+// string (validated by the detail router's coming-soon fallback).
+export type SettingsDetailKey =
+  | 'acc_edit'
+  | 'acc_username'
+  | 'acc_email'
+  | 'acc_password'
+  | 'acc_verify'
+  | 'acc_connected';
+
+export type SettingsDetailScreenProps = {
+  screen: string | undefined;
+};
+
+// A labeled form field for the Settings · Account screens (handoff `ASK.Field`):
+// uppercase label, recessed InputBase, optional prefix / secure toggle / multiline,
+// and a tone-coloured hint line. Settings-local on purpose — auth's AuthField is
+// feature-scoped and features never cross-import (UI is the one allowed dup).
+export type SettingsFieldHintTone = 'muted' | 'error' | 'success';
+
+export type SettingsFieldProps = {
+  label?: string;
+  value: string;
+  onChangeText: (value: string) => void;
+  placeholder?: string;
+  /** Static leading text inside the box (e.g. "https://"). */
+  prefix?: string;
+  secure?: boolean;
+  multiline?: boolean;
+  hint?: string | undefined;
+  hintTone?: SettingsFieldHintTone;
+  autoFocus?: boolean;
+  keyboardType?: KeyboardTypeOptions;
+  autoCapitalize?: TextInputProps['autoCapitalize'];
+  maxLength?: number;
 };

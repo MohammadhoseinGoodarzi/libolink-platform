@@ -207,8 +207,13 @@ export function ConversationList() {
     ) : null;
 
   return (
-    <View className="flex-1 bg-background">
-      {/* title + search + filters (fixed above the scrolling list) */}
+    <ScrollView
+      className="flex-1 bg-background"
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+      contentContainerClassName="pb-4"
+    >
+      {/* title + search + filters — scroll with the list, not pinned */}
       <View className="px-4 pt-1.5">
         <View className="mb-2 flex-row items-baseline gap-2">
           <Text className="font-sans-bold text-[27px] text-foreground">{t('title')}</Text>
@@ -242,11 +247,11 @@ export function ConversationList() {
       </View>
 
       {isLoading ? (
-        <View className="flex-1 items-center justify-center">
+        <View className="items-center justify-center py-24">
           <ActivityIndicator color={colors.primary} />
         </View>
       ) : isError ? (
-        <View className="flex-1 items-center justify-center gap-3 px-8">
+        <View className="items-center justify-center gap-3 px-8 py-24">
           <Text className="text-center font-sans text-[14px] text-muted-foreground">
             {tCommon('genericError')}
           </Text>
@@ -255,16 +260,16 @@ export function ConversationList() {
           </Button>
         </View>
       ) : filtered.length === 0 ? (
-        <View className="flex-1">
+        <>
           {archivedEntry}
-          <View className="flex-1 items-center justify-center px-10">
+          <View className="items-center justify-center px-10 py-24">
             <Text className="text-center font-sans text-[14px] text-muted-foreground">
               {filter === 'unread' ? t('emptyUnread') : t('emptyAll')}
             </Text>
           </View>
-        </View>
+        </>
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-4">
+        <>
           {archivedEntry}
 
           {pinned.length > 0 ? (
@@ -303,8 +308,8 @@ export function ConversationList() {
               {t('encrypted')}
             </Text>
           </View>
-        </ScrollView>
+        </>
       )}
-    </View>
+    </ScrollView>
   );
 }

@@ -9,6 +9,7 @@ import { AppearanceScreen } from './appearance-screen';
 import { ContentScreen } from './content-screen';
 import { NotificationsScreen } from './notifications-screen';
 import { PrivacyScreen } from './privacy-screen';
+import { SettingsDetailScreen } from './settings-detail-screen';
 import { SettingsScreenShell } from './settings-screen-shell';
 import { StorageScreen } from './storage-screen';
 import { SupportScreen } from './support-screen';
@@ -18,6 +19,13 @@ import { SupportScreen } from './support-screen';
 // index rows can already push to a titled screen with a working back button.
 export function SettingsSectionScreen({ section }: SettingsSectionScreenProps) {
   const t = useDictionary('Settings');
+
+  // Account deep sub-screens (acc_*) ride this same /settings/[section] route —
+  // delegate them to the detail registry (see ENGINEERING_LOG 2026-06-30: a
+  // separate nested route didn't deliver its param).
+  if (section?.startsWith('acc_')) {
+    return <SettingsDetailScreen screen={section} />;
+  }
 
   if (section === 'appearance') {
     return <AppearanceScreen />;
