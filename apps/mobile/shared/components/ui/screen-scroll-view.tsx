@@ -1,6 +1,17 @@
+import { cssInterop } from 'nativewind';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ScreenScrollViewProps } from './types';
+
+// KeyboardAwareScrollView is third-party, so NativeWind doesn't auto-map its
+// className props (only core RN ScrollView is). Register the SAME interop
+// NativeWind uses for ScrollView so `className` → `style` and (critically)
+// `contentContainerClassName` → `contentContainerStyle` keep working — otherwise
+// callers' page padding (e.g. SettingsScreenShell's `pt-4`) is silently dropped.
+cssInterop(KeyboardAwareScrollView, {
+  className: 'style',
+  contentContainerClassName: 'contentContainerStyle',
+});
 
 // The ONE scrollable-page primitive: a keyboard-aware ScrollView that always
 // reserves the device's bottom safe-area inset at the end of its content, so a
