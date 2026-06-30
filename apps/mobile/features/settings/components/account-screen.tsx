@@ -19,8 +19,11 @@ export function AccountScreen() {
   const t = useDictionary('Settings');
   const router = useRouter();
   const user = useAtomValue(userAtom);
+  // Reuse the proven /settings/[section] route + registry for the account deep
+  // screens too (a separate nested route didn't deliver its param). The registry
+  // delegates acc_* keys to the detail screens.
   const go = (screen: SettingsDetailKey) =>
-    router.push({ pathname: '/settings/screen/[screen]', params: { screen } });
+    router.push({ pathname: '/settings/[section]', params: { section: screen } });
 
   return (
     <SettingsScreenShell title={t('account')}>
