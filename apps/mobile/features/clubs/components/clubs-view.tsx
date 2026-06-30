@@ -59,12 +59,17 @@ export function ClubsView() {
 
   return (
     <View className="flex-1 bg-background">
-      <DirectoryIntro query={query} onQueryChange={setQuery} onCreate={comingSoon} />
-
       {searching ? (
-        <ClubSearchResults directory={directory} query={query} onOpen={openClub} />
+        // Active search: keep the title + search pinned above the (virtualized)
+        // results list so the query stays editable.
+        <>
+          <DirectoryIntro query={query} onQueryChange={setQuery} onCreate={comingSoon} />
+          <ClubSearchResults directory={directory} query={query} onOpen={openClub} />
+        </>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-6">
+          {/* title + search scroll with the directory, not pinned */}
+          <DirectoryIntro query={query} onQueryChange={setQuery} onCreate={comingSoon} />
           <MyClubsSection
             clubs={directory.myClubs}
             onSeeAll={() => seeAll('my-clubs')}
